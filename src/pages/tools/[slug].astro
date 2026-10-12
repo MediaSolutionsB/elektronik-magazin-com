@@ -1,0 +1,38 @@
+---
+import Base from '../../layouts/Base.astro';
+import { site } from '../../site.config.js';
+import fs from 'node:fs';
+import path from 'node:path';
+
+export function getStaticPaths() {
+  const indexFile = path.resolve('content/tools/index.json');
+  const items = JSON.parse(fs.readFileSync(indexFile, 'utf-8'));
+  return items.map((item) => ({
+    params: { slug: item.slug },
+    props: { meta: item }
+  }));
+}
+
+const { meta } = Astro.props;
+const file = path.resolve(`content/tools/${meta.slug}/content.html`);
+const contentHtml = fs.readFileSync(file, 'utf-8');
+---
+<Base
+  title={meta.title}
+  description={meta.excerpt || `${meta.title} – Kostenloser Online-Rechner bei Elektronik Magazin`}
+  path={`/tools/${meta.slug}/`}
+>
+  <article class="em-article-wrap">
+    <header class="em-article-header">
+      <div class="em-pill em-pill-blue">Online-Rechner & Tool</div>
+      <h1 style="font-size: clamp(28px, 3.8vw, 42px); margin-top: 14px;">{meta.title}</h1>
+      <div class="em-article-meta">
+        <span>Bereich: Tools & Rechner</span>
+        <span>&bull;</span>
+        <span>Kostenlos & sofort nutzbar</span>
+      </div>
+    </header>
+
+    <div class="em-content" set:html={contentHtml} />
+  </article>
+</Base>

@@ -1,0 +1,319 @@
+<p>Du bist auf der Suche nach einem neuen Drucker, bist dir aber unsicher, welches Modell am besten zu dir passt? Kein Problem! Mit unserem interaktiven Ratgeber findest du schnell heraus, welcher Druckertyp ideal für deine Bedürfnisse ist.</p>
+<p>Ob Einsteigergerät, Allrounddrucker, Fotodrucker oder ein professionelles Modell – wir helfen dir bei der Entscheidung. Beantworte einfach die folgenden Fragen, und erhalte eine personalisierte Empfehlung, die zu deinem Nutzungsverhalten passt. Starte jetzt den Test und finde deinen perfekten Drucker!</p>
+<div id="quiz">
+  <style scoped>
+    #quiz {
+      font-family: Arial, sans-serif;
+      color: white;
+      max-width: 600px;
+      padding: 20px;
+      background-color: #c66253;
+      border-radius: 10px;
+      box-sizing: border-box;
+    }
+    #quiz * {
+      box-sizing: border-box;
+    }
+    #quiz .quiz-container {
+      width: 100%;
+      text-align: center;
+    }
+    #quiz .question {
+      margin-bottom: 20px;
+    }
+    #quiz .options {
+      list-style-type: none;
+      padding: 0;
+    }
+    #quiz .options li {
+      margin-bottom: 10px;
+      cursor: pointer;
+      border: 1px solid white;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    #quiz .results {
+      color: white;
+      font-size: 16px;
+      line-height: 1.5;
+      margin-top: 20px;
+    }
+    #quiz .start-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #ffffff;
+      color: #c66253;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .hidden {
+      display: none;
+    }
+    .start-screen h2 {
+      color: white;
+      font-weight: bold;
+      font-size: 2.5em;
+    }
+    .results h3 {
+      color: white;
+      font-weight: bold;
+    }
+  </style>
+
+  <div class="quiz-container">
+    <div class="start-screen">
+      <h2>Welcher Drucker passt zu mir?</h2>
+      <p>Finde heraus, welcher Drucker am besten zu deinen Bedürfnissen passt!</p>
+      <button class="start-button" onclick="PrinterQuiz.startQuiz()">Jetzt starten</button>
+    </div>
+    
+    <div class="quiz-content hidden">
+      <div class="question"></div>
+      <ul class="options"></ul>
+    </div>
+    
+    <div class="results hidden"></div>
+  </div>
+
+  <script>
+    const PrinterQuiz = (function() {
+      const questions = [
+        {
+          question: "Wie oft druckst du pro Monat?",
+          options: [
+            { text: "Weniger als 20 Seiten", categories: ["Einsteigergerät"] },
+            { text: "Etwa 50-100 Seiten", categories: ["Allrounddrucker"] },
+            { text: "Mehr als 100 Seiten", categories: ["Profi-Drucker"] },
+            { text: "Vor allem Fotos, unabhängig von der Anzahl der Seiten", categories: ["Drucker speziell für Fotos"] }
+          ]
+        },
+        {
+          question: "Welche Art von Dokumenten druckst du am häufigsten?",
+          options: [
+            { text: "Einfacher Text, z. B. Briefe", categories: ["Einsteigergerät", "Allrounddrucker"] },
+            { text: "Bilder und Grafiken in hoher Qualität", categories: ["Drucker speziell für Fotos"] },
+            { text: "Berichte, Präsentationen und Diagramme", categories: ["Allrounddrucker", "Profi-Drucker"] },
+            { text: "Hochauflösende Fotos", categories: ["Drucker speziell für Fotos"] }
+          ]
+        },
+        {
+          question: "Wie wichtig ist dir die Druckgeschwindigkeit?",
+          options: [
+            { text: "Nicht wichtig, ich habe Zeit", categories: ["Einsteigergerät"] },
+            { text: "Mittelmäßig, ich drucke nicht oft", categories: ["Allrounddrucker"] },
+            { text: "Sehr wichtig, es muss schnell gehen", categories: ["Profi-Drucker"] },
+            { text: "Ich brauche eine gute Balance zwischen Geschwindigkeit und Qualität", categories: ["Drucker speziell für Fotos"] }
+          ]
+        },
+        {
+          question: "Welche Druckqualität erwartest du?",
+          options: [
+            { text: "Standardqualität reicht", categories: ["Einsteigergerät"] },
+            { text: "Gute Qualität für Dokumente", categories: ["Allrounddrucker"] },
+            { text: "Professionelle Qualität für Fotos und Grafiken", categories: ["Profi-Drucker", "Drucker speziell für Fotos"] },
+            { text: "Exzellente Qualität für den Fotodruck", categories: ["Drucker speziell für Fotos"] }
+          ]
+        },
+        {
+          question: "Wie wichtig ist dir die Möglichkeit, farbig zu drucken?",
+          options: [
+            { text: "Unwichtig, ich drucke nur in Schwarz-Weiß", categories: ["Einsteigergerät", "Profi-Drucker"] },
+            { text: "Ich brauche Farbdruck für Grafiken", categories: ["Allrounddrucker"] },
+            { text: "Farbdruck ist entscheidend, besonders für Fotos", categories: ["Drucker speziell für Fotos"] },
+            { text: "Ich nutze Farbdruck oft, aber er ist nicht entscheidend", categories: ["Allrounddrucker"] }
+          ]
+        },
+        {
+          question: "Wie hoch ist dein Budget für einen Drucker?",
+          options: [
+            { text: "Unter 100 €", categories: ["Einsteigergerät"] },
+            { text: "100-300 €", categories: ["Allrounddrucker"] },
+            { text: "300-600 €", categories: ["Profi-Drucker"] },
+            { text: "Über 600 €", categories: ["Drucker speziell für Fotos", "Profi-Drucker"] }
+          ]
+        },
+        {
+          question: "Wie oft druckst du Fotos aus?",
+          options: [
+            { text: "Fast nie", categories: ["Einsteigergerät"] },
+            { text: "Selten, meist Dokumente", categories: ["Allrounddrucker"] },
+            { text: "Oft, ich drucke regelmäßig Fotos", categories: ["Drucker speziell für Fotos"] },
+            { text: "Regelmäßig, aber auch viele andere Dokumente", categories: ["Profi-Drucker"] }
+          ]
+        },
+        {
+          question: "Wie wichtig ist dir die Konnektivität (WLAN, USB, etc.)?",
+          options: [
+            { text: "Mir reicht ein einfacher USB-Anschluss", categories: ["Einsteigergerät"] },
+            { text: "Ich brauche WLAN für drahtlosen Druck", categories: ["Allrounddrucker", "Profi-Drucker"] },
+            { text: "WLAN und mobile Apps sind entscheidend", categories: ["Drucker speziell für Fotos"] },
+            { text: "Je mehr Optionen, desto besser", categories: ["Profi-Drucker"] }
+          ]
+        },
+        {
+          question: "Benötigst du spezielle Funktionen wie Duplex-Druck oder Scanner?",
+          options: [
+            { text: "Nein, einfache Funktionen reichen mir", categories: ["Einsteigergerät"] },
+            { text: "Ja, Duplexdruck wäre hilfreich", categories: ["Allrounddrucker"] },
+            { text: "Ich brauche einen Scanner und Duplexdruck", categories: ["Profi-Drucker"] },
+            { text: "Ein Scanner ist nützlich, aber optional", categories: ["Drucker speziell für Fotos", "Allrounddrucker"] }
+          ]
+        },
+        {
+          question: "Wie wichtig ist dir der Support und die Wartung?",
+          options: [
+            { text: "Mir reicht eine einfache Bedienung, keine Wartung nötig", categories: ["Einsteigergerät"] },
+            { text: "Ich bevorzuge einfache Wartungsoptionen", categories: ["Allrounddrucker"] },
+            { text: "Regelmäßige Wartung ist für professionelle Nutzung entscheidend", categories: ["Profi-Drucker"] },
+            { text: "Wartung ist nur bei Bedarf erforderlich", categories: ["Drucker speziell für Fotos"] }
+          ]
+        }
+      ];
+
+      const categories = {
+        "Einsteigergerät": 0,
+        "Drucker speziell für Fotos": 0,
+        "Allrounddrucker": 0,
+        "Profi-Drucker": 0
+      };
+
+const results = {
+  "Einsteigergerät": 'Basierend auf deinen Antworten empfehlen wir dir ein <strong>Einsteigergerät</strong>. Es bietet grundlegende Funktionen und ist ideal für gelegentliche Druckaufgaben.<br>Daher empfehlen wir dir diesen Drucker: <br><strong><a href="https://amzn.to/4d0hggVHP" target="_blank" style="color: white; text-decoration: underline;">DeskJet 4220e Multifunktionsdrucker (Hier klicken und bei Amazon ansehen)</a></strong>',
+  
+  "Drucker speziell für Fotos": 'Basierend auf deinen Antworten empfehlen wir dir einen <strong>Drucker speziell für Fotos</strong>. Perfekt, um Fotos in höchster Qualität zu drucken.<br>Daher empfehlen wir dir diesen Drucker:  <br><strong><a href="https://amzn.to/3zfnETK" target="_blank" style="color: white; text-decoration: underline;">Liene Fotodrucker (Hier klicken und bei Amazon ansehen)</a></strong>',
+  
+  "Allrounddrucker": 'Basierend auf deinen Antworten empfehlen wir dir einen <strong>Allrounddrucker</strong>. Dieser Drucker bietet eine ausgewogene Balance zwischen Funktionsvielfalt und Preis.<br>Daher empfehlen wir dir diesen Drucker:  <br><strong><a href="https://amzn.to/3Zh6kIH" target="_blank" style="color: white; text-decoration: underline;">Epson EcoTank ET-2870 (Hier klicken und bei Amazon ansehen)</a></strong>',
+  
+  "Profi-Drucker": 'Basierend auf deinen Antworten empfehlen wir dir einen <strong>Profi-Drucker</strong>. Ideal für anspruchsvolle Druckaufgaben mit hohen Anforderungen an Geschwindigkeit und Qualität.<br>Daher empfehlen wir dir diesen Drucker:  <br><strong><a href="https://amzn.to/3APxkop" target="_blank" style="color: white; text-decoration: underline;">Brother MFC-L8690CDW (Hier klicken und bei Amazon ansehen)</a></strong>'
+};
+
+
+      let currentQuestionIndex = 0;
+
+      function startQuiz()
+		
+		{ document.querySelector(".start-screen").classList.add("hidden"); document.querySelector(".quiz-content").classList.remove("hidden"); showQuestion(); }
+		
+		  function showQuestion() {
+    const questionData = questions[currentQuestionIndex];
+    document.querySelector(".quiz-content .question").textContent = questionData.question;
+
+    const optionsList = document.querySelector(".quiz-content .options");
+    optionsList.innerHTML = '';
+
+    questionData.options.forEach(option => {
+      const li = document.createElement("li");
+      li.textContent = option.text;
+      li.onclick = () => selectAnswer(option.categories);
+      optionsList.appendChild(li);
+    });
+  }
+
+  function selectAnswer(selectedCategories) {
+    selectedCategories.forEach(category => {
+      categories[category]++;
+    });
+
+    currentQuestionIndex++;
+    if (currentQuestionIndex >= 10) {
+      showResults();
+    } else {
+      showQuestion();
+    }
+  }
+
+  function showResults() {
+    document.querySelector(".quiz-content").classList.add("hidden");
+    document.querySelector(".results").classList.remove("hidden");
+
+    const highestCategory = Object.keys(categories).reduce((a, b) => categories[a] > categories[b] ? a : b);
+    
+    document.querySelector(".results").innerHTML = `<h3>Ergebnis:</h3><p>${results[highestCategory]}</p>`;
+  }
+
+  return {
+    startQuiz: startQuiz
+  };
+})();
+</script> 
+</div>
+
+<hr>
+<h3>So funktioniert unser Drucker Quiz</h3>
+<ul>
+<li><strong>Anhand deiner Antworten</strong>: Der Test analysiert deine Druckgewohnheiten und Anforderungen, um den passenden Druckertyp zu ermitteln.</li>
+<li><strong>10 gezielte Fragen</strong>: Wir stellen dir Fragen zu Druckhäufigkeit, bevorzugten Funktionen, Druckqualität und Budget, um deine Bedürfnisse zu verstehen.</li>
+<li><strong>Individuelle Auswertung</strong>: Basierend auf deinen Antworten wird ein Druckertyp ermittelt, der ideal zu dir passt – ob Einsteigergerät, Fotodrucker, Allrounddrucker oder Profi-Drucker.</li>
+<li><strong>Persönliche Empfehlung</strong>: Wir empfehlen dir direkt ein passendes Gerät.</li>
+<li><strong>Schnelle Orientierung</strong>: Der Test spart dir Zeit und hilft dir, eine fundierte Entscheidung zu treffen, welcher Drucker deinen Anforderungen am besten entspricht.</li>
+</ul>
+
+
+<div class="kk-star-ratings kksr-auto kksr-align-right kksr-valign-bottom"
+    data-payload='{&quot;align&quot;:&quot;right&quot;,&quot;id&quot;:&quot;13889&quot;,&quot;slug&quot;:&quot;default&quot;,&quot;valign&quot;:&quot;bottom&quot;,&quot;ignore&quot;:&quot;&quot;,&quot;reference&quot;:&quot;auto&quot;,&quot;class&quot;:&quot;&quot;,&quot;count&quot;:&quot;93&quot;,&quot;legendonly&quot;:&quot;&quot;,&quot;readonly&quot;:&quot;&quot;,&quot;score&quot;:&quot;4.8&quot;,&quot;starsonly&quot;:&quot;&quot;,&quot;best&quot;:&quot;5&quot;,&quot;gap&quot;:&quot;5&quot;,&quot;greet&quot;:&quot;Bewerte diesen Beitrag&quot;,&quot;legend&quot;:&quot;4.8\/5 - (93 votes)&quot;,&quot;size&quot;:&quot;24&quot;,&quot;title&quot;:&quot;Test: Welcher Drucker passt zu mir?&quot;,&quot;width&quot;:&quot;136.7&quot;,&quot;_legend&quot;:&quot;{score}\/{best} - ({count} {votes})&quot;,&quot;font_factor&quot;:&quot;1.25&quot;}'>
+            
+<div class="kksr-stars">
+    
+<div class="kksr-stars-inactive">
+            <div class="kksr-star" data-star="1" style="padding-right: 5px">
+            
+
+<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
+        </div>
+            <div class="kksr-star" data-star="2" style="padding-right: 5px">
+            
+
+<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
+        </div>
+            <div class="kksr-star" data-star="3" style="padding-right: 5px">
+            
+
+<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
+        </div>
+            <div class="kksr-star" data-star="4" style="padding-right: 5px">
+            
+
+<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
+        </div>
+            <div class="kksr-star" data-star="5" style="padding-right: 5px">
+            
+
+<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
+        </div>
+    </div>
+    
+<div class="kksr-stars-active" style="width: 136.7px;">
+            <div class="kksr-star" style="padding-right: 5px">
+            
+
+<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
+        </div>
+            <div class="kksr-star" style="padding-right: 5px">
+            
+
+<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
+        </div>
+            <div class="kksr-star" style="padding-right: 5px">
+            
+
+<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
+        </div>
+            <div class="kksr-star" style="padding-right: 5px">
+            
+
+<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
+        </div>
+            <div class="kksr-star" style="padding-right: 5px">
+            
+
+<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
+        </div>
+    </div>
+</div>
+                
+
+<div class="kksr-legend" style="font-size: 19.2px;">
+            4.8/5 - (93 votes)    </div>
+    </div>

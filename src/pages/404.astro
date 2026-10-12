@@ -1,0 +1,11 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Seite nicht gefunden (404)" path="/404/" noindex={true}>
+  <div class="em-wrap" style="padding: 100px 24px; text-align: center;">
+    <span class="em-eyebrow">Fehler 404</span>
+    <h1 style="font-size: clamp(36px, 5vw, 60px); margin: 16px 0;">Seite nicht gefunden</h1>
+    <p style="color: var(--muted); max-width: 500px; margin: 0 auto 32px;">Die gewünschte Seite existiert leider nicht oder wurde verschoben.</p>
+    <a class="em-btn" href="/">Zur Startseite zurückkehren</a>
+  </div>
+</Base>

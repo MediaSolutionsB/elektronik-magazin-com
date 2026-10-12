@@ -1,0 +1,300 @@
+<p>Du möchtest wissen, welcher Fitness-Tracker am besten zu deinem Lebensstil passt? Dieser Test mit 12 Quiz-Fragen hilft dir dabei, den idealen Tracker für deine Bedürfnisse zu finden.</p>
+<p>Beantworte einfach die folgenden Fragen, und erhalte eine Empfehlung, die genau auf dich zugeschnitten ist. Finde heraus, ob ein Budget-, Mittelklasse- oder Premium-Tracker am besten zu dir passt!</p>
+<div id="quiz">
+  <style scoped>
+    #quiz {
+      font-family: Arial, sans-serif;
+      color: white;
+      max-width: 600px;
+      padding: 20px;
+      background-color: #c66253;
+      border-radius: 10px;
+      box-sizing: border-box;
+    }
+    #quiz * {
+      box-sizing: border-box;
+    }
+    #quiz .quiz-container {
+      width: 100%;
+      text-align: center;
+    }
+    #quiz .question {
+      margin-bottom: 20px;
+    }
+    #quiz .options {
+      list-style-type: none;
+      padding: 0;
+    }
+    #quiz .options li {
+      margin-bottom: 10px;
+      cursor: pointer;
+      border: 1px solid white;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    #quiz .results {
+      color: white;
+      font-size: 16px;
+      line-height: 1.5;
+      margin-top: 20px;
+    }
+    #quiz .start-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #ffffff;
+      color: #c66253;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .hidden {
+      display: none;
+    }
+    .start-screen h2 {
+      color: white;
+      font-weight: bold;
+      font-size: 2.5em;
+    }
+    .results h3 {
+      color: white;
+      font-weight: bold;
+    }
+  </style>
+
+  <div class="quiz-container">
+    <div class="start-screen">
+      <h2>Welcher Fitness-Tracker passt zu mir?</h2>
+      <p>Finde heraus, welcher Fitness-Tracker am besten zu deinen Bedürfnissen passt!</p>
+      <button class="start-button" onclick="FitnessTrackerQuiz.startQuiz()">Jetzt starten</button>
+    </div>
+    
+    <div class="quiz-content hidden">
+      <div class="question"></div>
+      <ul class="options"></ul>
+    </div>
+    
+    <div class="results hidden"></div>
+  </div>
+
+  <script>
+    const FitnessTrackerQuiz = (function() {
+      const questions = [
+        {
+          question: "Wie oft trainierst du pro Woche?",
+          options: [
+            { text: "1-2 Mal", category: "Budget" },
+            { text: "3-4 Mal", category: "Mittelklasse" },
+            { text: "5 oder mehr Mal", category: "Premium" }
+          ]
+        },
+        {
+          question: "Welche Art von Training machst du am häufigsten?",
+          options: [
+            { text: "Gehen oder Laufen", category: "Budget" },
+            { text: "Krafttraining oder HIIT", category: "Mittelklasse" },
+            { text: "Vielseitiges Training, z. B. Schwimmen und Radfahren", category: "Premium" }
+          ]
+        },
+        {
+          question: "Wie wichtig sind dir erweiterte Fitness-Tracking-Funktionen?",
+          options: [
+            { text: "Grundfunktionen reichen mir", category: "Budget" },
+            { text: "Ich möchte einige fortgeschrittene Funktionen", category: "Mittelklasse" },
+            { text: "Ich möchte möglichst viele Funktionen", category: "Premium" }
+          ]
+        },
+        {
+          question: "Benötigst du eine Herzfrequenzmessung?",
+          options: [
+            { text: "Nicht unbedingt", category: "Budget" },
+            { text: "Ja, das wäre hilfreich", category: "Mittelklasse" },
+            { text: "Unbedingt, sie ist für mein Training unerlässlich", category: "Premium" }
+          ]
+        },
+        {
+          question: "Wie wichtig ist dir die Akkulaufzeit?",
+          options: [
+            { text: "Es reicht, wenn er ein paar Tage hält", category: "Budget" },
+            { text: "Eine Woche wäre ideal", category: "Mittelklasse" },
+            { text: "Ich brauche eine sehr lange Akkulaufzeit", category: "Premium" }
+          ]
+        },
+        {
+          question: "Möchtest du ein GPS im Fitness-Tracker haben?",
+          options: [
+            { text: "Nein, brauche ich nicht", category: "Budget" },
+            { text: "Ja, wäre hilfreich", category: "Mittelklasse" },
+            { text: "Unbedingt, es ist sehr wichtig für mich", category: "Premium" }
+          ]
+        },
+        {
+          question: "Wie wichtig sind dir smarte Benachrichtigungen (Anrufe, SMS etc.)?",
+          options: [
+            { text: "Nicht wichtig", category: "Budget" },
+            { text: "Das wäre praktisch", category: "Mittelklasse" },
+            { text: "Unbedingt, ich möchte alles tracken", category: "Premium" }
+          ]
+        },
+        {
+          question: "Wie hoch ist dein Budget für einen Fitness-Tracker?",
+          options: [
+            { text: "Unter 50 €", category: "Budget" },
+            { text: "50-150 €", category: "Mittelklasse" },
+            { text: "Über 150 €", category: "Premium" }
+          ]
+        },
+        {
+          question: "Wichtig für dich: wasserdichtes Design?",
+          options: [
+            { text: "Nicht so wichtig", category: "Budget" },
+            { text: "Ja, aber nur bis zu einem gewissen Grad", category: "Mittelklasse" },
+            { text: "Unbedingt, ich brauche es zum Schwimmen", category: "Premium" }
+          ]
+        },
+        {
+          question: "Benötigst du eine Schlafanalyse?",
+          options: [
+            { text: "Nein, das ist mir nicht wichtig", category: "Budget" },
+            { text: "Das wäre hilfreich", category: "Mittelklasse" },
+            { text: "Ja, eine genaue Analyse ist wichtig", category: "Premium" }
+          ]
+        }
+      ];
+
+      const categories = {
+        Budget: 0,
+        Mittelklasse: 0,
+        Premium: 0
+      };
+
+const results = {
+  Budget: 'Basierend auf deinen Antworten empfehlen wir dir einen Fitness-Tracker im unteren Preissegment. Unsere Empfehlung: <br><strong><a href="https://amzn.to/3Mzwsa8" target="_blank" style="color: white; text-decoration: underline;">Xiaomi Mi Smart Band Fitness-Tracker (Hier klicken und bei Amazon ansehen)</a></strong>',
+  Mittelklasse: 'Basierend auf deinen Antworten empfehlen wir dir einen Fitness-Tracker im mittleren Preissegment. Unsere Empfehlung: <br><strong><a href="https://amzn.to/3MxB7t9" target="_blank" style="color: white; text-decoration: underline;">Polar Pacer (Hier klicken und bei Amazon ansehen)</a></strong>',
+  Premium: 'Basierend auf deinen Antworten empfehlen wir dir einen Fitness-Tracker im oberen Preissegment. Unsere Empfehlung:<br><strong><a href="https://amzn.to/3XxNb47" target="_blank" style="color: white; text-decoration: underline;">Garmin Vivoactive 5 (Hier klicken und bei Amazon ansehen)</a></strong>'
+};
+
+      let currentQuestionIndex = 0;
+
+      function startQuiz() {
+        document.querySelector(".start-screen").classList.add("hidden");
+        document.querySelector(".quiz-content").classList.remove("hidden");
+        showQuestion();
+      }
+
+      function showQuestion() {
+        const questionData = questions[currentQuestionIndex];
+        document.querySelector(".quiz-content .question").textContent = questionData.question;
+
+        const optionsList = document.querySelector(".quiz-content .options");
+        optionsList.innerHTML = '';
+
+        questionData.options.forEach(option => {
+          const li = document.createElement("li");
+          li.textContent = option.text;
+          li.onclick = () => selectAnswer(option.category);
+          optionsList.appendChild(li);
+        });
+      }
+
+      function selectAnswer(category) {
+        categories[category]++;
+        currentQuestionIndex++;
+        if (currentQuestionIndex >= 10) {
+          showResults();
+        } else {
+          showQuestion();
+        }
+      }
+
+      function showResults() {
+        document.querySelector(".quiz-content").classList.add("hidden");
+        document.querySelector(".results").classList.remove("hidden");
+
+        const highestCategory = Object.keys(categories).reduce((a, b) => categories[a] > categories[b] ? a : b);
+        
+        document.querySelector(".results").innerHTML = `<h3>Ergebnis:</h3><p>${results[highestCategory]}</p>`;
+      }
+
+      return {
+        startQuiz: startQuiz
+      };
+    })();
+  </script>
+</div>
+
+<hr>
+<h2>Wie funktioniert der Test?</h2>
+<p>Dieser Test wurde entwickelt, um dir dabei zu helfen, den Fitness-Tracker zu finden, der am besten zu deinem Lebensstil und deinen Bedürfnissen passt.</p>
+<p>Die Fragen decken verschiedene Aspekte deines Fitnessverhaltens ab, wie Trainingshäufigkeit, gewünschte Funktionen und Budget. Basierend auf deinen Antworten werden dir drei Kategorien von Fitness-Trackern empfohlen: Budget, Mittelklasse oder Premium.</p>
+<h2>Wie werden die Empfehlungen ermittelt?</h2>
+<p>Jede Antwort ist einer dieser Kategorien zugeordnet. Je nachdem, wie oft du eine bestimmte Kategorie auswählst, erhältst du am Ende eine personalisierte Empfehlung.</p>
+<p>Diese Empfehlungen basieren auf typischen Eigenschaften und Funktionen von Fitness-Trackern in den jeweiligen Preissegmenten, sodass du sicherstellen kannst, dass dein Tracker perfekt zu deinen Zielen und Anforderungen passt.</p>
+
+
+<div class="kk-star-ratings kksr-auto kksr-align-right kksr-valign-bottom"
+    data-payload='{&quot;align&quot;:&quot;right&quot;,&quot;id&quot;:&quot;13867&quot;,&quot;slug&quot;:&quot;default&quot;,&quot;valign&quot;:&quot;bottom&quot;,&quot;ignore&quot;:&quot;&quot;,&quot;reference&quot;:&quot;auto&quot;,&quot;class&quot;:&quot;&quot;,&quot;count&quot;:&quot;100&quot;,&quot;legendonly&quot;:&quot;&quot;,&quot;readonly&quot;:&quot;&quot;,&quot;score&quot;:&quot;4.7&quot;,&quot;starsonly&quot;:&quot;&quot;,&quot;best&quot;:&quot;5&quot;,&quot;gap&quot;:&quot;5&quot;,&quot;greet&quot;:&quot;Bewerte diesen Beitrag&quot;,&quot;legend&quot;:&quot;4.7\/5 - (100 votes)&quot;,&quot;size&quot;:&quot;24&quot;,&quot;title&quot;:&quot;Test: Welcher Fitness Tracker passt zu mir?&quot;,&quot;width&quot;:&quot;133.8&quot;,&quot;_legend&quot;:&quot;{score}\/{best} - ({count} {votes})&quot;,&quot;font_factor&quot;:&quot;1.25&quot;}'>
+            
+<div class="kksr-stars">
+    
+<div class="kksr-stars-inactive">
+            <div class="kksr-star" data-star="1" style="padding-right: 5px">
+            
+
+<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
+        </div>
+            <div class="kksr-star" data-star="2" style="padding-right: 5px">
+            
+
+<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
+        </div>
+            <div class="kksr-star" data-star="3" style="padding-right: 5px">
+            
+
+<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
+        </div>
+            <div class="kksr-star" data-star="4" style="padding-right: 5px">
+            
+
+<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
+        </div>
+            <div class="kksr-star" data-star="5" style="padding-right: 5px">
+            
+
+<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
+        </div>
+    </div>
+    
+<div class="kksr-stars-active" style="width: 133.8px;">
+            <div class="kksr-star" style="padding-right: 5px">
+            
+
+<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
+        </div>
+            <div class="kksr-star" style="padding-right: 5px">
+            
+
+<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
+        </div>
+            <div class="kksr-star" style="padding-right: 5px">
+            
+
+<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
+        </div>
+            <div class="kksr-star" style="padding-right: 5px">
+            
+
+<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
+        </div>
+            <div class="kksr-star" style="padding-right: 5px">
+            
+
+<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
+        </div>
+    </div>
+</div>
+                
+
+<div class="kksr-legend" style="font-size: 19.2px;">
+            4.7/5 - (100 votes)    </div>
+    </div>

@@ -1,0 +1,363 @@
+<p>Du überlegst, welches Betriebssystem am besten zu dir passt? In diesem Test findest du heraus, welches System deinen Bedürfnissen und Gewohnheiten am besten entspricht. Egal, ob du ein erfahrener Nutzer oder ein Einsteiger bist – es gibt ein Betriebssystem, das perfekt zu dir passt.</p>
+<p>Beantworte die folgenden Fragen, um die beste Empfehlung für deine Anforderungen zu erhalten. Entdecke jetzt, ob Windows, macOS, Linux, Chrome OS oder Ubuntu das Richtige für dich ist!</p>
+<div id="quiz">
+  <style scoped>
+    #quiz {
+      font-family: Arial, sans-serif;
+      color: white;
+      max-width: 600px;
+      padding: 20px;
+      background-color: #c66253;
+      border-radius: 10px;
+      box-sizing: border-box;
+    }
+    #quiz * {
+      box-sizing: border-box;
+    }
+    #quiz .quiz-container {
+      width: 100%;
+      text-align: center;
+    }
+    #quiz .question {
+      margin-bottom: 20px;
+    }
+    #quiz .options {
+      list-style-type: none;
+      padding: 0;
+    }
+    #quiz .options li {
+      margin-bottom: 10px;
+      cursor: pointer;
+      border: 1px solid white;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    #quiz .results {
+      color: white;
+      font-size: 16px;
+      line-height: 1.5;
+      margin-top: 20px;
+    }
+    #quiz .start-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #ffffff;
+      color: #c66253;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .hidden {
+      display: none;
+    }
+    .start-screen h2 {
+      color: white;
+      font-weight: bold;
+      font-size: 2.5em;
+    }
+    .results h3 {
+      color: white;
+      font-weight: bold;
+    }
+  </style>
+
+  <div class="quiz-container">
+    <div class="start-screen">
+      <h2>Welches Betriebssystem passt zu mir?</h2>
+      <p>Finde heraus, welches Betriebssystem am besten zu deinen Bedürfnissen passt!</p>
+      <button class="start-button" onclick="OSQuiz.startQuiz()">Jetzt starten</button>
+    </div>
+    
+    <div class="quiz-content hidden">
+      <div class="question"></div>
+      <ul class="options"></ul>
+    </div>
+    
+    <div class="results hidden"></div>
+  </div>
+
+  <script>
+    const OSQuiz = (function() {
+      const questions = [
+        {
+          question: "Wie viel Erfahrung hast du mit Computern?",
+          options: [
+            { text: "Anfänger, ich nutze nur einfache Anwendungen", categories: ["Chrome OS", "Windows"] },
+            { text: "Ich komme gut klar, aber mag keine komplexen Systeme", categories: ["Windows", "macOS"] },
+            { text: "Ich bin ein fortgeschrittener Nutzer und möchte mein System anpassen", categories: ["Linux", "Ubuntu"] }
+          ]
+        },
+        {
+          question: "Wofür nutzt du deinen Laptop hauptsächlich?",
+          options: [
+            { text: "Surfen, E-Mails und leichte Anwendungen", categories: ["Chrome OS", "Windows"] },
+            { text: "Arbeit und Produktivität (Office, kreative Programme)", categories: ["macOS", "Windows"] },
+            { text: "Programmieren oder technische Aufgaben", categories: ["Linux", "Ubuntu"] }
+          ]
+        },
+        {
+          question: "Welche Geräte nutzt du noch neben deinem Laptop?",
+          options: [
+            { text: "Ich nutze nur meinen Laptop", categories: ["Ubuntu", "Linux"] },
+            { text: "Ich nutze auch ein iPhone und ein iPad", categories: ["macOS"] },
+            { text: "Ich nutze Android-Geräte", categories: ["Windows", "Chrome OS"] }
+          ]
+        },
+        {
+          question: "Wie wichtig ist dir der Preis für das Betriebssystem?",
+          options: [
+            { text: "Es sollte möglichst günstig oder kostenlos sein", categories: ["Linux", "Ubuntu", "Chrome OS"] },
+            { text: "Ich zahle gerne für eine einfache und intuitive Nutzung", categories: ["macOS"] },
+            { text: "Mir ist eine gute Balance zwischen Preis und Leistung wichtig", categories: ["Windows"] }
+          ]
+        },
+        {
+          question: "Wie wichtig ist dir Flexibilität bei der Anpassung des Systems?",
+          options: [
+            { text: "Mir reicht ein einfaches, festgelegtes System", categories: ["Chrome OS", "macOS"] },
+            { text: "Ich möchte einige Anpassungen vornehmen können", categories: ["Windows"] },
+            { text: "Ich möchte mein System komplett anpassen können", categories: ["Linux", "Ubuntu"] }
+          ]
+        },
+        {
+          question: "Welche Art von Software möchtest du auf deinem Laptop nutzen?",
+          options: [
+            { text: "Webbasierte Apps wie Google Docs", categories: ["Chrome OS"] },
+            { text: "Professionelle Software (Photoshop, Final Cut)", categories: ["macOS", "Windows"] },
+            { text: "Open-Source-Software oder eigene Programme", categories: ["Linux", "Ubuntu"] }
+          ]
+        },
+        {
+          question: "Wie wichtig ist dir Sicherheit und Datenschutz?",
+          options: [
+            { text: "Mir sind grundlegende Sicherheitsfunktionen ausreichend", categories: ["Windows", "Chrome OS"] },
+            { text: "Ich möchte ein sicheres, geschlossenes System", categories: ["macOS"] },
+            { text: "Ich möchte vollständige Kontrolle über Sicherheitseinstellungen", categories: ["Linux", "Ubuntu"] }
+          ]
+        },
+        {
+          question: "Wie mobil bist du und welche Akkulaufzeit erwartest du?",
+          options: [
+            { text: "Ich brauche einen Laptop mit langer Akkulaufzeit für unterwegs", categories: ["Chrome OS", "macOS"] },
+            { text: "Akkulaufzeit ist mir wichtig, aber auch Leistung zählt", categories: ["Windows", "macOS"] },
+            { text: "Ich nutze den Laptop eher stationär, Akkulaufzeit ist nicht so wichtig", categories: ["Linux", "Ubuntu"] }
+          ]
+        },
+        {
+          question: "Wie wichtig ist dir der Support und die Nutzerfreundlichkeit?",
+          options: [
+            { text: "Ich brauche einfachen, zuverlässigen Support", categories: ["macOS", "Windows"] },
+            { text: "Mir reicht die Community und Online-Foren", categories: ["Linux", "Ubuntu"] },
+            { text: "Ich brauche schnellen Zugang zu Support, aber keine teuren Lösungen", categories: ["Windows", "Chrome OS"] }
+          ]
+        },
+        {
+          question: "Welches dieser Betriebssysteme hast du bisher genutzt?",
+          options: [
+            { text: "Windows", categories: ["Windows"] },
+            { text: "macOS", categories: ["macOS"] },
+            { text: "Linux oder Ubuntu", categories: ["Linux", "Ubuntu"] }
+          ]
+        }
+      ];
+
+      const categories = {
+        "Windows": 0,
+        "macOS": 0,
+        "Linux": 0,
+        "Chrome OS": 0,
+        "Ubuntu": 0
+      };
+
+      const results = {
+        "Windows": 'Basierend auf deinen Antworten empfehlen wir dir <strong>Windows</strong> als Betriebssystem. Es bietet eine ausgewogene Balance zwischen Preis, Leistung und Nutzerfreundlichkeit.',
+        "macOS": 'Basierend auf deinen Antworten empfehlen wir dir <strong>macOS</strong> als Betriebssystem. Perfekt für kreative Arbeiten und ein stabiles, intuitives Nutzererlebnis.',
+        "Linux": 'Basierend auf deinen Antworten empfehlen wir dir <strong>Linux</strong> als Betriebssystem. Ideal für erfahrene Nutzer, die maximale Kontrolle und Anpassung wünschen.',
+        "Chrome OS": 'Basierend auf deinen Antworten empfehlen wir dir <strong>Chrome OS</strong> als Betriebssystem. Einfach zu bedienen, ideal für webbasierte Anwendungen und lange Akkulaufzeiten.',
+        "Ubuntu": 'Basierend auf deinen Antworten empfehlen wir dir <strong>Ubuntu</strong> als Betriebssystem. Es ist kostenlos, anpassbar und ideal für erfahrene Nutzer, die Flexibilität suchen.'
+      };
+
+      let currentQuestionIndex = 0;
+
+      function startQuiz() {
+        document.querySelector(".start-screen").classList.add("hidden");
+        document.querySelector(".quiz-content").classList.remove("hidden");
+        showQuestion();
+      }
+
+      function showQuestion() {
+        const questionData = questions[currentQuestionIndex];
+        document.querySelector(".quiz-content .question").textContent = questionData.question;
+
+        const optionsList = document.querySelector(".quiz-content .options");
+        optionsList.innerHTML = '';
+
+        questionData.options.forEach(option => {
+          const li = document.createElement("li");
+          li.textContent = option.text;
+          li.onclick = () => selectAnswer(option.categories);
+          optionsList.appendChild(li);
+        });
+      }
+
+      function selectAnswer(selectedCategories) {
+        selectedCategories.forEach(category => {
+          categories[category]++;
+        });
+
+        currentQuestionIndex++;
+        if (currentQuestionIndex >= 10) {
+          showResults();
+        } else {
+          showQuestion();
+        }
+      }
+
+      function showResults() {
+        document.querySelector(".quiz-content").classList.add("hidden");
+        document.querySelector(".results").classList.remove("hidden");
+
+        const highestCategory = Object.keys(categories).reduce((a, b) => categories[a] > categories[b] ? a : b);
+        
+        document.querySelector(".results").innerHTML = `<h3>Ergebnis:</h3><p>${results[highestCategory]}</p>`;
+      }
+
+      return {
+        startQuiz: startQuiz
+      };
+    })();
+  </script>
+</div>
+
+<hr>
+<h2>Übersicht der Betriebssysteme und ihre Eigenschaften</h2>
+<p>In der folgenden Tabelle findest du eine Zusammenfassung der wichtigsten Betriebssysteme für Laptops. Sie zeigt die Vor- und Nachteile der einzelnen Systeme, sowie deren Zielgruppe und besondere Merkmale.</p>
+<p>Diese Informationen helfen dir, einen schnellen Überblick zu gewinnen und die beste Entscheidung für deine Bedürfnisse zu treffen.<br />
+<div class="su-table su-table-responsive su-table-alternate">
+<table>
+<thead>
+<tr>
+<th>Betriebssystem</th>
+<th>Vorteile</th>
+<th>Nachteile</th>
+<th>Zielgruppe</th>
+<th>Aktuelle Version (Stand: 2023)</th>
+<th>Besonderheiten</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Windows</td>
+<td>Große Software-Auswahl, hohe Kompatibilität mit Hardware, ideal für Gaming und Büroarbeit</td>
+<td>Sicherheitsrisiken, kostenpflichtig, regelmäßige Updates können störend sein</td>
+<td>Breite Nutzerbasis: von Gelegenheitssurfern bis hin zu Gamern und Büroanwendern</td>
+<td>Windows 11</td>
+<td>Weit verbreitetes System, besonders für Gaming und Office</td>
+</tr>
+<tr>
+<td>macOS</td>
+<td>Stabiles, benutzerfreundliches System, ideal für kreative Berufe, hohe Sicherheit</td>
+<td>Teuer, nur auf Apple-Hardware verfügbar, eingeschränkte Software-Auswahl</td>
+<td>Professionelle Nutzer im kreativen Bereich, z. B. Designer, Videobearbeiter</td>
+<td>macOS Ventura</td>
+<td>Optimiert für Apple-Hardware, exzellente Integration ins Apple-Ökosystem</td>
+</tr>
+<tr>
+<td>Linux</td>
+<td>Kostenlos, anpassbar, hohe Sicherheit, keine Lizenzgebühren</td>
+<td>Steilere Lernkurve, nicht alle Programme sind kompatibel</td>
+<td>Technik-Enthusiasten, Entwickler, sicherheitsbewusste Nutzer</td>
+<td>Ubuntu 22.04 LTS</td>
+<td>Open-Source, vielseitig anpassbar, für Server und Desktop geeignet</td>
+</tr>
+<tr>
+<td>Chrome OS</td>
+<td>Sehr einfach zu bedienen, schnelle Updates, leichtgewichtig, ideal für Cloud-basierte Arbeit</td>
+<td>Stark auf Google-Dienste angewiesen, eingeschränkte Offline-Funktionen</td>
+<td>Gelegenheitssurfer, Studenten, die primär Online-Tools nutzen</td>
+<td>Chrome OS 115</td>
+<td>Optimiert für Chromebooks, sehr gute Integration von Google-Diensten</td>
+</tr>
+<tr>
+<td>Ubuntu</td>
+<td>Benutzerfreundlich für ein Linux-System, kostenlos, regelmäßig aktualisiert</td>
+<td>Weniger Software als auf Windows oder macOS, Support durch die Community</td>
+<td>Technikinteressierte, die ein freies, sicheres und stabiles System suchen</td>
+<td>Ubuntu 22.04 LTS</td>
+<td>Eine der beliebtesten Linux-Distributionen, ideal für Einsteiger</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2><u>Fazit</u></h2>
+<p>Letztlich kommt es natürlich zusätzlich auf die Besonderheiten hinsichtlich Ihrer Anforderungen an. Sind Sie ein Gamer, kommt wohl nur Windows in Frage. Als Programmierer empfehlen wir Linux oder Windows. Als Designer hingegen wäre iOS nützlich. Hier zum Abschluss eine Gegenüberstellung von Windows und Linux im Video:</p>
+
+
+<div class="kk-star-ratings kksr-auto kksr-align-right kksr-valign-bottom"
+    data-payload='{&quot;align&quot;:&quot;right&quot;,&quot;id&quot;:&quot;13875&quot;,&quot;slug&quot;:&quot;default&quot;,&quot;valign&quot;:&quot;bottom&quot;,&quot;ignore&quot;:&quot;&quot;,&quot;reference&quot;:&quot;auto&quot;,&quot;class&quot;:&quot;&quot;,&quot;count&quot;:&quot;92&quot;,&quot;legendonly&quot;:&quot;&quot;,&quot;readonly&quot;:&quot;&quot;,&quot;score&quot;:&quot;4.7&quot;,&quot;starsonly&quot;:&quot;&quot;,&quot;best&quot;:&quot;5&quot;,&quot;gap&quot;:&quot;5&quot;,&quot;greet&quot;:&quot;Bewerte diesen Beitrag&quot;,&quot;legend&quot;:&quot;4.7\/5 - (92 votes)&quot;,&quot;size&quot;:&quot;24&quot;,&quot;title&quot;:&quot;Test: Welches Betriebssystem passt zu mir?&quot;,&quot;width&quot;:&quot;133.8&quot;,&quot;_legend&quot;:&quot;{score}\/{best} - ({count} {votes})&quot;,&quot;font_factor&quot;:&quot;1.25&quot;}'>
+            
+<div class="kksr-stars">
+    
+<div class="kksr-stars-inactive">
+            <div class="kksr-star" data-star="1" style="padding-right: 5px">
+            
+
+<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
+        </div>
+            <div class="kksr-star" data-star="2" style="padding-right: 5px">
+            
+
+<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
+        </div>
+            <div class="kksr-star" data-star="3" style="padding-right: 5px">
+            
+
+<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
+        </div>
+            <div class="kksr-star" data-star="4" style="padding-right: 5px">
+            
+
+<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
+        </div>
+            <div class="kksr-star" data-star="5" style="padding-right: 5px">
+            
+
+<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
+        </div>
+    </div>
+    
+<div class="kksr-stars-active" style="width: 133.8px;">
+            <div class="kksr-star" style="padding-right: 5px">
+            
+
+<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
+        </div>
+            <div class="kksr-star" style="padding-right: 5px">
+            
+
+<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
+        </div>
+            <div class="kksr-star" style="padding-right: 5px">
+            
+
+<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
+        </div>
+            <div class="kksr-star" style="padding-right: 5px">
+            
+
+<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
+        </div>
+            <div class="kksr-star" style="padding-right: 5px">
+            
+
+<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
+        </div>
+    </div>
+</div>
+                
+
+<div class="kksr-legend" style="font-size: 19.2px;">
+            4.7/5 - (92 votes)    </div>
+    </div>

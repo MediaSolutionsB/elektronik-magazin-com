@@ -1,0 +1,102 @@
+---
+import '@fontsource-variable/bricolage-grotesque';
+import '@fontsource-variable/figtree';
+import '../styles/site.css';
+import { site } from '../site.config.js';
+
+const {
+  title,
+  description = site.tagline,
+  image = '/bilder/logo-2020-jpg.webp',
+  path = '/',
+  noindex = false,
+  type = 'website',
+  jsonld = null
+} = Astro.props;
+
+const canonical = site.url + path;
+const year = new Date().getFullYear();
+---
+<!doctype html>
+<html lang={site.lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title ? `${title} | ${site.name}` : `${site.name} – Tests, Ratgeber & Rechner`}</title>
+    <meta name="description" content={description} />
+    {noindex ? <meta name="robots" content="noindex, follow" /> : <meta name="robots" content="index, follow, max-image-preview:large" />}
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={title || site.name} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={site.name} />
+    {image && <meta property="og:image" content={image.startsWith('http') ? image : site.url + image} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    {jsonld && <script type="application/ld+json" set:html={JSON.stringify(jsonld)} />}
+  </head>
+  <body>
+    <a class="em-skip" href="#inhalt">Zum Inhalt springen</a>
+    <header class="em-header">
+      <div class="em-wrap em-header-inner">
+        <a class="em-logo" href="/">
+          <img src="/bilder/logo-2020-jpg.webp" alt="Elektronik Magazin Logo" />
+        </a>
+        <input type="checkbox" id="em-nav-toggle" class="em-nav-toggle" />
+        <label for="em-nav-toggle" class="em-nav-button"><span>Menü</span></label>
+        <nav class="em-nav" aria-label="Hauptmenü">
+          <a href="/ratgeber/">Ratgeber</a>
+          <a href="/tools/">Online-Rechner</a>
+          <a href="/individuelle-kaufberatung/">Kaufberatung</a>
+          <a href="/ueber-uns/">Über Uns</a>
+          <a class="em-nav-btn" href="/kontakt/">Kontakt</a>
+        </nav>
+      </div>
+    </header>
+    <main id="inhalt">
+      <slot />
+    </main>
+    <footer class="em-footer">
+      <div class="em-wrap">
+        <div class="em-footer-cols">
+          <div class="em-footer-about">
+            <span class="em-footer-name">{site.name}</span>
+            <p>{site.tagline}</p>
+          </div>
+          <div>
+            <span class="em-footer-head">Bereiche</span>
+            <div class="em-footer-nav">
+              <a href="/ratgeber/">Ratgeber & Tests</a>
+              <a href="/tools/">Tools & Rechner</a>
+              <a href="/individuelle-kaufberatung/">Individuelle Kaufberatung</a>
+              <a href="/installationsservice-fuer-heimkino-und-hifi-systeme/">Installationsservice</a>
+            </div>
+          </div>
+          <div>
+            <span class="em-footer-head">Magazin</span>
+            <div class="em-footer-nav">
+              <a href="/ueber-uns/">Über Uns</a>
+              <a href="/oliver-bechstein/">Oliver Bechstein (Autor)</a>
+              <a href="/fernwartung-und-technischer-support/">Support</a>
+              <a href="/kontakt/">Kontakt</a>
+            </div>
+          </div>
+          <div>
+            <span class="em-footer-head">Rechtliches</span>
+            <div class="em-footer-nav">
+              <a href="/impressum/">Impressum</a>
+              <a href="/datenschutzerklaerung/">Datenschutzerklärung</a>
+              <a href="/sitemap-html/">Sitemap</a>
+            </div>
+          </div>
+        </div>
+        <div class="em-footer-bottom">
+          <span>&copy; {year} {site.name}. Alle Rechte vorbehalten.</span>
+          <span>Unabhängige Tests & Technologie-Wissen.</span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

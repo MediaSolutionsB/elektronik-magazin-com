@@ -1,0 +1,254 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../site.config.js';
+
+const sv = site.service;
+const pageUrl = `${site.url}/elektronik-services/`;
+
+const ico = (d) => `<svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+const arrow = `<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+
+const services = [
+  {
+    id: 'pc-laptop',
+    icon: ico('<rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>'),
+    tag: 'PC & Notebook',
+    title: 'Einrichtung & Installation von PC und Laptop',
+    text: 'Fachgerechte Ersteinrichtung von neuen PCs, Notebooks und Macs, sichere Datenübernahme vom Altgerät und lückenlose Software-Einrichtung.',
+    points: [
+      'Ersteinrichtung von Windows & Mac (Updates, Treiber & Grundeinstellungen)',
+      'Sichere Datenübernahme vom alten PC (Dokumente, Fotos, Mails & Passwörter)',
+      'Installation von Software (Office, Antivirus, Backup & nützliche Tools)',
+      'Einbindung ins Heimnetzwerk & Konfiguration von WLAN, Druckern & Scannern',
+    ],
+  },
+  {
+    id: 'tv-montage',
+    icon: ico('<rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/>'),
+    tag: 'TV & Heimkino',
+    title: 'Aufbau & Wandmontage von Fernsehgeräten',
+    text: 'Sichere, gerade Wandbefestigung aller Bildschirmgrößen an jedem Wandtyp inklusive unsichtbarer Kabelführung und Smart-TV-Setup.',
+    points: [
+      'Fachgerechte Wandhalterung für OLED, QLED & LED (Beton, Ziegel & Trockenbau)',
+      'Sauberes Kabelmanagement und unauffällige Verlegung',
+      'Sendersuchlauf, persönliche Favoritenliste & Streaming-Apps (Netflix, Mediatheken)',
+      'Anschluss & Kalibrierung von Soundbars, Heimkino-Receivern & Zuspielern',
+    ],
+  },
+  {
+    id: 'haushaltsgeraete',
+    icon: ico('<rect x="4" y="2" width="16" height="20" rx="2"/><circle cx="12" cy="14" r="4"/><line x1="8" y1="6" x2="8.01" y2="6"/><line x1="12" y1="6" x2="12.01" y2="6"/>'),
+    tag: 'Küche & Haushalt',
+    title: 'Installation von Küchen- und Haushaltsgeräten',
+    text: 'Sicherer Anschluss von Waschmaschinen, Trocknern, Geschirrspülern und Kühlschränken direkt am gewünschten Einsatzort.',
+    points: [
+      'Wasser- & Abwasseranschluss inklusive professioneller Dichtigkeitsprüfung',
+      'Exaktes Ausrichten & Nivellieren (verhindert Vibrationen, Lärm & Wandern)',
+      'Entfernen von Transportsicherungen, Ersteinrichtung & Probelauf',
+      'Auf Wunsch: Hilfe beim Abbau und Transport alter Geräte',
+    ],
+  },
+  {
+    id: 'smart-home',
+    icon: ico('<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>'),
+    tag: 'Smart Home & Mesh',
+    title: 'Installation von Smart Home Geräten & WLAN',
+    text: 'Mach dein Zuhause smart: Intelligente Heizkörperthermostate, Beleuchtung, Sicherheitskameras und ein stabiles WLAN-Netz im ganzen Haus.',
+    points: [
+      'Einrichtung von Smart-Home-Zentralen (Home Assistant, Apple Home, Google, Alexa, Hue)',
+      'Installation von intelligenten Thermostaten zur Senkung von Heizkosten',
+      'Smarte Lichtsteuerung, Bewegungsmelder & automatisierte Routinen',
+      'WLAN-Mesh-Optimierung für schnelles, lückenloses Internet in allen Räumen',
+    ],
+  },
+];
+
+const steps = [
+  {
+    n: '1',
+    title: 'Unverbindlich anfragen',
+    text: 'Ruf uns an oder schreib uns kurz, welches Gerät du eingerichtet, montiert oder installiert haben möchtest und wo du wohnst.',
+  },
+  {
+    n: '2',
+    title: 'Termin vor Ort vereinbaren',
+    text: 'Wir vereinbaren einen zeitnahen Termin bei dir zu Hause in Stuttgart oder im Rems-Murr-Kreis – pünktlich und verlässlich.',
+  },
+  {
+    n: '3',
+    title: 'Fachgerechte Installation & Einweisung',
+    text: 'Wir installieren alles sauber, testen die Funktion ausgiebig und erklären dir in Ruhe alle wichtigen Bedienfunktionen.',
+  },
+];
+
+const jsonld = {
+  '@context': 'https://schema.org',
+  '@type': 'HomeAndConstructionBusiness',
+  '@id': `${pageUrl}#betrieb`,
+  name: `${site.name} Vor-Ort-Service`,
+  description: 'Technik-Service vor Ort in Stuttgart und im Rems-Murr-Kreis: PC-Installation, TV-Wandmontage, Haushaltsgeräte-Anschluss und Smart Home.',
+  url: pageUrl,
+  telephone: sv.phoneLink,
+  email: sv.email,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: sv.street,
+    postalCode: sv.zip,
+    addressLocality: sv.city,
+    addressRegion: 'Baden-Württemberg',
+    addressCountry: 'DE',
+  },
+  areaServed: sv.areas.map((a) => ({ '@type': 'AdministrativeArea', name: a })),
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Elektronik & Technik Vor-Ort-Services',
+    itemListElement: services.map((s) => ({
+      '@type': 'Offer',
+      itemOffered: {
+        '@type': 'Service',
+        name: s.title,
+        description: s.text,
+        areaServed: sv.areas.join(', '),
+      },
+    })),
+  },
+};
+---
+<Base
+  title={`Vor-Ort-Service in ${sv.areas.join(' und im ')} – PC, TV, Haushalt & Smart Home`}
+  description={`Technik-Service vor Ort in ${sv.areas.join(' und im ')}: PC- und Laptop-Einrichtung, TV-Wandmontage, Anschluss von Haushaltsgeräten und Smart-Home-Installation.`}
+  path="/elektronik-services/"
+  jsonld={jsonld}
+>
+  <section class="em-hero em-svc-hero">
+    <div class="em-wrap">
+      <span class="em-hero-tag">Vor Ort in {sv.areas.join(' und im ')}</span>
+      <h1>Elektronik- & Technik-Service: Wir richten es für dich ein.</h1>
+      <p>Kein Technik-Frust: PC-Einrichtung, TV-Wandmontage, Anschluss von Haushaltsgeräten und Smart-Home-Installation aus einer Hand direkt bei dir vor Ort.</p>
+      <div class="em-svc-hero-actions">
+        <a class="em-btn" href="#anfrage">Termin anfragen <span set:html={arrow} /></a>
+        <a class="em-btn em-btn-ghost" href={`tel:${sv.phoneLink}`}>Anrufen: {sv.phone}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="em-wrap em-section" id="leistungen">
+    <div class="em-section-head">
+      <div>
+        <span class="em-eyebrow">Unsere Leistungen vor Ort</span>
+        <h2>Unsere Vor-Ort-Services</h2>
+      </div>
+      <span class="em-pill em-pill-blue">Region Stuttgart & Rems-Murr</span>
+    </div>
+    <div class="em-svc-grid">
+      {services.map((s) => (
+        <article class="em-svc" id={s.id}>
+          <div class="em-svc-top">
+            <span class="em-svc-ico" set:html={s.icon} />
+            <span class="em-pill">{s.tag}</span>
+          </div>
+          <h3>{s.title}</h3>
+          <p>{s.text}</p>
+          <ul>
+            {s.points.map((p) => (
+              <li>{p}</li>
+            ))}
+          </ul>
+          <a class="em-svc-link" href="#anfrage">
+            Dazu unverbindlich anfragen <span set:html={arrow} />
+          </a>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="em-wrap em-section" style="background: var(--card); border-radius: 24px; padding: 48px 36px; margin-top: 20px; border: 1px solid var(--line);">
+    <div class="em-section-head">
+      <div>
+        <span class="em-eyebrow">Einfach & Zuverlässig</span>
+        <h2>So läuft es ab</h2>
+      </div>
+    </div>
+    <ol class="em-svc-steps">
+      {steps.map((s) => (
+        <li>
+          <span class="em-svc-num">{s.n}</span>
+          <div>
+            <strong>{s.title}</strong>
+            <p>{s.text}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="em-wrap em-section">
+    <div class="em-section-head">
+      <div>
+        <span class="em-eyebrow">Regionale Verfügbarkeit</span>
+        <h2>Unser Einsatzgebiet</h2>
+      </div>
+    </div>
+    <p style="color: var(--muted); font-size: 17px; margin-bottom: 16px;">
+      Wir sind für dich im gesamten Großraum Stuttgart und im Rems-Murr-Kreis im Einsatz, unter anderem in:
+    </p>
+    <div class="em-svc-towns">
+      {sv.towns.map((town) => (
+        <span class="em-town-badge">{town}</span>
+      ))}
+    </div>
+  </section>
+
+  <section class="em-wrap em-section" id="anfrage">
+    <div class="em-svc-cta">
+      <div>
+        <span class="em-eyebrow" style="color: var(--accent-bright);">Anfrage & Kontakt · Einsatzgebiet {sv.areas.join(' und ')}</span>
+        <h2>Ruf uns an oder schreib uns</h2>
+        <p>
+          Nenn uns kurz dein Anliegen, welches Gerät installiert werden soll und deinen Wohnort. Wir melden uns umgehend bei dir mit einem fairen Angebot und Terminvorschlag.
+        </p>
+        <address class="em-svc-address">
+          <strong>{sv.name} ({sv.company})</strong>
+          <span>{sv.street}</span>
+          <span>{sv.zip} {sv.city}</span>
+        </address>
+      </div>
+      <div class="em-svc-cta-action">
+        <a class="em-svc-phone" href={`tel:${sv.phoneLink}`}>
+          <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/>
+          </svg>
+          {sv.phone}
+        </a>
+        <span class="em-svc-mail" id="em-svc-mail">{sv.email}</span>
+        <div class="em-svc-cta-buttons">
+          <button class="em-btn" type="button" id="em-svc-copy" data-mail={sv.email}>E-Mail kopieren</button>
+          <a class="em-btn em-btn-ghost" href={`mailto:${sv.email}?subject=${encodeURIComponent('Anfrage Vor-Ort-Service Stuttgart & Rems-Murr')}`}>Mail-Programm öffnen</a>
+        </div>
+        <span class="em-svc-copied" id="em-svc-copied" role="status" aria-live="polite"></span>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>
+    (function () {
+      var btn = document.getElementById('em-svc-copy');
+      var out = document.getElementById('em-svc-copied');
+      if (!btn) return;
+      btn.addEventListener('click', function () {
+        var mail = btn.getAttribute('data-mail');
+        var done = function () { out.textContent = 'E-Mail-Adresse kopiert!'; };
+        var fallback = function () {
+          var r = document.createRange(); r.selectNodeContents(document.getElementById('em-svc-mail'));
+          var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+          try { document.execCommand('copy'); done(); } catch (e) { out.textContent = 'Bitte markieren und kopieren.'; }
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(mail).then(done, fallback);
+        } else {
+          fallback();
+        }
+      });
+    })();
+  </script>
+</Base>

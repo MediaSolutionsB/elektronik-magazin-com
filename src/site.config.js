@@ -8,8 +8,17 @@ export const site = {
   youtube: 'https://www.youtube.com',
   amazonTag: 'wwwonlinefitn-21',
   service: {
+    name: 'Elektronik-Magazin Vor-Ort-Service',
+    company: 'Bantle Media GmbH',
     email: 'info@elektronik-magazin.com',
-    areas: ['Deutschland', 'Österreich', 'Schweiz'],
+    phone: '0711 25266369',
+    phoneLink: '+4971125266369',
+    street: 'Junkeräcker 28',
+    zip: '71384',
+    city: 'Weinstadt',
+    region: 'Baden-Württemberg',
+    areas: ['Stuttgart', 'Rems-Murr-Kreis'],
+    towns: ['Stuttgart', 'Waiblingen', 'Fellbach', 'Weinstadt', 'Schorndorf', 'Winnenden', 'Backnang', 'Remshalden', 'Kernen i.R.', 'Esslingen', 'Ludwigsburg'],
   },
   author: {
     name: 'Oliver Bechstein',

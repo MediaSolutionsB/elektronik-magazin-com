@@ -9,6 +9,7 @@ export async function GET() {
 
   const staticUrls = [
     '/',
+    '/elektronik-services/',
     '/ratgeber/',
     '/tools/',
     '/kontakt/',

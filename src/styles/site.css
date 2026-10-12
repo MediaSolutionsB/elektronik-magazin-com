@@ -397,3 +397,10 @@ h1, h2, h3, h4 { font-family: var(--display); letter-spacing: -0.02em; line-heig
 .em-article .em-video-inline { margin: 20px 0 0; }
 .em-article hr { border: 0; border-top: 1px solid var(--line); margin: 32px 0; }
 .em-hero .em-btn-ghost { color: #fff; border-color: rgba(255,255,255,.45); } .em-hero .em-btn-ghost:hover { background: rgba(255,255,255,.1); color: #fff; }
+
+/* Autorenbox unter den Beiträgen */
+.em-author { display: flex; align-items: center; gap: 20px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 24px; margin-top: 48px; }
+.em-author img { flex: none; width: 84px; height: 84px; border-radius: 999px; object-fit: contain; background: #fff; border: 1px solid var(--line); }
+.em-author-label { display: block; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.em-author strong { display: block; font-size: 19px; margin: 2px 0 4px; }
+.em-author p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.5; }

@@ -50,7 +50,7 @@ const product = hasScore && review.productName
   : { '@type': 'Article', headline: review.title, datePublished: review.published, image: site.url + review.image, author: person, publisher: { '@type': 'Organization', name: site.name, url: site.url } };
 const jsonld = { '@context': 'https://schema.org', '@graph': [product, ...(video ? [video] : [])] };
 ---
-<Base title={`${review.title} - Elektronik-Magazin`} description={review.excerpt} image={review.image} path={path} type="article" jsonld={jsonld}>
+<Base title={review.title} description={review.excerpt} image={review.image} path={path} type="article" jsonld={jsonld}>
   <section class="em-pagehead">
     <div class="em-wrap">
       <nav class="em-crumbs" aria-label="Brotkrumen">

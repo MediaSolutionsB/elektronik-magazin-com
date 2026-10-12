@@ -10,7 +10,7 @@ export function getStaticPaths() {
 const { cat } = Astro.props;
 const reviews = allReviews().filter((r) => r.category && r.category.slug === cat.slug);
 ---
-<Base title={`${cat.name} - Elektronik-Magazin`} description={`Tests, Checks und Ratgeber in der Kategorie ${cat.name}: ${cat.text}.`} path={`/kategorie/${cat.slug}/`} noindex={reviews.length === 0}>
+<Base title={cat.name} description={`Tests, Checks und Ratgeber in der Kategorie ${cat.name}: ${cat.text}.`} path={`/kategorie/${cat.slug}/`} noindex={reviews.length === 0}>
   <section class="em-pagehead">
     <div class="em-wrap">
       <nav class="em-crumbs" aria-label="Brotkrumen"><a href="/">Startseite</a><span aria-hidden="true">/</span><span>{cat.name}</span></nav>

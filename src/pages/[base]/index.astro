@@ -10,7 +10,7 @@ export function getStaticPaths() {
 const { key, t } = Astro.props;
 const reviews = allReviews().filter((r) => r.type === key);
 ---
-<Base title={`Alle ${t.plural} - Elektronik-Magazin`} description={t.intro} path={`/${t.base}/`} noindex={reviews.length === 0}>
+<Base title={`Alle ${t.plural}`} description={t.intro} path={`/${t.base}/`} noindex={reviews.length === 0}>
   <section class="em-pagehead">
     <div class="em-wrap">
       <nav class="em-crumbs" aria-label="Brotkrumen"><a href="/">Startseite</a><span aria-hidden="true">/</span><span>{t.plural}</span></nav>

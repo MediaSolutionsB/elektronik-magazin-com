@@ -1,0 +1,57 @@
+---
+import Seite from '../../components/RechnerSeite.astro';
+import Wahl from '../../components/Wahl.astro';
+import { hdmiBandbreite, HDMI_STUFEN } from '../../rechner/heimkino.js';
+const BEISPIELE = [
+  ['Full-HD 60 Hz, 8 Bit', '1080p', 60, 8, 'rgb'],
+  ['4K 60 Hz, 8 Bit (SDR)', '4k', 60, 8, 'rgb'],
+  ['4K 60 Hz, 10 Bit HDR, 4:2:2', '4k', 60, 10, '422'],
+  ['4K 60 Hz, 10 Bit HDR, RGB', '4k', 60, 10, 'rgb'],
+  ['4K 120 Hz, 10 Bit HDR (PS5, Xbox)', '4k', 120, 10, 'rgb'],
+  ['4K 144 Hz, 10 Bit (PC)', '4k', 144, 10, 'rgb'],
+  ['8K 60 Hz, 10 Bit, 4:2:0', '8k', 60, 10, '420'],
+];
+const g = (n) => n.toLocaleString('de-DE', { maximumFractionDigits: 1 });
+---
+<Seite slug="hdmi-bandbreite-rechner" title="HDMI-Bandbreite-Rechner: Reicht HDMI 2.0 oder brauche ich HDMI 2.1?"
+  h1="HDMI-Bandbreite-Rechner: HDMI 2.0 oder HDMI 2.1?"
+  intro="Auflösung, Bildwiederholrate, Farbtiefe und Farbformat wählen. Der Rechner zeigt die nötige Datenrate in Gbit/s und welche HDMI-Version und welches Kabel du dafür brauchst."
+  description="Benötigte HDMI-Bandbreite berechnen: 4K mit 60, 120 oder 144 Hz, 8K, HDR mit 10 oder 12 Bit, RGB, 4:2:2 und 4:2:0. Ergebnis: HDMI 1.4, 2.0 oder 2.1 und das passende Kabel.">
+  <Fragment slot="eingaben">
+    <Wahl name="aufl" label="Auflösung" value="4k" options={[{ value: '1080p', label: 'Full-HD' }, { value: '1440p', label: 'WQHD (1440p)' }, { value: '4k', label: '4K' }, { value: '8k', label: '8K' }]} />
+    <Wahl name="hz" label="Bildwiederholrate" value="120" options={[{ value: '24', label: '24 Hz' }, { value: '60', label: '60 Hz' }, { value: '120', label: '120 Hz' }, { value: '144', label: '144 Hz' }, { value: '240', label: '240 Hz' }]} />
+    <Wahl name="bit" label="Farbtiefe" value="10" options={[{ value: '8', label: '8 Bit (SDR)' }, { value: '10', label: '10 Bit (HDR10)' }, { value: '12', label: '12 Bit (Dolby Vision)' }]} />
+    <Wahl name="farbe" label="Farbformat" value="rgb" options={[{ value: 'rgb', label: 'RGB / 4:4:4' }, { value: '422', label: '4:2:2' }, { value: '420', label: '4:2:0' }]} />
+  </Fragment>
+  <Fragment slot="ergebnis">
+    <h2>Dein Ergebnis</h2>
+    <div id="out"></div>
+  </Fragment>
+  <Fragment slot="info">
+    <h2>Welche HDMI-Version schafft wie viel?</h2>
+    <table>
+      <tr><th>Version</th><th>Brutto</th><th>Nutzbar</th><th>Kabel</th></tr>
+      {HDMI_STUFEN.map((s) => <tr><td>{s.name}</td><td>{s.brutto}</td><td>{g(s.max)} Gbit/s</td><td>{s.kabel}</td></tr>)}
+    </table>
+    <p>Ein Teil der Bandbreite geht für die Leitungscodierung verloren, deshalb ist der nutzbare Wert kleiner. Viele Fernseher haben HDMI-2.1-Anschlüsse mit nur <strong>40 Gbit/s</strong>. Das reicht für 4K mit 120 Hz und 10 Bit, aber nicht für jede Kombination.</p>
+    <h3>Typische Beispiele</h3>
+    <table>
+      <tr><th>Signal</th><th>Datenrate</th><th>Reicht ab</th></tr>
+      {BEISPIELE.map(([n, a, hz, bit, farbe]) => { const r = hdmiBandbreite({ aufloesung: a, hz, bit, farbe }); return <tr><td>{n}</td><td>{g(r.gbit)} Gbit/s</td><td>{r.stufe ? r.stufe.name : 'nur mit DSC'}</td></tr>; })}
+    </table>
+    <h3>So rechnet der Rechner</h3>
+    <p>Datenrate = <strong>Pixeltakt × Bits pro Pixel</strong>. Der Pixeltakt umfasst neben den sichtbaren Pixeln auch die Austastlücken. Wir rechnen nach dem Standard CVT-RB v2, wie die gängigen Tabellen. RGB braucht 3 Farbwerte pro Pixel, 4:2:0 nur die Hälfte. 4:2:2 wird bei HDMI immer mit 24 Bit pro Pixel übertragen, egal ob 8, 10 oder 12 Bit.</p>
+    <p>Reicht die Bandbreite nicht, nutzen Geräte <strong>DSC</strong> (Display Stream Compression). Das komprimiert das Bild nahezu ohne sichtbaren Verlust. Dafür müssen aber beide Geräte DSC unterstützen.</p>
+  </Fragment>
+</Seite>
+<script>
+  import { hdmiBandbreite } from '../../rechner/heimkino.js';
+  import { $, radio, bind, fmt } from '../../rechner/ui.js';
+  function run() {
+    const r = hdmiBandbreite({ aufloesung: radio('aufl'), hz: Number(radio('hz')), bit: Number(radio('bit')), farbe: radio('farbe') });
+    $('out').innerHTML = `<div class="em-big"><strong>${r.stufe ? r.stufe.name : 'DSC nötig'}</strong><span>${r.stufe ? 'reicht für dieses Signal' : 'mehr als 48 Gbit/s, nur mit Kompression'}</span></div>
+      <ul class="em-res-list"><li><span>Nötige Datenrate</span><b>${fmt(r.gbit, 2)} Gbit/s</b></li><li><span>Pixeltakt</span><b>${fmt(r.pixeltaktMHz)} MHz</b></li><li><span>Bits pro Pixel</span><b>${fmt(r.bpp)}</b></li>${r.stufe ? `<li><span>Passendes Kabel</span><b>${r.stufe.kabel}</b></li>` : ''}</ul>
+      ${r.stufe && r.stufe.name.includes('2.1') ? '<p class="em-res-note">Achte darauf, dass <strong>beide Anschlüsse</strong> (Fernseher und Zuspieler) HDMI 2.1 mit genug Bandbreite haben. Oft sind nur 1 oder 2 Anschlüsse am TV dafür ausgelegt.</p>' : ''}`;
+  }
+  bind(document.querySelector('.em-calc-form'), run);
+</script>

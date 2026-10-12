@@ -1,0 +1,53 @@
+---
+import Seite from '../../components/RechnerSeite.astro';
+import Feld from '../../components/Feld.astro';
+import { ppi } from '../../rechner/technik.js';
+const BEISPIELE = [
+  ['24-Zoll-Monitor Full-HD', 1920, 1080, 24],
+  ['27-Zoll-Monitor WQHD', 2560, 1440, 27],
+  ['27-Zoll-Monitor 4K', 3840, 2160, 27],
+  ['32-Zoll-Monitor 4K', 3840, 2160, 32],
+  ['55-Zoll-Fernseher 4K', 3840, 2160, 55],
+  ['Smartphone 6,1 Zoll (2556 × 1179)', 2556, 1179, 6.1],
+];
+const z = (n) => Math.round(n).toLocaleString('de-DE');
+---
+<Seite slug="ppi-rechner" title="PPI-Rechner: Pixeldichte von Monitor, TV und Handy berechnen"
+  h1="PPI-Rechner: Wie scharf ist dein Bildschirm?"
+  intro="Auflösung und Bildschirmgröße eintragen. Der Rechner zeigt die Pixeldichte in PPI (Pixel pro Zoll), den Pixelabstand und ab welchem Abstand du keine einzelnen Pixel mehr erkennst."
+  description="Pixeldichte berechnen: PPI aus Auflösung und Zoll für Monitor, Fernseher, Laptop und Smartphone. Mit Pixelabstand in mm und Sehabstand, ab dem keine Pixel mehr sichtbar sind.">
+  <Fragment slot="eingaben">
+    <div class="em-row">
+      <Feld id="bpx" label="Breite" unit="Pixel" value="2560" />
+      <Feld id="hpx" label="Höhe" unit="Pixel" value="1440" />
+    </div>
+    <Feld id="zoll" label="Bildschirmdiagonale" unit="Zoll" value="27" />
+  </Fragment>
+  <Fragment slot="ergebnis">
+    <h2>Dein Ergebnis</h2>
+    <div id="out"></div>
+  </Fragment>
+  <Fragment slot="info">
+    <h2>Was bedeutet PPI?</h2>
+    <p>PPI steht für <strong>Pixel pro Zoll</strong> (pixels per inch), also wie viele Bildpunkte auf 2,54 cm Bildschirm kommen. Je höher der Wert, desto schärfer wirken Schrift und Bilder. Ob man den Unterschied sieht, hängt aber vom <strong>Abstand</strong> ab: Einen Fernseher schaut man aus Metern an, ein Handy aus 30 cm.</p>
+    <p>PPI = <strong>√(Breite² + Höhe²) ÷ Diagonale in Zoll</strong>. Ein normales Auge erkennt Details bis etwa 1 Bogenminute. Daraus ergibt sich der Abstand, ab dem einzelne Pixel verschwinden (bei Apple „Retina“ genannt).</p>
+    <h3>Typische Werte</h3>
+    <table>
+      <tr><th>Gerät</th><th>PPI</th><th>Pixel unsichtbar ab</th></tr>
+      {BEISPIELE.map(([n, b, h, d]) => { const r = ppi({ breitePx: b, hoehePx: h, zoll: d }); return <tr><td>{n}</td><td>{z(r.ppi)}</td><td>{r.retinaCm >= 100 ? `${(r.retinaCm / 100).toLocaleString('de-DE', { maximumFractionDigits: 1 })} m` : `${z(r.retinaCm)} cm`}</td></tr>; })}
+    </table>
+    <p>Für Monitore am Schreibtisch (60 bis 80 cm Abstand) gelten etwa 100 bis 110 PPI als ausreichend, ab etwa 140 PPI wirkt Schrift richtig scharf. Bei Windows lohnt sich dann eine Skalierung von 125 bis 150 %.</p>
+  </Fragment>
+</Seite>
+<script>
+  import { ppi } from '../../rechner/technik.js';
+  import { $, num, bind, fmt } from '../../rechner/ui.js';
+  function run() {
+    const r = ppi({ breitePx: num('bpx'), hoehePx: num('hpx'), zoll: num('zoll') });
+    if (!r || !num('bpx') || !num('hpx')) { $('out').innerHTML = '<p class="em-res-empty">Bitte Auflösung und Bildschirmdiagonale eingeben.</p>'; return; }
+    const ab = r.retinaCm >= 100 ? `${fmt(r.retinaCm / 100, 2)} m` : `${fmt(r.retinaCm)} cm`;
+    $('out').innerHTML = `<div class="em-big"><strong>${fmt(r.ppi)} PPI</strong><span>Pixel pro Zoll</span></div>
+      <ul class="em-res-list"><li><span>Pixelabstand</span><b>${fmt(r.pitchMm, 3)} mm</b></li><li><span>Pixel unsichtbar ab</span><b>${ab}</b></li><li><span>Pixel gesamt</span><b>${fmt(r.megapixel, 1)} Megapixel</b></li><li><span>Pixel pro cm</span><b>${fmt(r.ppi / 2.54)}</b></li></ul>`;
+  }
+  bind(document.querySelector('.em-calc-form'), run);
+</script>

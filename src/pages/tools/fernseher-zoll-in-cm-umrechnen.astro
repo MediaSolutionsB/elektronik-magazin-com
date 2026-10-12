@@ -1,0 +1,55 @@
+---
+import Seite from '../../components/RechnerSeite.astro';
+import Feld from '../../components/Feld.astro';
+import Wahl from '../../components/Wahl.astro';
+import { zollInCm, TV_ZOLL } from '../../rechner/technik.js';
+const c = (n) => Math.round(n).toLocaleString('de-DE');
+---
+<Seite slug="fernseher-zoll-in-cm-umrechnen" title="Fernseher Zoll in cm umrechnen: Breite, Höhe und Diagonale"
+  h1="Fernseher-Größe: Zoll in cm umrechnen"
+  intro="Zoll eingeben und du bekommst Diagonale, Breite und Höhe in Zentimetern. Oder andersherum: Wie viel Platz hast du auf dem Sideboard, und welcher Fernseher passt drauf?"
+  description="TV-Größe in cm berechnen: Zoll in Zentimeter, Breite und Höhe für 16:9, 21:9 und 4:3. Mit Tabelle von 24 bis 100 Zoll und Rechner, welcher Fernseher aufs Sideboard passt.">
+  <Fragment slot="eingaben">
+    <Wahl name="modus" label="Was möchtest du wissen?" value="cm" options={[{ value: 'cm', label: 'Maße meines Fernsehers' }, { value: 'platz', label: 'Welcher TV passt auf meinen Platz?' }]} />
+    <div data-modus="cm"><Feld id="zoll" label="Bildschirmdiagonale" unit="Zoll" value="55" /></div>
+    <div data-modus="platz" hidden><Feld id="breite" label="Verfügbare Breite (z. B. Sideboard, Nische)" unit="cm" value="160" /></div>
+    <Wahl name="format" label="Format" value="16:9" options={[{ value: '16:9', label: '16:9 (Standard)' }, { value: '21:9', label: '21:9' }, { value: '4:3', label: '4:3' }]} />
+  </Fragment>
+  <Fragment slot="ergebnis">
+    <h2>Dein Ergebnis</h2>
+    <div id="out"></div>
+  </Fragment>
+  <Fragment slot="info">
+    <h2>Wie rechnet man Zoll in cm um?</h2>
+    <p>Ein Zoll sind genau <strong>2,54 cm</strong>. Die Zoll-Angabe beim Fernseher ist immer die <strong>Diagonale des Bildes</strong>, von einer Ecke zur gegenüberliegenden. Breite und Höhe ergeben sich aus dem Format: Bei 16:9 ist die Breite etwa 87 % und die Höhe etwa 49 % der Diagonale.</p>
+    <p>Das Gerät selbst ist etwas größer als das Bild. Bei modernen Fernsehern kommen je Seite meist 1 bis 1,5 cm Rahmen dazu, der Standfuß kann aber deutlich breiter sein. Für das Sideboard zählt oft der <strong>Abstand der Füße</strong>. Schau dafür ins Datenblatt.</p>
+    <h3>Tabelle: Fernseher-Größen in cm (16:9)</h3>
+    <table>
+      <tr><th>Zoll</th><th>Diagonale</th><th>Breite</th><th>Höhe</th></tr>
+      {TV_ZOLL.map((z) => { const r = zollInCm({ zoll: z }); return <tr><td>{z} Zoll</td><td>{c(r.diagCm)} cm</td><td>{c(r.breite)} cm</td><td>{c(r.hoehe)} cm</td></tr>; })}
+    </table>
+  </Fragment>
+</Seite>
+<script>
+  import { zollInCm, maxZollFuerBreite } from '../../rechner/technik.js';
+  import { $, num, radio, bind, fmt } from '../../rechner/ui.js';
+  function run() {
+    const mod = radio('modus'), format = radio('format');
+    document.querySelectorAll('[data-modus]').forEach((el) => { el.hidden = el.dataset.modus !== mod; });
+    if (mod === 'cm') {
+      const zoll = num('zoll');
+      if (!zoll) { $('out').innerHTML = '<p class="em-res-empty">Bitte die Bildschirmdiagonale eingeben.</p>'; return; }
+      const r = zollInCm({ zoll, format });
+      $('out').innerHTML = `<div class="em-big"><strong>${fmt(r.diagCm, 1)} cm</strong><span>Bilddiagonale bei ${fmt(zoll, 1)} Zoll</span></div>
+        <ul class="em-res-list"><li><span>Bildbreite</span><b>${fmt(r.breite, 1)} cm</b></li><li><span>Bildhöhe</span><b>${fmt(r.hoehe, 1)} cm</b></li><li><span>Bildfläche</span><b>${fmt(r.flaecheM2, 2)} m²</b></li><li><span>Gerätebreite ungefähr</span><b>${fmt(r.geraetBreite)} cm</b></li></ul>`;
+    } else {
+      const breiteCm = num('breite');
+      if (!breiteCm) { $('out').innerHTML = '<p class="em-res-empty">Bitte die verfügbare Breite eingeben.</p>'; return; }
+      const r = maxZollFuerBreite({ breiteCm, format });
+      $('out').innerHTML = `<div class="em-big"><strong>${r.groesster ? r.groesster + ' Zoll' : 'zu schmal'}</strong><span>Größter gängiger Fernseher für ${fmt(breiteCm)} cm</span></div>
+        <ul class="em-res-list"><li><span>Rechnerisch maximal</span><b>${fmt(r.zoll, 1)} Zoll</b></li></ul>
+        <p class="em-res-note">Gerechnet mit 1,5 cm Rahmen pro Seite. Prüfe im Datenblatt auch die <strong>Breite des Standfußes</strong>.</p>`;
+    }
+  }
+  bind(document.querySelector('.em-calc-form'), run);
+</script>

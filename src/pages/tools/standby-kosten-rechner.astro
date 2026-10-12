@@ -1,0 +1,62 @@
+---
+import Seite from '../../components/RechnerSeite.astro';
+import Feld from '../../components/Feld.astro';
+const GERAETE = [
+  { id: 'tv', name: 'Fernseher', watt: 0.5, anzahl: 1 },
+  { id: 'sound', name: 'Soundbar / AV-Receiver', watt: 2, anzahl: 1 },
+  { id: 'konsole', name: 'Spielkonsole im Ruhemodus', watt: 10, anzahl: 1 },
+  { id: 'box', name: 'Receiver / Streaming-Box', watt: 3, anzahl: 0 },
+  { id: 'pc', name: 'PC mit Monitor (ausgeschaltet)', watt: 2, anzahl: 0 },
+  { id: 'drucker', name: 'Drucker', watt: 2, anzahl: 0 },
+  { id: 'kaffee', name: 'Kaffeevollautomat', watt: 1.5, anzahl: 0 },
+  { id: 'netzteil', name: 'Ladegeräte und Netzteile in der Steckdose', watt: 0.3, anzahl: 3 },
+];
+---
+<Seite slug="standby-kosten-rechner" title="Standby-Kosten-Rechner: Was kostet Standby im Jahr?"
+  h1="Standby-Kosten-Rechner: Was kosten deine Geräte im Standby?"
+  intro="Geräte auswählen, Anzahl und Standby-Leistung prüfen. Der Rechner zeigt, wie viel Strom und Geld im Jahr verloren gehen, nur weil die Geräte nicht ganz aus sind."
+  description="Standby-Verbrauch berechnen: Fernseher, Soundbar, Spielkonsole, PC, Drucker und Ladegeräte. Kosten pro Jahr und Gerät, mit typischen Standby-Werten in Watt.">
+  <Fragment slot="eingaben">
+    <fieldset>
+      <legend>Deine Geräte</legend>
+      {GERAETE.map((g) => (
+        <div class="em-row">
+          <Feld id={`w_${g.id}`} label={g.name} unit="Watt" value={String(g.watt).replace('.', ',')} />
+          <Feld id={`n_${g.id}`} label="Anzahl" unit="Stück" value={String(g.anzahl)} />
+        </div>
+      ))}
+    </fieldset>
+    <Feld id="stunden" label="Stunden im Standby pro Tag" unit="Stunden" value="20" hint="24 minus die Stunden, in denen die Geräte laufen." />
+    <Feld id="preis" label="Strompreis" unit="Cent/kWh" value="35" />
+  </Fragment>
+  <Fragment slot="ergebnis">
+    <h2>Dein Ergebnis</h2>
+    <div id="out"></div>
+  </Fragment>
+  <Fragment slot="info">
+    <h2>Wie viel Strom braucht Standby?</h2>
+    <p>Seit 2013 dürfen neue Geräte in der EU im einfachen Standby höchstens <strong>0,5 Watt</strong> brauchen. Geräte, die übers Netzwerk geweckt werden können (z. B. per App oder Sprachassistent), dürfen mehr verbrauchen. Spielkonsolen im Ruhemodus mit Schnellstart und automatischen Updates liegen oft bei 10 Watt und mehr.</p>
+    <p>Kosten im Jahr = <strong>Watt × Anzahl × Stunden pro Tag × 365 ÷ 1.000 × Strompreis</strong>. Ein Gerät mit 10 Watt rund um die Uhr kostet bei 35 Cent etwa 30 Euro im Jahr.</p>
+    <h3>So sparst du Standby-Strom</h3>
+    <ul>
+      <li>Eine <strong>schaltbare Steckdosenleiste</strong> trennt Fernseher, Soundbar und Konsole mit einem Klick.</li>
+      <li>Bei Konsolen den <strong>Energiesparmodus</strong> statt Schnellstart wählen.</li>
+      <li>Geräte, die du selten nutzt (Drucker, alte Receiver), ganz vom Strom trennen.</li>
+      <li>Den echten Verbrauch misst ein Strommessgerät aus dem Baumarkt.</li>
+    </ul>
+  </Fragment>
+</Seite>
+<script>
+  import { standbyKosten } from '../../rechner/technik.js';
+  import { $, num, bind, fmt, eur } from '../../rechner/ui.js';
+  const ids = [...document.querySelectorAll('input[id^="w_"]')].map((el) => el.id.slice(2));
+  function run() {
+    const geraete = ids.map((id) => ({ id, name: document.querySelector(`label[for="w_${id}"] > span`).textContent, watt: num('w_' + id), anzahl: num('n_' + id) })).filter((g) => g.watt && g.anzahl);
+    const r = standbyKosten({ geraete, stunden: num('stunden'), preisCent: num('preis') });
+    if (!geraete.length) { $('out').innerHTML = '<p class="em-res-empty">Bitte bei mindestens einem Gerät eine Anzahl eintragen.</p>'; return; }
+    const zeilen = r.zeilen.sort((a, b) => b.kostenJahr - a.kostenJahr).map((z) => `<li><span>${z.name}${z.anzahl > 1 ? ` (${fmt(z.anzahl)}×)` : ''}</span><b>${eur(z.kostenJahr)}</b></li>`).join('');
+    $('out').innerHTML = `<div class="em-big"><strong>${eur(r.kostenJahr)}</strong><span>Standby-Kosten im Jahr</span></div>
+      <ul class="em-res-list"><li><span>Standby-Leistung gesamt</span><b>${fmt(r.watt, 1)} Watt</b></li><li><span>Verbrauch im Jahr</span><b>${fmt(r.kwhJahr)} kWh</b></li>${zeilen}</ul>`;
+  }
+  bind(document.querySelector('.em-calc-form'), run);
+</script>

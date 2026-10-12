@@ -1,0 +1,51 @@
+---
+import Seite from '../../components/RechnerSeite.astro';
+import Feld from '../../components/Feld.astro';
+import Wahl from '../../components/Wahl.astro';
+import { balken } from '../../rechner/heimkino.js';
+const FILME = [['16:9', 'Serien, TV, YouTube'], ['1.85:1', 'Viele Kinofilme (Flat)'], ['2.39:1', 'Cinemascope, z. B. Actionfilme'], ['4:3', 'Alte Serien und Filme']];
+const pct = (n) => Math.round(n * 100) + ' %';
+---
+<Seite slug="seitenverhaeltnis-rechner-schwarze-balken" title="Seitenverhältnis-Rechner: Wie groß sind die schwarzen Balken?"
+  h1="Seitenverhältnis-Rechner: Wie groß ist das Bild mit schwarzen Balken?"
+  intro="Kinofilme sind oft breiter als der Fernseher. Dann gibt es schwarze Balken oben und unten. Der Rechner zeigt, wie groß das Bild wirklich ist und wie viel vom Bildschirm genutzt wird."
+  description="Schwarze Balken berechnen: Bildgröße von Kinofilmen in 2,39:1, 1,85:1 und 4:3 auf Fernsehern mit 16:9, 21:9 oder 4:3. Mit genutzter Fläche in Prozent und Balkenhöhe in cm.">
+  <Fragment slot="eingaben">
+    <Feld id="zoll" label="Bildschirmdiagonale" unit="Zoll" value="65" />
+    <Wahl name="tv" label="Format des Fernsehers" value="16:9" options={[{ value: '16:9', label: '16:9 (fast alle TVs)' }, { value: '21:9', label: '21:9 (Ultrawide)' }, { value: '4:3', label: '4:3 (alt)' }]} />
+    <Wahl name="film" label="Format des Films" value="2.39:1" options={[{ value: '16:9', label: '16:9' }, { value: '1.85:1', label: '1,85:1' }, { value: '2.39:1', label: '2,39:1' }, { value: '4:3', label: '4:3' }]} />
+  </Fragment>
+  <Fragment slot="ergebnis">
+    <h2>Dein Ergebnis</h2>
+    <div id="out"></div>
+  </Fragment>
+  <Fragment slot="info">
+    <h2>Warum gibt es schwarze Balken?</h2>
+    <p>Fernseher haben fast immer das Format <strong>16:9</strong>, also 1,78 mal so breit wie hoch. Viele Kinofilme sind aber breiter gedreht, etwa in <strong>2,39:1</strong> (Cinemascope). Damit der ganze Film zu sehen ist, wird das Bild verkleinert, bis es in die Breite passt. Oben und unten bleibt ein schwarzer Rand. Bei alten Serien in 4:3 ist es umgekehrt: Dort entstehen Balken links und rechts.</p>
+    <table>
+      <tr><th>Format</th><th>Typisch für</th><th>Genutzte Fläche auf 16:9</th></tr>
+      {FILME.map(([f, t]) => <tr><td>{f.replace('.', ',')}</td><td>{t}</td><td>{pct(balken({ zoll: 65, tvFormat: '16:9', filmFormat: f }).genutzt)}</td></tr>)}
+    </table>
+    <h3>So rechnet der Rechner</h3>
+    <p>Aus Diagonale und Format ergeben sich Breite und Höhe des Bildschirms (Satz des Pythagoras). Ist der Film breiter als der Bildschirm, bleibt die Breite gleich und die Bildhöhe ist <strong>Breite ÷ Filmformat</strong>. Ist der Film schmaler, bleibt die Höhe gleich und die Breite ist <strong>Höhe × Filmformat</strong>.</p>
+    <p>Wer viele Kinofilme schaut, profitiert von einem größeren Fernseher oder einem Beamer mit 21:9-Leinwand. Den Zoom des Fernsehers solltest du nicht nutzen: Er schneidet links und rechts Teile des Bildes ab.</p>
+  </Fragment>
+</Seite>
+<script>
+  import { balken } from '../../rechner/heimkino.js';
+  import { $, num, radio, bind, fmt } from '../../rechner/ui.js';
+  function run() {
+    const zoll = num('zoll');
+    if (!zoll) { $('out').innerHTML = '<p class="em-res-empty">Bitte die Bildschirmdiagonale eingeben.</p>'; return; }
+    const r = balken({ zoll, tvFormat: radio('tv'), filmFormat: radio('film') });
+    const ort = r.art === 'oben-unten' ? 'oben und unten' : 'links und rechts';
+    const w = 260, h = Math.round(w / r.tv.r), bw = Math.round(w * r.bildB / r.tv.breite), bh = Math.round(h * r.bildH / r.tv.hoehe);
+    $('out').innerHTML = `<div class="em-big"><strong>${fmt(r.genutzt * 100)} %</strong><span>des Bildschirms zeigen Bild</span></div>
+      <svg viewBox="0 0 ${w} ${h}" width="100%" style="max-width:${w}px;border-radius:8px" role="img" aria-label="Bild mit Balken"><rect width="${w}" height="${h}" fill="#000"/><rect x="${(w - bw) / 2}" y="${(h - bh) / 2}" width="${bw}" height="${bh}" fill="#7fb3d5"/></svg>
+      <ul class="em-res-list"><li><span>Sichtbares Bild (B × H)</span><b>${fmt(r.bildB)} × ${fmt(r.bildH)} cm</b></li>
+      <li><span>Bildschirm (B × H)</span><b>${fmt(r.tv.breite)} × ${fmt(r.tv.hoehe)} cm</b></li>
+      <li><span>Balken ${r.art === 'keine' ? '' : ort}</span><b>${r.art === 'keine' ? 'keine' : `je ${fmt(r.balkenJe, 1)} cm`}</b></li>
+      <li><span>Bilddiagonale des Films</span><b>${fmt(r.bildDiagZoll, 1)} Zoll</b></li></ul>`;
+  }
+  bind(document.querySelector('.em-calc-form'), run);
+</script>

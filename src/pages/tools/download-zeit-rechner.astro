@@ -1,0 +1,46 @@
+---
+import Seite from '../../components/RechnerSeite.astro';
+import Feld from '../../components/Feld.astro';
+import Wahl from '../../components/Wahl.astro';
+import { downloadZeit, dauerText } from '../../rechner/technik.js';
+const DATEIEN = [['Handy-Update', 3], ['Film in 4K', 25], ['Spiel', 100], ['Großes Spiel (z. B. Call of Duty)', 200]];
+const RATEN = [50, 100, 250, 1000];
+---
+<Seite slug="download-zeit-rechner" title="Download-Zeit-Rechner: Wie lange dauert der Download?"
+  h1="Download-Zeit-Rechner: Wie lange dauert der Download?"
+  intro="Dateigröße und Internetgeschwindigkeit eintragen. Der Rechner zeigt, wie lange der Download theoretisch dauert und wie lange er in der Praxis ungefähr braucht."
+  description="Download-Dauer berechnen: Wie lange dauern 50 GB oder 100 GB bei 50, 100, 250 oder 1.000 Mbit/s? Mit realistischem Wert und Tabelle für Spiele, Filme und Updates.">
+  <Fragment slot="eingaben">
+    <Feld id="groesse" label="Dateigröße" unit="" value="100" />
+    <Wahl name="ge" label="Einheit der Datei" value="GB" options={[{ value: 'MB', label: 'MB' }, { value: 'GB', label: 'GB' }, { value: 'TB', label: 'TB' }]} />
+    <Feld id="rate" label="Internetgeschwindigkeit" unit="" value="100" hint="Die gebuchte Geschwindigkeit steht im Vertrag, z. B. „100 Mbit/s“. Deine echte Geschwindigkeit zeigt ein Speedtest." />
+    <Wahl name="re" label="Einheit der Geschwindigkeit" value="Mbit/s" options={[{ value: 'Mbit/s', label: 'Mbit/s' }, { value: 'Gbit/s', label: 'Gbit/s' }, { value: 'MB/s', label: 'MB/s' }]} />
+  </Fragment>
+  <Fragment slot="ergebnis">
+    <h2>Dein Ergebnis</h2>
+    <div id="out"></div>
+  </Fragment>
+  <Fragment slot="info">
+    <h2>So rechnet der Download-Rechner</h2>
+    <p>Internetanbieter geben die Geschwindigkeit in <strong>Megabit</strong> pro Sekunde an, Dateien werden in <strong>Megabyte</strong> gemessen. Ein Byte hat 8 Bit. Deshalb lädt ein 100-Mbit/s-Anschluss höchstens 12,5 MB pro Sekunde.</p>
+    <p>Dauer = <strong>Dateigröße in Bit ÷ Geschwindigkeit in Bit pro Sekunde</strong>. In der Praxis kommen meist nur etwa 90 % an, weil ein Teil für die Verwaltung der Daten draufgeht. Im WLAN, bei vollen Servern oder abends kann es deutlich langsamer sein.</p>
+    <h3>Tabelle: Download-Dauer (realistisch)</h3>
+    <table>
+      <tr><th>Datei</th>{RATEN.map((r) => <th>{r.toLocaleString('de-DE')} Mbit/s</th>)}</tr>
+      {DATEIEN.map(([n, gb]) => <tr><td>{n} ({gb} GB)</td>{RATEN.map((r) => <td>{dauerText(downloadZeit({ groesse: gb, rate: r }).sekReal)}</td>)}</tr>)}
+    </table>
+    <p>Hinweis: Wir rechnen wie die Hersteller mit 1 GB = 1.000 MB. Windows und viele Spiele-Shops zeigen Größen in GiB (1.024 MiB) an. Dann dauert es rund 7 % länger.</p>
+  </Fragment>
+</Seite>
+<script>
+  import { downloadZeit, dauerText } from '../../rechner/technik.js';
+  import { $, num, radio, bind, fmt } from '../../rechner/ui.js';
+  function run() {
+    const groesse = num('groesse'), rate = num('rate');
+    if (!groesse || !rate) { $('out').innerHTML = '<p class="em-res-empty">Bitte Dateigröße und Geschwindigkeit eingeben.</p>'; return; }
+    const r = downloadZeit({ groesse, gEinheit: radio('ge'), rate, rEinheit: radio('re') });
+    $('out').innerHTML = `<div class="em-big"><strong>${dauerText(r.sekReal)}</strong><span>Realistische Download-Dauer</span></div>
+      <ul class="em-res-list"><li><span>Theoretisch (100 % Geschwindigkeit)</span><b>${dauerText(r.sek)}</b></li><li><span>In Sekunden</span><b>${fmt(r.sekReal)} s</b></li></ul>`;
+  }
+  bind(document.querySelector('.em-calc-form'), run);
+</script>

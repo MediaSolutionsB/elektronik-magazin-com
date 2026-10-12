@@ -1,0 +1,52 @@
+---
+import Seite from '../../components/RechnerSeite.astro';
+import Feld from '../../components/Feld.astro';
+import Wahl from '../../components/Wahl.astro';
+import { leinwand } from '../../rechner/heimkino.js';
+const ZEILEN = [2.5, 3, 3.5, 4, 4.5, 5];
+---
+<Seite slug="leinwand-groesse-rechner" title="Leinwand-Größe-Rechner: Welche Leinwand passt zu meinem Raum?"
+  h1="Leinwand-Größe-Rechner: Welche Leinwand passt zum Sitzabstand?"
+  intro="Sitzabstand, Wandbreite und Beamer-Auflösung eintragen. Der Rechner zeigt dir die ideale Leinwanddiagonale und die passende Standardgröße, die auch an deine Wand passt."
+  description="Die richtige Leinwandgröße für Beamer berechnen: aus Sitzabstand, Wandbreite und Auflösung (Full-HD oder 4K). Für 16:9 und 21:9 (2,35:1). Mit Tabelle.">
+  <Fragment slot="eingaben">
+    <Feld id="abstand" label="Abstand vom Sofa zur Leinwand" unit="Meter" value="3,5" />
+    <Feld id="wand" label="Breite der Wand (optional)" unit="Meter" value="3,2" hint="Wir lassen insgesamt 30 cm Platz zum Rand, z. B. für Lautsprecher oder Rahmen." />
+    <Wahl name="aufl" label="Auflösung des Beamers" value="4k" options={[{ value: '4k', label: '4K' }, { value: 'fhd', label: 'Full-HD' }]} />
+    <Wahl name="format" label="Format der Leinwand" value="16:9" options={[{ value: '16:9', label: '16:9' }, { value: '2.39:1', label: 'Cinemascope 2,35:1' }]} />
+  </Fragment>
+  <Fragment slot="ergebnis">
+    <h2>Dein Ergebnis</h2>
+    <div id="out"></div>
+  </Fragment>
+  <Fragment slot="info">
+    <h2>So rechnet der Leinwand-Rechner</h2>
+    <p>Wir gehen vom <strong>Blickwinkel</strong> aus, also wie viel deines Sichtfelds die Leinwand füllt. Für ein Kino-Gefühl empfehlen Fachverbände 30 bis 40 Grad. Bei 4K darf es etwas mehr sein, weil man keine Pixel sieht:</p>
+    <table>
+      <tr><th>Auflösung</th><th>Ideal</th><th>Bereich</th></tr>
+      <tr><td>Full-HD</td><td>33°</td><td>30 bis 36°</td></tr>
+      <tr><td>4K</td><td>40°</td><td>36 bis 45°</td></tr>
+    </table>
+    <p>Bildbreite = <strong>2 × Sitzabstand × tan(Blickwinkel ÷ 2)</strong>. Daraus ergibt sich die Diagonale. Ist die Wand zu schmal, begrenzt der Rechner die Größe auf die Wandbreite minus 30 cm.</p>
+    <h3>Tabelle: Leinwandgröße bei 4K und 16:9</h3>
+    <table>
+      <tr><th>Sitzabstand</th><th>Ideale Diagonale</th><th>Standardgröße</th></tr>
+      {ZEILEN.map((a) => { const r = leinwand({ abstandM: a, aufloesung: '4k' }); return <tr><td>{a.toLocaleString('de-DE')} m</td><td>{Math.round(r.zoll)} Zoll</td><td>{r.standard ? `${r.standard} Zoll` : '–'}</td></tr>; })}
+    </table>
+    <h3>16:9 oder Cinemascope?</h3>
+    <p>Eine 16:9-Leinwand passt für alles: Serien, Sport, Spiele. Eine Cinemascope-Leinwand (2,35:1) zeigt Kinofilme ohne Balken, bei 16:9-Inhalten bleiben dann aber links und rechts Flächen frei. Für die meisten Wohnzimmer ist 16:9 die bessere Wahl.</p>
+  </Fragment>
+</Seite>
+<script>
+  import { leinwand } from '../../rechner/heimkino.js';
+  import { $, num, radio, bind, fmt } from '../../rechner/ui.js';
+  function run() {
+    const abstandM = num('abstand'), wandM = num('wand');
+    if (!abstandM) { $('out').innerHTML = '<p class="em-res-empty">Bitte den Sitzabstand eingeben.</p>'; return; }
+    const r = leinwand({ abstandM, wandM, aufloesung: radio('aufl'), format: radio('format') });
+    $('out').innerHTML = `<div class="em-big"><strong>${r.standard ? r.standard + ' Zoll' : fmt(r.zoll) + ' Zoll'}</strong><span>${r.standard ? 'Passende Standardgröße' : 'Ideale Diagonale'}</span></div>
+      <ul class="em-res-list"><li><span>Rechnerisch ideal</span><b>${fmt(r.zoll)} Zoll (${fmt(r.zoll * 2.54)} cm)</b></li><li><span>Bildbreite × Bildhöhe</span><b>${fmt(r.breite)} × ${fmt(r.hoehe)} cm</b></li><li><span>Guter Bereich</span><b>${fmt(r.zollMin)} bis ${fmt(r.zollMax)} Zoll</b></li></ul>
+      ${r.begrenztDurchWand ? '<p class="em-res-note">Die <strong>Wandbreite begrenzt</strong> die Größe. Ohne diese Grenze wäre eine größere Leinwand ideal.</p>' : ''}`;
+  }
+  bind(document.querySelector('.em-calc-form'), run);
+</script>

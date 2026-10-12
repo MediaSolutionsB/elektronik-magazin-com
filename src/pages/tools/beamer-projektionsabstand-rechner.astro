@@ -1,0 +1,71 @@
+---
+import Seite from '../../components/RechnerSeite.astro';
+import Feld from '../../components/Feld.astro';
+import Wahl from '../../components/Wahl.astro';
+import { projektionsabstand } from '../../rechner/technik.js';
+const ZEILEN = [80, 100, 120, 150];
+const m = (n) => n.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+---
+<Seite slug="beamer-projektionsabstand-rechner" title="Beamer-Projektionsabstand-Rechner: Wie weit weg von der Wand?"
+  h1="Beamer-Projektionsabstand-Rechner"
+  intro="Throw Ratio (Projektionsverhältnis) des Beamers und die gewünschte Bildgröße eintragen. Du siehst, wie weit der Beamer von der Leinwand entfernt stehen muss. Oder andersherum: Wie groß wird das Bild bei deinem Abstand?"
+  description="Projektionsabstand für Beamer berechnen: aus Throw Ratio und Bildgröße, mit Zoom-Bereich. Oder umgekehrt: Bildgröße aus dem Abstand zur Wand. Für 16:9 und 4:3.">
+  <Fragment slot="eingaben">
+    <Wahl name="modus" label="Was möchtest du wissen?" value="abstand" options={[{ value: 'abstand', label: 'Abstand für meine Bildgröße' }, { value: 'bild', label: 'Bildgröße bei meinem Abstand' }]} />
+    <div class="em-row">
+      <Feld id="tmin" label="Throw Ratio von" unit=":1" value="1,2" />
+      <Feld id="tmax" label="bis (bei Zoom)" unit=":1" value="1,5" />
+    </div>
+    <small style="color:var(--muted);margin-top:-8px">Steht im Datenblatt, z. B. „1,20–1,50:1“. Ohne Zoom nur das erste Feld ausfüllen.</small>
+    <div data-modus="abstand"><Feld id="zoll" label="Gewünschte Bilddiagonale" unit="Zoll" value="100" /></div>
+    <div data-modus="bild" hidden><Feld id="abstand" label="Abstand Beamer zur Wand" unit="Meter" value="3,5" /></div>
+    <Wahl name="format" label="Format" value="16:9" options={[{ value: '16:9', label: '16:9' }, { value: '4:3', label: '4:3' }]} />
+  </Fragment>
+  <Fragment slot="ergebnis">
+    <h2>Dein Ergebnis</h2>
+    <div id="out"></div>
+  </Fragment>
+  <Fragment slot="info">
+    <h2>Was ist die Throw Ratio?</h2>
+    <p>Die Throw Ratio (Projektionsverhältnis) sagt, wie viele Meter Abstand der Beamer für einen Meter Bildbreite braucht. Bei <strong>1,5:1</strong> wird ein 2 Meter breites Bild aus 3 Metern Entfernung projiziert.</p>
+    <p>Abstand = <strong>Throw Ratio × Bildbreite</strong>. Gemessen wird von der Linse bis zur Leinwand.</p>
+    <table>
+      <tr><th>Beamer-Art</th><th>Typische Throw Ratio</th></tr>
+      <tr><td>Normaler Heimkino-Beamer</td><td>1,2 bis 2,0</td></tr>
+      <tr><td>Kurzdistanz-Beamer</td><td>0,4 bis 1,0</td></tr>
+      <tr><td>Ultrakurzdistanz (Laser-TV)</td><td>0,2 bis 0,3, misst sich anders (siehe Datenblatt)</td></tr>
+    </table>
+    <h3>Tabelle: Abstand bei Throw Ratio 1,5 (16:9)</h3>
+    <table>
+      <tr><th>Bildgröße</th><th>Bildbreite</th><th>Abstand</th></tr>
+      {ZEILEN.map((z) => { const r = projektionsabstand({ throwMin: 1.5, zoll: z }); return <tr><td>{z} Zoll</td><td>{Math.round(r.breite)} cm</td><td>{m(r.min)} m</td></tr>; })}
+    </table>
+    <p>Tipp: Plane den Beamer möglichst ohne digitale Trapezkorrektur ein. Die kostet Bildschärfe. Besser ist ein optischer Lens-Shift, wenn dein Beamer ihn hat.</p>
+  </Fragment>
+</Seite>
+<script>
+  import { projektionsabstand, bildAusAbstand } from '../../rechner/technik.js';
+  import { $, num, radio, bind, fmt } from '../../rechner/ui.js';
+  const m = (n) => `${fmt(n, 2)} m`;
+  function run() {
+    const mod = radio('modus'), format = radio('format'), throwMin = num('tmin'), throwMax = num('tmax');
+    document.querySelectorAll('[data-modus]').forEach((el) => { el.hidden = el.dataset.modus !== mod; });
+    if (!throwMin) { $('out').innerHTML = '<p class="em-res-empty">Bitte die Throw Ratio eingeben.</p>'; return; }
+    if (mod === 'abstand') {
+      const zoll = num('zoll');
+      if (!zoll) { $('out').innerHTML = '<p class="em-res-empty">Bitte die Bildgröße eingeben.</p>'; return; }
+      const r = projektionsabstand({ throwMin, throwMax, zoll, format });
+      const zoom = Math.abs(r.max - r.min) > 0.005;
+      $('out').innerHTML = `<div class="em-big"><strong>${zoom ? `${fmt(r.min, 2)} – ${fmt(r.max, 2)} m` : m(r.min)}</strong><span>Abstand Linse bis Leinwand</span></div>
+        <ul class="em-res-list"><li><span>Bildbreite × Bildhöhe</span><b>${fmt(r.breite)} × ${fmt(r.hoehe)} cm</b></li></ul>`;
+    } else {
+      const abstandM = num('abstand');
+      if (!abstandM) { $('out').innerHTML = '<p class="em-res-empty">Bitte den Abstand eingeben.</p>'; return; }
+      const r = bildAusAbstand({ throwMin, throwMax, abstandM, format });
+      const zoom = Math.abs(r.zollMax - r.zollMin) > 0.5;
+      $('out').innerHTML = `<div class="em-big"><strong>${zoom ? `${fmt(r.zollMin)} – ${fmt(r.zollMax)} Zoll` : fmt(r.zollMax) + ' Zoll'}</strong><span>Mögliche Bilddiagonale</span></div>
+        <ul class="em-res-list"><li><span>Bildbreite</span><b>${zoom ? `${fmt(r.breiteMin)} bis ${fmt(r.breiteMax)}` : fmt(r.breiteMax)} cm</b></li></ul>`;
+    }
+  }
+  bind(document.querySelector('.em-calc-form'), run);
+</script>

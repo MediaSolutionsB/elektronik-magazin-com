@@ -1,0 +1,73 @@
+---
+import Seite from '../../components/RechnerSeite.astro';
+import Feld from '../../components/Feld.astro';
+import Wahl from '../../components/Wahl.astro';
+import { SYSTEME } from '../../rechner/heimkino.js';
+---
+<Seite slug="lautsprecher-aufstellung-rechner" title="Lautsprecher-Aufstellung-Rechner für 5.1, 7.1 und Dolby Atmos"
+  h1="Lautsprecher-Aufstellung: 5.1, 7.1 und Dolby Atmos richtig platzieren"
+  intro="System wählen, Hörabstand und Raummaße eintragen. Der Rechner zeigt dir für jede Box den Winkel und wie weit sie vor, neben oder hinter deinem Sitzplatz stehen soll, inklusive Deckenlautsprecher für Dolby Atmos."
+  description="Lautsprecher-Positionen für 5.1, 7.1, 5.1.2, 5.1.4 und 7.1.4 Dolby Atmos berechnen: Winkel nach Dolby-Empfehlung, Abstände in Metern und Position der Deckenlautsprecher.">
+  <Fragment slot="eingaben">
+    <Wahl name="system" label="Lautsprecher-System" value="5.1.2" options={SYSTEME.map((s) => ({ value: s, label: s }))} />
+    <Feld id="abstand" label="Abstand vom Sitzplatz zu den Front-Boxen" unit="Meter" value="2,5" hint="Ideal stehen alle Boxen gleich weit von dir entfernt, wie auf einem Kreis." />
+    <div class="em-row">
+      <Feld id="breite" label="Raumbreite" unit="Meter" value="4" />
+      <Feld id="hoehe" label="Deckenhöhe" unit="Meter" value="2,5" />
+    </div>
+  </Fragment>
+  <Fragment slot="ergebnis">
+    <h2>Dein Ergebnis</h2>
+    <div id="out"></div>
+  </Fragment>
+  <Fragment slot="info">
+    <h2>So werden die Lautsprecher aufgestellt</h2>
+    <p>Grundlage sind die Empfehlungen von Dolby. Alle Boden-Lautsprecher stehen idealerweise auf einem <strong>Kreis um deinen Sitzplatz</strong>, also gleich weit entfernt. 0 Grad ist genau vor dir, 90 Grad genau neben dir, 180 Grad direkt hinter dir.</p>
+    <table>
+      <tr><th>Lautsprecher</th><th>Winkel</th><th>Höhe</th></tr>
+      <tr><td>Center</td><td>0°</td><td>direkt unter oder über dem Bild</td></tr>
+      <tr><td>Front links / rechts</td><td>22 bis 30°</td><td>Hochtöner auf Ohrhöhe</td></tr>
+      <tr><td>Surround (5.1)</td><td>110 bis 120°</td><td>auf Ohrhöhe oder 30 bis 60 cm darüber</td></tr>
+      <tr><td>Seiten-Surround (7.1)</td><td>90 bis 110°</td><td>auf Ohrhöhe oder etwas darüber</td></tr>
+      <tr><td>Rück-Surround (7.1)</td><td>135 bis 150°</td><td>auf Ohrhöhe oder etwas darüber</td></tr>
+      <tr><td>Decke Mitte (.2)</td><td>65 bis 100° nach oben</td><td>an der Decke, etwas vor dir</td></tr>
+      <tr><td>Decke vorne / hinten (.4)</td><td>30 bis 55° nach oben</td><td>an der Decke vor und hinter dir</td></tr>
+    </table>
+    <p>Die Deckenlautsprecher stehen seitlich auf einer Linie mit den Front-Boxen oder etwas weiter innen. Ihre Position hängt von der Deckenhöhe ab: Je höher die Decke, desto weiter vorne bzw. hinten. Wir rechnen mit 1,10 m Ohrhöhe im Sitzen.</p>
+    <h3>Wenn es nicht genau passt</h3>
+    <p>Kaum ein Wohnzimmer erlaubt den perfekten Kreis. Weicht eine Box vom Abstand ab, ist das kein Problem: Der AV-Receiver gleicht unterschiedliche Abstände über die <strong>Einmessung</strong> (z. B. Audyssey, Dirac, YPAO) aus. Wichtiger als der genaue Abstand sind die Winkel. Für den Subwoofer gibt es keinen festen Platz. Teste ein paar Stellen im vorderen Raumdrittel.</p>
+  </Fragment>
+</Seite>
+<script>
+  import { lautsprecher } from '../../rechner/heimkino.js';
+  import { $, num, radio, bind, fmt } from '../../rechner/ui.js';
+  const m = (n) => `${fmt(Math.abs(n), 2)} m`;
+  const lage = (v) => (Math.abs(v) < 0.05 ? 'auf deiner Höhe' : v > 0 ? `${m(v)} vor dir` : `${m(v)} hinter dir`);
+  function svg(r, abstand, breite) {
+    const S = 260, pad = 20, span = Math.max(abstand * 1.15, (breite || 0) / 2) * 2;
+    const k = (S - 2 * pad) / span, cx = S / 2, cy = S / 2;
+    const P = (x, y) => [cx + x * k, cy - y * k];
+    let out = `<svg viewBox="0 0 ${S} ${S}" width="100%" style="max-width:${S}px;background:rgba(255,255,255,.06);border-radius:12px" role="img" aria-label="Draufsicht">`;
+    if (breite) { const [x1] = P(-breite / 2, 0), [x2] = P(breite / 2, 0); out += `<line x1="${x1}" y1="4" x2="${x1}" y2="${S - 4}" stroke="rgba(255,255,255,.35)" stroke-dasharray="4 4"/><line x1="${x2}" y1="4" x2="${x2}" y2="${S - 4}" stroke="rgba(255,255,255,.35)" stroke-dasharray="4 4"/>`; }
+    out += `<circle cx="${cx}" cy="${cy}" r="${abstand * k}" fill="none" stroke="rgba(255,255,255,.25)"/>`;
+    const dot = (x, y, c) => { const [a, b] = P(x, y); return `<circle cx="${a}" cy="${b}" r="7" fill="${c}"/>`; };
+    r.boxen.forEach((b) => { out += dot(b.seitlich, b.vorne, '#7fb3d5'); if (b.winkel) out += dot(-b.seitlich, b.vorne, '#7fb3d5'); });
+    r.deckenBoxen.forEach((b) => { out += dot(b.seitlich, b.vorne, '#f5c26b') + dot(-b.seitlich, b.vorne, '#f5c26b'); });
+    const [px, py] = P(0, 0);
+    out += `<rect x="${px - 9}" y="${py - 9}" width="18" height="18" rx="4" fill="#fff"/></svg>`;
+    return out;
+  }
+  function run() {
+    const abstandM = num('abstand'), raumBreiteM = num('breite'), raumHoeheM = num('hoehe');
+    if (!abstandM) { $('out').innerHTML = '<p class="em-res-empty">Bitte den Hörabstand eingeben.</p>'; return; }
+    const r = lautsprecher({ system: radio('system'), abstandM, raumBreiteM, raumHoeheM });
+    const zeilen = r.boxen.map((b) => `<li><span>${b.name} (${b.winkel}°)</span><b>${b.winkel ? `${m(b.seitlich)} seitlich, ` : ''}${lage(b.vorne)}${b.anWand ? '<br><small>zu breit: an die Wand stellen</small>' : ''}</b></li>`).join('');
+    const decke = r.deckenBoxen.map((b) => `<li><span>${b.name}</span><b>${m(b.seitlich)} seitlich, ${lage(b.vorne)}</b></li>`).join('');
+    $('out').innerHTML = `${svg(r, abstandM, raumBreiteM)}
+      <p class="em-res-note">Draufsicht: <strong>weiß</strong> = dein Platz, <strong>blau</strong> = Boden-Boxen, <strong>gelb</strong> = Decke. Vorne ist oben.</p>
+      <ul class="em-res-list">${zeilen}${decke}</ul>
+      ${r.deckenBoxen.length && !raumHoeheM ? '<p class="em-res-note">Für die Deckenlautsprecher bitte die Deckenhöhe eintragen.</p>' : ''}
+      ${r.boxen.some((b) => b.anWand) ? '<p class="em-res-note">Mindestens eine Box passt nicht auf den Kreis. Stelle sie an die Wand, der AV-Receiver gleicht den kürzeren Abstand bei der Einmessung aus.</p>' : ''}`;
+  }
+  bind(document.querySelector('.em-calc-form'), run);
+</script>

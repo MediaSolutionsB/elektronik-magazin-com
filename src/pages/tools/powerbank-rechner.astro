@@ -1,0 +1,49 @@
+---
+import Seite from '../../components/RechnerSeite.astro';
+import Feld from '../../components/Feld.astro';
+import Wahl from '../../components/Wahl.astro';
+import { powerbank } from '../../rechner/technik.js';
+const ZEILEN = [5000, 10000, 20000, 26800];
+const z = (n) => n.toLocaleString('de-DE', { maximumFractionDigits: 1 });
+---
+<Seite slug="powerbank-rechner" title="Powerbank-Rechner: Wie oft lädt meine Powerbank das Handy?"
+  h1="Powerbank-Rechner: Wie oft lädt sie dein Handy?"
+  intro="Kapazität der Powerbank und des Handy-Akkus eintragen. Du siehst, wie viele volle Ladungen realistisch drin sind, wie lange ein Gerät damit läuft und ob du die Powerbank ins Flugzeug mitnehmen darfst."
+  description="Powerbank-Ladungen berechnen: Wie oft lädt eine Powerbank mit 10.000 oder 20.000 mAh ein Handy? Mit Wirkungsgrad, Laufzeit für Geräte in Watt und 100-Wh-Regel fürs Flugzeug.">
+  <Fragment slot="eingaben">
+    <Feld id="mah" label="Kapazität der Powerbank" unit="mAh" value="20000" />
+    <Feld id="handy" label="Akku des Handys" unit="mAh" value="4500" hint="Steht im Datenblatt des Handys. Aktuelle Smartphones haben meist 4.000 bis 5.500 mAh." />
+    <Wahl name="eff" label="Wirkungsgrad" value="0.65" options={[{ value: '0.6', label: 'Günstig (60 %)' }, { value: '0.65', label: 'Normal (65 %)' }, { value: '0.75', label: 'Sehr gut (75 %)' }]} />
+    <Feld id="watt" label="Oder: Gerät mit Leistung (optional)" unit="Watt" value="" hint="Zum Beispiel Laptop 30 W, Ventilator 5 W, Kamera 8 W. Dann siehst du die Laufzeit in Stunden." />
+  </Fragment>
+  <Fragment slot="ergebnis">
+    <h2>Dein Ergebnis</h2>
+    <div id="out"></div>
+  </Fragment>
+  <Fragment slot="info">
+    <h2>Warum lädt eine 20.000-mAh-Powerbank ein 5.000-mAh-Handy nicht viermal?</h2>
+    <p>Die mAh-Angabe auf der Powerbank bezieht sich auf die Akkuzellen mit <strong>3,7 Volt</strong>. Zum Laden wandelt die Powerbank auf 5 Volt oder mehr um. Dabei, im Kabel und im Handy selbst geht Energie als Wärme verloren. Realistisch kommen nur <strong>60 bis 75 %</strong> beim Handy an.</p>
+    <p>Rechnung: Energie in Wh = <strong>mAh × 3,7 V ÷ 1.000</strong>. Davon nutzbar = Wh × Wirkungsgrad. Ladungen = nutzbare Wh ÷ Wh des Handy-Akkus (Handy-mAh × 3,85 V ÷ 1.000).</p>
+    <h3>Tabelle: Ladungen für ein Handy mit 4.500 mAh (65 %)</h3>
+    <table>
+      <tr><th>Powerbank</th><th>Energie</th><th>Ladungen</th></tr>
+      {ZEILEN.map((m) => { const r = powerbank({ mah: m, handyMah: 4500 }); return <tr><td>{m.toLocaleString('de-DE')} mAh</td><td>{z(r.wh)} Wh</td><td>ca. {z(r.ladungen)}</td></tr>; })}
+    </table>
+    <h3>Powerbank im Flugzeug</h3>
+    <p>Powerbanks gehören immer ins <strong>Handgepäck</strong>, nie in den Koffer. Bis <strong>100 Wh</strong> sind sie erlaubt (das sind etwa 27.000 mAh bei 3,7 V). Zwischen 100 und 160 Wh muss die Airline zustimmen. Über 160 Wh sind sie verboten. Einige Airlines haben strengere Regeln, etwa ein Verbot, die Powerbank an Bord zu benutzen. Schau vor dem Flug auf die Seite deiner Airline.</p>
+  </Fragment>
+</Seite>
+<script>
+  import { powerbank } from '../../rechner/technik.js';
+  import { $, num, radio, bind, fmt } from '../../rechner/ui.js';
+  const FLUG = { ok: 'Erlaubt im Handgepäck', zustimmung: 'Nur mit Zustimmung der Airline', verboten: 'Im Flugzeug verboten' };
+  function run() {
+    const mah = num('mah'), handyMah = num('handy'), geraetWatt = num('watt');
+    if (!mah) { $('out').innerHTML = '<p class="em-res-empty">Bitte die Kapazität der Powerbank eingeben.</p>'; return; }
+    const r = powerbank({ mah, handyMah, geraetWatt, wirkungsgrad: Number(radio('eff')) });
+    const gross = geraetWatt ? `<div class="em-big"><strong>${fmt(r.stunden, 1)} Std.</strong><span>Laufzeit bei ${fmt(geraetWatt, 1)} Watt</span></div>` : `<div class="em-big"><strong>${fmt(r.ladungen, 1)}×</strong><span>volle Handy-Ladungen</span></div>`;
+    $('out').innerHTML = `${gross}
+      <ul class="em-res-list"><li><span>Energie der Powerbank</span><b>${fmt(r.wh, 1)} Wh</b></li><li><span>Davon nutzbar</span><b>${fmt(r.nutzbar, 1)} Wh</b></li>${handyMah ? `<li><span>Handy-Ladungen</span><b>ca. ${fmt(r.ladungen, 1)}</b></li>` : ''}<li><span>Flugzeug</span><b>${FLUG[r.flug]}</b></li></ul>`;
+  }
+  bind(document.querySelector('.em-calc-form'), run);
+</script>

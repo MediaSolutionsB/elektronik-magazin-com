@@ -1,0 +1,59 @@
+---
+import Seite from '../../components/RechnerSeite.astro';
+import Feld from '../../components/Feld.astro';
+---
+<Seite slug="raummoden-rechner" title="Raummoden-Rechner: Bei welchen Frequenzen dröhnt der Bass?"
+  h1="Raummoden-Rechner: Warum dröhnt der Bass in meinem Raum?"
+  intro="Länge, Breite und Höhe deines Raums eintragen. Der Rechner zeigt die Raummoden, also die Frequenzen, bei denen der Bass besonders laut oder besonders leise wird, und warnt vor ungünstigen Raummaßen."
+  description="Raummoden berechnen: axiale, tangentiale und schräge Moden aus Raumlänge, Breite und Höhe. Mit Warnung bei Häufungen und Lücken im Bass. Für Heimkino und HiFi.">
+  <Fragment slot="eingaben">
+    <div class="em-row3">
+      <Feld id="l" label="Länge" unit="m" value="5" />
+      <Feld id="b" label="Breite" unit="m" value="4" />
+      <Feld id="h" label="Höhe" unit="m" value="2,5" />
+    </div>
+  </Fragment>
+  <Fragment slot="ergebnis">
+    <h2>Dein Ergebnis</h2>
+    <div id="out"></div>
+  </Fragment>
+  <Fragment slot="info">
+    <h2>Was sind Raummoden?</h2>
+    <p>Tiefe Töne haben sehr lange Wellen. Ein Ton mit 34 Hz ist etwa 10 Meter lang. Zwischen zwei parallelen Wänden werden die Wellen hin- und hergeworfen und überlagern sich. Bei bestimmten Frequenzen entstehen so <strong>stehende Wellen</strong>: An manchen Stellen im Raum dröhnt der Bass, an anderen ist er fast weg.</p>
+    <ul>
+      <li><strong>Axiale Moden</strong> entstehen zwischen zwei gegenüberliegenden Flächen (z. B. Vorder- und Rückwand). Sie sind am stärksten.</li>
+      <li><strong>Tangentiale Moden</strong> laufen über vier Flächen und sind etwa halb so stark.</li>
+      <li><strong>Schräge Moden</strong> laufen über alle sechs Flächen und sind am schwächsten.</li>
+    </ul>
+    <p>Formel für axiale Moden: <strong>f = n × 343 ÷ (2 × Raummaß)</strong>. 343 m/s ist die Schallgeschwindigkeit bei 20 °C, n = 1, 2, 3 … Für alle Moden: f = 343 ÷ 2 × √((nL/L)² + (nB/B)² + (nH/H)²).</p>
+    <h3>Was ist ungünstig?</h3>
+    <p>Liegen mehrere axiale Moden fast auf derselben Frequenz, verstärken sie sich. Das passiert, wenn Raummaße gleich sind oder Vielfache voneinander (z. B. 5 m lang und 2,5 m hoch). Große Lücken zwischen den Moden führen dagegen zu fehlendem Bass bei bestimmten Tönen.</p>
+    <h3>Was hilft?</h3>
+    <ul>
+      <li>Hörplatz nicht genau in die Raummitte und nicht direkt an die Rückwand stellen. Gut ist oft etwa 38 % der Raumlänge von der Rückwand.</li>
+      <li>Subwoofer an verschiedenen Stellen ausprobieren oder zwei Subwoofer nutzen.</li>
+      <li>Die automatische Einmessung des AV-Receivers kann Dröhnfrequenzen absenken.</li>
+      <li>Bassfallen in den Raumecken dämpfen vor allem die tiefen Moden.</li>
+    </ul>
+  </Fragment>
+</Seite>
+<script>
+  import { raummoden } from '../../rechner/heimkino.js';
+  import { $, num, bind, fmt } from '../../rechner/ui.js';
+  const hz = (f) => `${fmt(f, 1)} Hz`;
+  function run() {
+    const l = num('l'), b = num('b'), h = num('h');
+    const r = raummoden({ l, b, h, bis: 200 });
+    if (!r) { $('out').innerHTML = '<p class="em-res-empty">Bitte Länge, Breite und Höhe eingeben.</p>'; return; }
+    const axial = r.axial.filter((m) => m.f <= 150).map((m) => `<li><span>${m.richtung} (${Math.max(...m.idx)}. Ordnung)</span><b>${hz(m.f)}</b></li>`).join('');
+    const weitere = r.modes.filter((m) => m.typ !== 'axial' && m.f <= 100).slice(0, 8).map((m) => `${hz(m.f)} (${m.typ})`).join(', ');
+    const haeuf = r.haeufungen.filter(([a]) => a.f <= 150).map(([a, c]) => Math.abs(a.f - c.f) < 0.5 ? hz(a.f) : `${hz(a.f)} / ${hz(c.f)}`);
+    $('out').innerHTML = `<div class="em-big"><strong>${hz(r.tiefste.f)}</strong><span>Tiefste Raummode (${r.tiefste.richtung})</span></div>
+      ${haeuf.length ? `<p class="em-res-note"><strong>Dröhn-Gefahr:</strong> Mehrere Moden fallen zusammen bei ${haeuf.join(', ')}. Dort ist der Bass wahrscheinlich zu laut.</p>` : '<p class="em-res-note">Keine starken Häufungen unter 150 Hz. Die Raummaße sind günstig verteilt.</p>'}
+      ${r.luecken.length ? `<p class="em-res-note"><strong>Lücke:</strong> Zwischen ${r.luecken.map(([a, c]) => `${fmt(a)} und ${fmt(c)} Hz`).join(' sowie ')} gibt es keine axiale Mode. Dort kann Bass fehlen.</p>` : ''}
+      <ul class="em-res-list"><li><span><strong>Axiale Moden bis 150 Hz</strong></span><b></b></li>${axial}</ul>
+      ${weitere ? `<p class="em-res-note">Schwächere Moden bis 100 Hz: ${weitere}</p>` : ''}
+      <p class="em-res-note">Oberhalb von etwa <strong>${fmt(r.schroeder)} Hz</strong> spielen Raummoden in einem Raum mit ${fmt(r.volumen)} m³ kaum noch eine Rolle.</p>`;
+  }
+  bind(document.querySelector('.em-calc-form'), run);
+</script>

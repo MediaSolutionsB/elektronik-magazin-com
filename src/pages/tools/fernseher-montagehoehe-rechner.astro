@@ -1,0 +1,52 @@
+---
+import Seite from '../../components/RechnerSeite.astro';
+import Feld from '../../components/Feld.astro';
+import { montagehoehe } from '../../rechner/heimkino.js';
+const ZEILEN = [43, 50, 55, 65, 75, 85];
+const cm = (n) => Math.round(n).toLocaleString('de-DE');
+---
+<Seite slug="fernseher-montagehoehe-rechner" title="Fernseher an die Wand: Wie hoch? Rechner für die richtige Höhe"
+  h1="TV-Montagehöhe-Rechner: Wie hoch muss der Fernseher an die Wand?"
+  intro="Augenhöhe im Sitzen, Fernsehgröße und Sitzabstand eintragen. Du siehst, wo die Bildmitte, die Unterkante und die Oberkante des Bildes hingehören, und wie hoch der Fernseher höchstens hängen darf."
+  description="Richtige Höhe für den Fernseher an der Wand berechnen: Bildmitte auf Augenhöhe, Unterkante und Oberkante in cm, maximale Höhe z. B. über dem Kamin. Für 32 bis 100 Zoll.">
+  <Fragment slot="eingaben">
+    <Feld id="augen" label="Augenhöhe im Sitzen" unit="cm" value="110" hint="Vom Boden bis zu den Augen, wenn du auf dem Sofa sitzt. Auf einem normalen Sofa sind das meist 100 bis 115 cm." />
+    <Feld id="zoll" label="Bildschirmdiagonale" unit="Zoll" value="65" />
+    <Feld id="abstand" label="Abstand vom Sofa zum Fernseher" unit="Meter" value="3" />
+  </Fragment>
+  <Fragment slot="ergebnis">
+    <h2>Dein Ergebnis</h2>
+    <div id="out"></div>
+  </Fragment>
+  <Fragment slot="info">
+    <h2>So rechnet der Montagehöhe-Rechner</h2>
+    <p>Am entspanntesten schaust du, wenn die <strong>Bildmitte auf Augenhöhe</strong> liegt. Dann musst du den Kopf weder heben noch senken. Die Unterkante liegt eine halbe Bildhöhe darunter, die Oberkante eine halbe Bildhöhe darüber.</p>
+    <p>Hängt der Fernseher höher, musst du nach oben schauen. Bis etwa <strong>10 Grad</strong> ist das noch bequem. <strong>15 Grad</strong> sehen wir als Obergrenze, zum Beispiel für einen Fernseher über dem Kamin. Darüber wird der Nacken auf Dauer steif. Je weiter du wegsitzt, desto höher darf der Fernseher hängen.</p>
+    <h3>Tabelle: Unterkante bei 110 cm Augenhöhe</h3>
+    <table>
+      <tr><th>Größe</th><th>Bildhöhe</th><th>Unterkante</th><th>Oberkante</th></tr>
+      {ZEILEN.map((z) => { const r = montagehoehe({ augenCm: 110, zoll: z, abstandM: 3 }); return <tr><td>{z} Zoll</td><td>{cm(r.hoeheBild)} cm</td><td>{cm(r.unterkante)} cm</td><td>{cm(r.oberkante)} cm</td></tr>; })}
+    </table>
+    <h3>Tipps für die Wandhalterung</h3>
+    <ul>
+      <li>Der Rechner gibt die Höhe des <strong>Bildes</strong> an. Der Rahmen kommt noch dazu, bei modernen Geräten meist nur 1 bis 2 cm.</li>
+      <li>Die Bohrlöcher der Halterung sitzen selten genau in der Bildmitte. Miss am Fernseher nach, wie weit die VESA-Löcher von der Unterkante entfernt sind.</li>
+      <li>Muss der Fernseher höher hängen, hilft eine neigbare Halterung. Ein paar Grad nach unten geneigt sieht das Bild deutlich besser aus, vor allem bei LCD-Fernsehern.</li>
+    </ul>
+  </Fragment>
+</Seite>
+<script>
+  import { montagehoehe } from '../../rechner/heimkino.js';
+  import { $, num, bind, fmt } from '../../rechner/ui.js';
+  const cm = (n) => `${fmt(n)} cm`;
+  function run() {
+    const augenCm = num('augen'), zoll = num('zoll'), abstandM = num('abstand');
+    if (!augenCm || !zoll) { $('out').innerHTML = '<p class="em-res-empty">Bitte Augenhöhe und Bildschirmdiagonale eingeben.</p>'; return; }
+    const r = montagehoehe({ augenCm, zoll, abstandM });
+    $('out').innerHTML = `<div class="em-big"><strong>${cm(r.mitte)}</strong><span>Höhe der Bildmitte über dem Boden</span></div>
+      <ul class="em-res-list"><li><span>Unterkante des Bildes</span><b>${cm(r.unterkante)}</b></li><li><span>Oberkante des Bildes</span><b>${cm(r.oberkante)}</b></li><li><span>Bildgröße (B × H)</span><b>${fmt(r.breiteBild)} × ${fmt(r.hoeheBild)} cm</b></li>
+      ${abstandM ? `<li><span>Bildmitte noch bequem bis (10°)</span><b>${cm(r.max10)}</b></li><li><span>Bildmitte höchstens (15°)</span><b>${cm(r.max15)}</b></li>` : ''}</ul>
+      ${abstandM ? `<p class="em-res-note">Über dem Kamin oder an einer hohen Wand sollte die <strong>Unterkante nicht höher als ${cm(r.unterkanteMax15)}</strong> liegen.</p>` : ''}`;
+  }
+  bind(document.querySelector('.em-calc-form'), run);
+</script>

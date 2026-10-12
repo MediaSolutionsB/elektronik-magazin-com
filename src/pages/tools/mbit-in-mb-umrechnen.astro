@@ -1,0 +1,46 @@
+---
+import Seite from '../../components/RechnerSeite.astro';
+import Feld from '../../components/Feld.astro';
+import Wahl from '../../components/Wahl.astro';
+import { datenrate } from '../../rechner/technik.js';
+const RATEN = [16, 50, 100, 250, 500, 1000, 2000];
+const z = (n) => n.toLocaleString('de-DE', { maximumFractionDigits: 2 });
+---
+<Seite slug="mbit-in-mb-umrechnen" title="Mbit/s in MB/s umrechnen: Rechner für die Internetgeschwindigkeit"
+  h1="Mbit/s in MB/s umrechnen"
+  intro="Geschwindigkeit eingeben und Einheit wählen. Der Rechner zeigt den Wert in Mbit/s, MB/s, Gbit/s, kB/s und MiB/s, damit du Internetvertrag, Speedtest und Download-Anzeige vergleichen kannst."
+  description="Mbit/s in MB/s umrechnen und umgekehrt: Internetgeschwindigkeit verstehen. Mit Tabelle für 16, 50, 100, 250, 500 und 1.000 Mbit/s und Erklärung von Bit und Byte.">
+  <Fragment slot="eingaben">
+    <Feld id="wert" label="Geschwindigkeit" unit="" value="100" />
+    <Wahl name="einheit" label="Einheit" value="Mbit/s" options={['kbit/s', 'Mbit/s', 'Gbit/s', 'kB/s', 'MB/s', 'MiB/s'].map((e) => ({ value: e, label: e }))} />
+  </Fragment>
+  <Fragment slot="ergebnis">
+    <h2>Dein Ergebnis</h2>
+    <div id="out"></div>
+  </Fragment>
+  <Fragment slot="info">
+    <h2>Bit oder Byte: Was ist der Unterschied?</h2>
+    <p>Internetanbieter messen in <strong>Bit</strong> (kleines b, z. B. Mbit/s oder Mbps). Browser, Steam und Download-Programme zeigen meist <strong>Byte</strong> an (großes B, z. B. MB/s). Ein Byte sind 8 Bit. Deshalb gilt: <strong>MB/s = Mbit/s ÷ 8</strong>.</p>
+    <p>Ein 100-Mbit/s-Anschluss lädt also höchstens 12,5 MB pro Sekunde. Das ist keine Mogelei des Anbieters, sondern nur eine andere Einheit. MiB/s ist noch etwas kleiner, weil dort mit 1.024 statt 1.000 gerechnet wird.</p>
+    <h3>Tabelle: Mbit/s in MB/s</h3>
+    <table>
+      <tr><th>Mbit/s</th><th>MB/s</th><th>MiB/s</th></tr>
+      {RATEN.map((r) => { const x = datenrate({ wert: r }); return <tr><td>{r.toLocaleString('de-DE')}</td><td>{z(x['MB/s'])}</td><td>{z(x['MiB/s'])}</td></tr>; })}
+    </table>
+    <p>Real erreichst du meist etwas weniger, etwa 90 % der gebuchten Geschwindigkeit. Wie lange ein bestimmter Download dauert, zeigt unser Download-Zeit-Rechner.</p>
+  </Fragment>
+</Seite>
+<script>
+  import { datenrate } from '../../rechner/technik.js';
+  import { $, num, radio, bind, fmt } from '../../rechner/ui.js';
+  const REIHE = ['Mbit/s', 'MB/s', 'Gbit/s', 'kbit/s', 'kB/s', 'MiB/s'];
+  function run() {
+    const wert = num('wert'), einheit = radio('einheit');
+    if (!wert) { $('out').innerHTML = '<p class="em-res-empty">Bitte eine Geschwindigkeit eingeben.</p>'; return; }
+    const r = datenrate({ wert, einheit });
+    const gross = einheit.includes('bit') ? 'MB/s' : 'Mbit/s';
+    $('out').innerHTML = `<div class="em-big"><strong>${fmt(r[gross], 2)} ${gross}</strong><span>${fmt(wert, 2)} ${einheit}</span></div>
+      <ul class="em-res-list">${REIHE.filter((e) => e !== einheit && e !== gross).map((e) => `<li><span>${e}</span><b>${fmt(r[e], 3)}</b></li>`).join('')}</ul>`;
+  }
+  bind(document.querySelector('.em-calc-form'), run);
+</script>

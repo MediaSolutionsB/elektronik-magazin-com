@@ -1,0 +1,58 @@
+---
+import Seite from '../../components/RechnerSeite.astro';
+import Feld from '../../components/Feld.astro';
+import Wahl from '../../components/Wahl.astro';
+import { raid, RAID } from '../../rechner/technik.js';
+---
+<Seite slug="raid-rechner" title="RAID-Rechner: Wie viel Speicher bleibt mit RAID 0, 1, 5, 6 und 10?"
+  h1="RAID-Rechner: Wie viel Speicher bleibt nutzbar?"
+  intro="Anzahl und Größe der Festplatten eintragen und RAID-Level wählen. Du siehst den nutzbaren Speicher, wie viele Platten ausfallen dürfen und was dein NAS ungefähr anzeigen wird."
+  description="RAID-Kapazität berechnen für RAID 0, 1, 5, 6 und 10: nutzbarer Speicher in TB, Ausfallsicherheit und Effizienz. Für NAS von Synology, QNAP und Co. mit Vergleichstabelle.">
+  <Fragment slot="eingaben">
+    <div class="em-row">
+      <Feld id="anzahl" label="Anzahl Festplatten" unit="Stück" value="4" />
+      <Feld id="tb" label="Größe pro Platte" unit="TB" value="8" />
+    </div>
+    <Wahl name="level" label="RAID-Level" value="5" options={Object.entries(RAID).map(([k, v]) => ({ value: k, label: v.name }))} />
+  </Fragment>
+  <Fragment slot="ergebnis">
+    <h2>Dein Ergebnis</h2>
+    <div id="out"></div>
+  </Fragment>
+  <Fragment slot="info">
+    <h2>Die RAID-Level im Überblick</h2>
+    <table>
+      <tr><th>Level</th><th>Min. Platten</th><th>Nutzbar</th><th>Darf ausfallen</th></tr>
+      <tr><td>RAID 0</td><td>2</td><td>alle Platten</td><td>keine</td></tr>
+      <tr><td>RAID 1</td><td>2</td><td>1 Platte</td><td>alle bis auf eine</td></tr>
+      <tr><td>RAID 5</td><td>3</td><td>alle minus 1</td><td>1 Platte</td></tr>
+      <tr><td>RAID 6</td><td>4</td><td>alle minus 2</td><td>2 Platten</td></tr>
+      <tr><td>RAID 10</td><td>4 (gerade Anzahl)</td><td>die Hälfte</td><td>1, im besten Fall eine pro Paar</td></tr>
+    </table>
+    <h3>Beispiel: 4 Platten mit je 8 TB</h3>
+    <table>
+      <tr><th>Level</th><th>Nutzbar</th><th>Effizienz</th></tr>
+      {Object.keys(RAID).map((k) => { const r = raid({ anzahl: 4, tb: 8, level: k }); return <tr><td>{RAID[k].name}</td><td>{r.nutzTb} TB</td><td>{Math.round(r.effizienz * 100)} %</td></tr>; })}
+    </table>
+    <h3>Wichtig zu wissen</h3>
+    <ul>
+      <li>Der Rechner geht von <strong>gleich großen Platten</strong> aus. Bei unterschiedlichen Größen zählt im klassischen RAID die kleinste Platte. Synology SHR und ähnliche Systeme nutzen gemischte Größen besser aus.</li>
+      <li>Das NAS zeigt weniger an, als auf der Platte steht: Hersteller rechnen mit 1 TB = 1.000 GB, das Betriebssystem mit 1.024. Aus 8 TB werden so etwa 7,28 TiB.</li>
+      <li><strong>RAID ist kein Backup.</strong> Es schützt vor dem Ausfall einer Platte, aber nicht vor versehentlichem Löschen, Viren oder einem defekten NAS. Wichtige Daten gehören zusätzlich auf eine externe Festplatte oder in die Cloud.</li>
+    </ul>
+  </Fragment>
+</Seite>
+<script>
+  import { raid } from '../../rechner/technik.js';
+  import { $, num, radio, bind, fmt } from '../../rechner/ui.js';
+  function run() {
+    const anzahl = num('anzahl'), tb = num('tb');
+    if (!anzahl || !tb) { $('out').innerHTML = '<p class="em-res-empty">Bitte Anzahl und Größe der Festplatten eingeben.</p>'; return; }
+    const r = raid({ anzahl, tb, level: radio('level') });
+    if (r.fehler) { $('out').innerHTML = `<p class="em-res-note">${r.fehler}</p>`; return; }
+    $('out').innerHTML = `<div class="em-big"><strong>${fmt(r.nutzTb, 1)} TB</strong><span>nutzbarer Speicher mit ${r.name}</span></div>
+      <ul class="em-res-list"><li><span>Gesamt (alle Platten)</span><b>${fmt(r.brutto, 1)} TB</b></li><li><span>Anzeige im NAS ungefähr</span><b>${fmt(r.nutzTib, 2)} TiB</b></li><li><span>Effizienz</span><b>${fmt(r.effizienz * 100)} %</b></li><li><span>Platten dürfen ausfallen</span><b>${r.ausfall}</b></li></ul>
+      <p class="em-res-note">${r.text}</p>`;
+  }
+  bind(document.querySelector('.em-calc-form'), run);
+</script>

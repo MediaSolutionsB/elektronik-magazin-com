@@ -1,0 +1,48 @@
+---
+import Seite from '../../components/RechnerSeite.astro';
+import Feld from '../../components/Feld.astro';
+import Wahl from '../../components/Wahl.astro';
+import { beamerLumen } from '../../rechner/heimkino.js';
+const ZEILEN = [80, 100, 120, 135, 150];
+const l = (n) => n.toLocaleString('de-DE');
+---
+<Seite slug="beamer-lumen-rechner" title="Beamer-Lumen-Rechner: Wie hell muss mein Beamer sein?"
+  h1="Beamer-Helligkeit-Rechner: Wie viele Lumen brauchst du?"
+  intro="Leinwandgröße und Raumlicht wählen. Der Rechner zeigt, wie viele ANSI-Lumen dein Beamer mindestens haben sollte und welchen Wert wir für ein gutes Bild empfehlen."
+  description="Benötigte Beamer-Helligkeit in ANSI-Lumen berechnen: nach Leinwandgröße, Raumhelligkeit und Leinwand-Gain. Für Heimkino im dunklen Raum und Wohnzimmer bei Tag.">
+  <Fragment slot="eingaben">
+    <Feld id="zoll" label="Leinwanddiagonale" unit="Zoll" value="100" />
+    <Wahl name="licht" label="Wie hell ist der Raum?" value="dunkel" options={[{ value: 'dunkel', label: 'Dunkel (Heimkino, abends)' }, { value: 'gedimmt', label: 'Etwas Licht' }, { value: 'hell', label: 'Hell (Wohnzimmer am Tag)' }]} />
+    <Feld id="gain" label="Gain der Leinwand" unit="" value="1,0" hint="Steht im Datenblatt. Normale weiße Leinwände haben 1,0. Eine weiße Wand liegt eher bei 0,8." />
+    <Wahl name="format" label="Format" value="16:9" options={[{ value: '16:9', label: '16:9' }, { value: '2.39:1', label: '2,35:1' }]} />
+  </Fragment>
+  <Fragment slot="ergebnis">
+    <h2>Dein Ergebnis</h2>
+    <div id="out"></div>
+  </Fragment>
+  <Fragment slot="info">
+    <h2>So rechnet der Lumen-Rechner</h2>
+    <p>Für die Helligkeit auf der Leinwand gibt es eine Kino-Norm: <strong>16 Foot-Lambert</strong> (etwa 55 Nits) im dunklen Raum. Mit Restlicht im Raum braucht es deutlich mehr, damit das Bild nicht blass wirkt. Wir rechnen mit 30 fL bei etwas Licht und 50 fL im hellen Raum.</p>
+    <p>Nötige Lumen = <strong>Foot-Lambert × Leinwandfläche in Quadratfuß ÷ Gain</strong>. Je größer die Leinwand, desto mehr verteilt sich das Licht.</p>
+    <h3>Warum empfehlen wir das Doppelte?</h3>
+    <p>Hersteller geben die Helligkeit im hellsten Bildmodus an. Der ist meist grünstichig. Im farbgetreuen Kino-Modus bleibt oft nur etwa die Hälfte übrig, und die Lampe oder LED wird mit den Jahren dunkler. Deshalb verdoppeln wir den Mindestwert. Für HDR-Filme darf es gern noch mehr sein.</p>
+    <h3>Tabelle: Empfohlene ANSI-Lumen (Gain 1,0, 16:9)</h3>
+    <table>
+      <tr><th>Leinwand</th><th>Dunkel</th><th>Etwas Licht</th><th>Hell</th></tr>
+      {ZEILEN.map((z) => <tr><td>{z} Zoll</td><td>{l(beamerLumen({ zoll: z, licht: 'dunkel' }).empfohlen)}</td><td>{l(beamerLumen({ zoll: z, licht: 'gedimmt' }).empfohlen)}</td><td>{l(beamerLumen({ zoll: z, licht: 'hell' }).empfohlen)}</td></tr>)}
+    </table>
+    <p>Achte auf die Angabe <strong>ANSI-Lumen</strong> oder ISO-Lumen. Sehr hohe Werte ohne diesen Zusatz, etwa bei billigen Mini-Beamern, sind oft geschönt.</p>
+  </Fragment>
+</Seite>
+<script>
+  import { beamerLumen } from '../../rechner/heimkino.js';
+  import { $, num, radio, bind, fmt } from '../../rechner/ui.js';
+  function run() {
+    const zoll = num('zoll'), gain = num('gain') || 1;
+    if (!zoll) { $('out').innerHTML = '<p class="em-res-empty">Bitte die Leinwanddiagonale eingeben.</p>'; return; }
+    const r = beamerLumen({ zoll, licht: radio('licht'), gain, format: radio('format') });
+    $('out').innerHTML = `<div class="em-big"><strong>${fmt(r.empfohlen)}</strong><span>ANSI-Lumen empfohlen</span></div>
+      <ul class="em-res-list"><li><span>Rechnerisches Minimum</span><b>${fmt(r.minimum)} Lumen</b></li><li><span>Leinwandfläche</span><b>${fmt(r.flaecheM2, 2)} m²</b></li></ul>`;
+  }
+  bind(document.querySelector('.em-calc-form'), run);
+</script>

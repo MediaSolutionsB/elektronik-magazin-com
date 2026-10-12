@@ -1,0 +1,47 @@
+---
+import Seite from '../../components/RechnerSeite.astro';
+import Feld from '../../components/Feld.astro';
+import Wahl from '../../components/Wahl.astro';
+---
+<Seite slug="saugroboter-akku-rechner" title="Saugroboter-Akku-Rechner: Schafft der Akku meine Wohnung?"
+  h1="Saugroboter-Akku-Rechner: Schafft der Akku deine Wohnung?"
+  intro="Wohnfläche und Akkulaufzeit laut Hersteller eintragen. Der Rechner schätzt, wie lange die Reinigung dauert und ob der Saugroboter zwischendurch nachladen muss."
+  description="Saugroboter-Laufzeit berechnen: Reicht der Akku für 80, 120 oder 200 m²? Mit Saugstufe, Wischfunktion und Möbeln. Zeigt Reinigungsdauer und nötige Ladepausen.">
+  <Fragment slot="eingaben">
+    <Feld id="flaeche" label="Zu reinigende Fläche" unit="m²" value="100" hint="Nur die freie Bodenfläche, also ohne Schränke, Betten und Sofas. Faustregel: etwa 75 % der Wohnfläche." />
+    <Feld id="laufzeit" label="Akkulaufzeit laut Hersteller" unit="Minuten" value="180" hint="Hersteller messen meist in der leisesten Stufe. Der Rechner zieht das bei höheren Stufen ab." />
+    <Wahl name="modus" label="Reinigung" value="saugen" options={[{ value: 'saugen', label: 'Nur saugen' }, { value: 'wischen', label: 'Saugen und wischen' }]} />
+    <Wahl name="stufe" label="Saugstufe" value="standard" options={[{ value: 'leise', label: 'Leise' }, { value: 'standard', label: 'Standard' }, { value: 'stark', label: 'Stark' }, { value: 'max', label: 'Maximal' }]} />
+    <label class="em-check"><input type="checkbox" id="moebel" /><span>Viele Möbel, Stuhlbeine und Teppichkanten</span></label>
+  </Fragment>
+  <Fragment slot="ergebnis">
+    <h2>Dein Ergebnis</h2>
+    <div id="out"></div>
+  </Fragment>
+  <Fragment slot="info">
+    <h2>So rechnet der Saugroboter-Rechner</h2>
+    <p>Moderne Saugroboter mit Laser-Navigation schaffen beim Saugen etwa <strong>1,2 m² pro Minute</strong>. Beim gleichzeitigen Wischen fahren sie langsamer und enger, etwa 0,8 m² pro Minute. Viele Möbel und Hindernisse kosten zusätzlich rund 20 %.</p>
+    <table>
+      <tr><th>Saugstufe</th><th>Anteil der Hersteller-Laufzeit</th></tr>
+      <tr><td>Leise</td><td>100 %</td></tr>
+      <tr><td>Standard</td><td>80 %</td></tr>
+      <tr><td>Stark</td><td>60 %</td></tr>
+      <tr><td>Maximal</td><td>40 %</td></tr>
+    </table>
+    <p>Saugroboter fahren meist bei 15 bis 20 % Restakku zur Station. Wir rechnen deshalb mit 85 % der Laufzeit. Reicht der Akku nicht, laden die meisten Modelle auf und machen dort weiter, wo sie aufgehört haben. Das verlängert die Reinigung je nach Modell um ein bis drei Stunden.</p>
+    <p>Die Werte sind Richtwerte. Wie schnell ein Roboter wirklich ist, hängt von Navigation, Grundriss und Teppichen ab. In unseren Tests geben wir die gemessene Zeit für unsere Testfläche an.</p>
+  </Fragment>
+</Seite>
+<script>
+  import { saugroboter } from '../../rechner/technik.js';
+  import { $, num, radio, checked, bind, fmt } from '../../rechner/ui.js';
+  const min = (n) => (n >= 60 ? `${Math.floor(n / 60)} Std. ${Math.round(n % 60)} Min.` : `${Math.round(n)} Min.`);
+  function run() {
+    const flaecheM2 = num('flaeche'), laufzeitMin = num('laufzeit');
+    if (!flaecheM2 || !laufzeitMin) { $('out').innerHTML = '<p class="em-res-empty">Bitte Fläche und Akkulaufzeit eingeben.</p>'; return; }
+    const r = saugroboter({ flaecheM2, laufzeitMin, modus: radio('modus'), stufe: radio('stufe'), vieleMoebel: checked('moebel') });
+    $('out').innerHTML = `<div class="em-big"><strong>${r.reicht ? 'Reicht' : `${r.nachladen}× nachladen`}</strong><span>${r.reicht ? 'Der Akku schafft die Fläche in einem Durchgang' : 'Der Akku reicht nicht für die ganze Fläche'}</span></div>
+      <ul class="em-res-list"><li><span>Reinigungszeit (ohne Ladepausen)</span><b>${min(r.bedarf)}</b></li><li><span>Nutzbare Laufzeit pro Akkuladung</span><b>${min(r.proLadung)}</b></li><li><span>Fläche pro Akkuladung</span><b>ca. ${fmt(r.schafft)} m²</b></li></ul>`;
+  }
+  bind(document.querySelector('.em-calc-form'), run);
+</script>

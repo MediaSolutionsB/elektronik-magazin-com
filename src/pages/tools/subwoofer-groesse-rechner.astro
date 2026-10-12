@@ -1,0 +1,43 @@
+---
+import Seite from '../../components/RechnerSeite.astro';
+import Feld from '../../components/Feld.astro';
+import { SUB_STUFEN } from '../../rechner/heimkino.js';
+---
+<Seite slug="subwoofer-groesse-rechner" title="Subwoofer-Größe-Rechner: Welcher Subwoofer passt zu meinem Raum?"
+  h1="Subwoofer-Größe-Rechner: Welcher Subwoofer passt zum Raum?"
+  intro="Raumfläche und Deckenhöhe eintragen. Der Rechner ermittelt das Raumvolumen und zeigt, welche Chassis-Größe und welche Leistung dein Subwoofer ungefähr haben sollte."
+  description="Passende Subwoofer-Größe berechnen: Chassis in Zoll und Leistung in Watt nach Raumvolumen in m³. Für kleine Zimmer bis offene Wohnbereiche, mit Tipps zu zwei Subwoofern.">
+  <Fragment slot="eingaben">
+    <Feld id="flaeche" label="Raumfläche" unit="m²" value="25" />
+    <Feld id="hoehe" label="Deckenhöhe" unit="Meter" value="2,5" />
+    <label class="em-check"><input type="checkbox" id="offen" /><span>Raum ist zur Küche oder zum Flur offen<br /><small style="color:var(--muted)">Offene Räume brauchen mehr Bass, wir rechnen dann mit 50 % mehr Volumen.</small></span></label>
+  </Fragment>
+  <Fragment slot="ergebnis">
+    <h2>Dein Ergebnis</h2>
+    <div id="out"></div>
+  </Fragment>
+  <Fragment slot="info">
+    <h2>Wie groß muss ein Subwoofer sein?</h2>
+    <p>Tiefe Töne brauchen viel bewegte Luft. Je größer der Raum, desto größer sollte die Membran (das Chassis) sein. Entscheidend ist das <strong>Raumvolumen</strong>: Fläche × Deckenhöhe.</p>
+    <table>
+      <tr><th>Raumvolumen</th><th>Chassis</th><th>Leistung</th></tr>
+      {SUB_STUFEN.map((s, i) => <tr><td>{i === 0 ? `bis ${s.bis} m³` : s.bis === Infinity ? `über ${SUB_STUFEN[i - 1].bis} m³` : `${SUB_STUFEN[i - 1].bis} bis ${s.bis} m³`}</td><td>{s.zoll}</td><td>{s.watt}</td></tr>)}
+    </table>
+    <p>Diese Werte sind Faustregeln. Ein gut gebauter 10-Zoll-Subwoofer kann einen billigen 12-Zöller übertreffen. Achte auch auf den <strong>Frequenzgang</strong>: Für Filme sollte er bis etwa 25 bis 30 Hz hinunterreichen.</p>
+    <h3>Ein großer oder zwei kleinere?</h3>
+    <p>Zwei Subwoofer verteilen den Bass gleichmäßiger im Raum. Dadurch gibt es weniger Stellen, an denen es dröhnt oder der Bass fehlt. Ab etwa 75 m³ oder bei mehreren Sitzreihen lohnt sich das. Warum es im Raum an manchen Stellen dröhnt, zeigt unser Raummoden-Rechner.</p>
+  </Fragment>
+</Seite>
+<script>
+  import { subwoofer } from '../../rechner/heimkino.js';
+  import { $, num, checked, bind, fmt } from '../../rechner/ui.js';
+  function run() {
+    const flaecheM2 = num('flaeche'), hoeheM = num('hoehe') || 2.5;
+    if (!flaecheM2) { $('out').innerHTML = '<p class="em-res-empty">Bitte die Raumfläche eingeben.</p>'; return; }
+    const r = subwoofer({ flaecheM2, hoeheM, offen: checked('offen') });
+    $('out').innerHTML = `<div class="em-big"><strong>${r.zoll.split(' (')[0].split(' oder')[0]}</strong><span>Empfohlene Chassis-Größe</span></div>
+      <ul class="em-res-list"><li><span>Raumvolumen (gerechnet)</span><b>${fmt(r.volumen)} m³</b></li><li><span>Chassis</span><b>${r.zoll}</b></li><li><span>Verstärkerleistung (RMS)</span><b>${r.watt}</b></li></ul>
+      ${r.anzahl > 1 ? '<p class="em-res-note">Bei so viel Raum klingen <strong>zwei Subwoofer</strong> meist gleichmäßiger als einer.</p>' : ''}`;
+  }
+  bind(document.querySelector('.em-calc-form'), run);
+</script>

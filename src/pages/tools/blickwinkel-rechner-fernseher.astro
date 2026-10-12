@@ -1,0 +1,53 @@
+---
+import Seite from '../../components/RechnerSeite.astro';
+import Feld from '../../components/Feld.astro';
+import { blickwinkel } from '../../rechner/heimkino.js';
+const ZEILEN = [55, 65, 75, 85, 100];
+const m = (n) => n.toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+---
+<Seite slug="blickwinkel-rechner-fernseher" title="Blickwinkel-Rechner: Wie viel Sichtfeld füllt dein Fernseher?"
+  h1="Blickwinkel-Rechner: Wie viel vom Sichtfeld füllt der Fernseher?"
+  intro="Bildschirmgröße und Sitzabstand eintragen. Der Rechner zeigt den Blickwinkel in Grad und vergleicht ihn mit den Empfehlungen von SMPTE (mindestens 30 Grad) und THX (36 bis 40 Grad)."
+  description="Blickwinkel zum Fernseher in Grad berechnen und mit SMPTE (30°) und THX (36–40°) vergleichen. Mit den passenden Sitzabständen für Kino-Gefühl.">
+  <Fragment slot="eingaben">
+    <Feld id="zoll" label="Bildschirmdiagonale" unit="Zoll" value="65" />
+    <Feld id="abstand" label="Abstand vom Sofa zum Fernseher" unit="Meter" value="2,5" />
+  </Fragment>
+  <Fragment slot="ergebnis">
+    <h2>Dein Ergebnis</h2>
+    <div id="out"></div>
+  </Fragment>
+  <Fragment slot="info">
+    <h2>Was bedeutet der Blickwinkel?</h2>
+    <p>Der Blickwinkel gibt an, wie viel von deinem Sichtfeld das Bild einnimmt, gemessen von der linken bis zur rechten Bildkante. Je größer der Winkel, desto mehr fühlt es sich wie Kino an.</p>
+    <ul>
+      <li><strong>Unter 30 Grad:</strong> Der Fernseher wirkt eher klein. Gut für Nachrichten, weniger für Filme.</li>
+      <li><strong>30 Grad:</strong> Mindestwert, den die SMPTE (Verband der Film- und Fernsehtechniker) empfiehlt.</li>
+      <li><strong>36 bis 40 Grad:</strong> Empfehlung von THX für ein echtes Kino-Gefühl.</li>
+      <li><strong>Über 45 Grad:</strong> Sehr eindrucksvoll, aber du musst die Augen bewegen, um das ganze Bild zu sehen.</li>
+    </ul>
+    <h3>So wird gerechnet</h3>
+    <p>Blickwinkel = <strong>2 × arctan(halbe Bildbreite ÷ Sitzabstand)</strong>. Die Bildbreite eines 16:9-Fernsehers ist etwa 87 % der Diagonale.</p>
+    <h3>Tabelle: Sitzabstand für 30, 36 und 40 Grad</h3>
+    <table>
+      <tr><th>Größe</th><th>30° (SMPTE)</th><th>36° (THX)</th><th>40° (THX max.)</th></tr>
+      {ZEILEN.map((z) => { const r = blickwinkel({ zoll: z, abstandM: 1 }); return <tr><td>{z} Zoll</td><td>{m(r.abstand30)} m</td><td>{m(r.abstand36)} m</td><td>{m(r.abstand40)} m</td></tr>; })}
+    </table>
+    <p>Bei Full-HD solltest du eher beim größeren Abstand bleiben, sonst siehst du einzelne Pixel. Bei 4K und 8K klappt auch der kürzere Abstand.</p>
+  </Fragment>
+</Seite>
+<script>
+  import { blickwinkel } from '../../rechner/heimkino.js';
+  import { $, num, bind, fmt } from '../../rechner/ui.js';
+  const m = (n) => `${fmt(n, 2)} m`;
+  function run() {
+    const zoll = num('zoll'), abstandM = num('abstand');
+    if (!zoll || !abstandM) { $('out').innerHTML = '<p class="em-res-empty">Bitte Bildschirmdiagonale und Sitzabstand eingeben.</p>'; return; }
+    const r = blickwinkel({ zoll, abstandM });
+    const urteil = r.grad < 30 ? 'Eher klein. Für Filme darfst du näher ran oder einen größeren Fernseher wählen.' : r.grad <= 36 ? 'Passt: Das entspricht der SMPTE-Empfehlung.' : r.grad <= 40 ? 'Sehr gut: Das ist THX-Kino-Gefühl.' : r.grad <= 45 ? 'Sehr groß: Eindrucksvoll, bei Full-HD siehst du eventuell Pixel.' : 'Riesig: Du musst die Augen bewegen, um das ganze Bild zu sehen.';
+    $('out').innerHTML = `<div class="em-big"><strong>${fmt(r.grad, 1)}°</strong><span>Blickwinkel bei ${fmt(zoll)} Zoll und ${fmt(abstandM, 2)} m</span></div>
+      <p class="em-res-note">${urteil}</p>
+      <ul class="em-res-list"><li><span>Abstand für 30° (SMPTE)</span><b>${m(r.abstand30)}</b></li><li><span>Abstand für 36° (THX)</span><b>${m(r.abstand36)}</b></li><li><span>Abstand für 40° (THX max.)</span><b>${m(r.abstand40)}</b></li><li><span>Bildbreite</span><b>${fmt(r.breite)} cm</b></li></ul>`;
+  }
+  bind(document.querySelector('.em-calc-form'), run);
+</script>

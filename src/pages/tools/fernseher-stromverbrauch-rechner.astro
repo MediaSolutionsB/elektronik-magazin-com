@@ -1,0 +1,60 @@
+---
+import Seite from '../../components/RechnerSeite.astro';
+import Feld from '../../components/Feld.astro';
+import Wahl from '../../components/Wahl.astro';
+import { tvStrom } from '../../rechner/heimkino.js';
+const ZEILEN = [43, 55, 65, 75, 85];
+const w = (n) => Math.round(n).toLocaleString('de-DE');
+const e = (n) => n.toLocaleString('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+---
+<Seite slug="fernseher-stromverbrauch-rechner" title="Fernseher-Stromverbrauch-Rechner: Was kostet der TV im Jahr?"
+  h1="Fernseher-Stromverbrauch-Rechner: Was kostet dein TV im Jahr?"
+  intro="Größe, Bildschirmart und Nutzungsdauer eintragen. Der Rechner schätzt den Verbrauch in Watt und zeigt die Stromkosten pro Monat und Jahr. Kennst du den Wert vom Energielabel, wird es noch genauer."
+  description="Stromverbrauch und Stromkosten vom Fernseher berechnen: LED, QLED, Mini-LED und OLED von 32 bis 100 Zoll. Watt, kWh im Jahr und Kosten pro Monat und Jahr.">
+  <Fragment slot="eingaben">
+    <Feld id="zoll" label="Bildschirmdiagonale" unit="Zoll" value="55" />
+    <Wahl name="panel" label="Bildschirmart" value="led" options={[{ value: 'led', label: 'LED / LCD' }, { value: 'qled', label: 'QLED / Mini-LED' }, { value: 'oled', label: 'OLED' }]} />
+    <Feld id="stunden" label="Fernsehen pro Tag" unit="Stunden" value="4" />
+    <Feld id="eigen" label="Leistung vom Energielabel (optional)" unit="Watt" value="" hint="Auf dem EU-Energielabel steht „kWh/1000h“ für SDR. Diese Zahl entspricht genau den Watt. Leer lassen, dann schätzt der Rechner." />
+    <Feld id="preis" label="Strompreis" unit="Cent/kWh" value="35" />
+  </Fragment>
+  <Fragment slot="ergebnis">
+    <h2>Dein Ergebnis</h2>
+    <div id="out"></div>
+  </Fragment>
+  <Fragment slot="info">
+    <h2>Wie viel Strom braucht ein Fernseher?</h2>
+    <p>Der Verbrauch hängt vor allem von der <strong>Bildfläche</strong> ab: Ein 65-Zoll-Fernseher hat 40 % mehr Fläche als ein 55-Zoll-Gerät und braucht entsprechend mehr Strom. Ohne Angabe vom Energielabel rechnen wir mit typischen Werten im normalen Bildmodus (SDR):</p>
+    <table>
+      <tr><th>Bildschirmart</th><th>Richtwert</th></tr>
+      <tr><td>LED / LCD</td><td>ca. 100 Watt pro m² Bildfläche</td></tr>
+      <tr><td>QLED / Mini-LED</td><td>ca. 115 Watt pro m²</td></tr>
+      <tr><td>OLED</td><td>ca. 120 Watt pro m²</td></tr>
+    </table>
+    <p>Dazu kommen 0,5 Watt Standby für die restlichen Stunden des Tages. Kosten = <strong>Watt × Stunden × 365 ÷ 1.000 × Strompreis</strong>.</p>
+    <h3>Tabelle: LED-Fernseher, 4 Stunden am Tag, 35 Cent/kWh</h3>
+    <table>
+      <tr><th>Größe</th><th>Leistung</th><th>Kosten im Jahr</th></tr>
+      {ZEILEN.map((z) => { const r = tvStrom({ zoll: z, panel: 'led', stunden: 4, preisCent: 35 }); return <tr><td>{z} Zoll</td><td>ca. {w(r.watt)} W</td><td>{e(r.kostenJahr)}</td></tr>; })}
+    </table>
+    <h3>So sparst du Strom beim Fernsehen</h3>
+    <ul>
+      <li>Der <strong>Energiesparmodus</strong> oder ein Lichtsensor senkt die Helligkeit und spart oft 20 bis 30 %.</li>
+      <li><strong>HDR</strong> braucht deutlich mehr Strom als SDR, teils das Doppelte, weil die Helligkeit stark steigt.</li>
+      <li>Ein Fernseher, der im Hintergrund läuft, kostet genauso viel wie einer, den man anschaut. Ausschalten lohnt sich.</li>
+    </ul>
+  </Fragment>
+</Seite>
+<script>
+  import { tvStrom } from '../../rechner/heimkino.js';
+  import { $, num, radio, bind, fmt, eur } from '../../rechner/ui.js';
+  function run() {
+    const zoll = num('zoll'), stunden = num('stunden'), preisCent = num('preis'), eigenWatt = num('eigen');
+    if (!zoll && !eigenWatt) { $('out').innerHTML = '<p class="em-res-empty">Bitte die Bildschirmdiagonale eingeben.</p>'; return; }
+    const r = tvStrom({ zoll, panel: radio('panel'), stunden, preisCent, eigenWatt });
+    $('out').innerHTML = `<div class="em-big"><strong>${eur(r.kostenJahr)}</strong><span>Stromkosten im Jahr</span></div>
+      <ul class="em-res-list"><li><span>Leistung im Betrieb</span><b>${r.geschaetzt ? 'ca. ' : ''}${fmt(r.watt)} Watt</b></li><li><span>Verbrauch im Jahr</span><b>${fmt(r.kwhJahr)} kWh</b></li><li><span>Kosten im Monat</span><b>${eur(r.kostenMonat)}</b></li><li><span>Kosten pro Stunde</span><b>${fmt(r.watt / 1000 * preisCent, 1)} Cent</b></li></ul>
+      ${r.geschaetzt ? '<p class="em-res-note">Geschätzter Wert. Genauer wird es mit der Angabe vom Energielabel deines Fernsehers.</p>' : ''}`;
+  }
+  bind(document.querySelector('.em-calc-form'), run);
+</script>

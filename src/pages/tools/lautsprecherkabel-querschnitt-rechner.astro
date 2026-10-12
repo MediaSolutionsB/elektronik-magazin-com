@@ -1,0 +1,45 @@
+---
+import Seite from '../../components/RechnerSeite.astro';
+import Feld from '../../components/Feld.astro';
+import Wahl from '../../components/Wahl.astro';
+import { kabelQuerschnitt } from '../../rechner/heimkino.js';
+const LAENGEN = [3, 5, 10, 15, 20, 30];
+const q = (n) => n.toLocaleString('de-DE') + ' mm²';
+---
+<Seite slug="lautsprecherkabel-querschnitt-rechner" title="Lautsprecherkabel-Querschnitt-Rechner: Wie dick muss das Kabel sein?"
+  h1="Lautsprecherkabel-Rechner: Welcher Querschnitt ist nötig?"
+  intro="Kabellänge und Impedanz der Lautsprecher eintragen. Du siehst, welcher Querschnitt in mm² reicht, damit kein Klang im Kabel verloren geht."
+  description="Den richtigen Querschnitt für Lautsprecherkabel berechnen: nach Kabellänge und Impedanz (4, 6 oder 8 Ohm). Mit Tabelle für 0,75 bis 4 mm² und Widerstand des Kabels.">
+  <Fragment slot="eingaben">
+    <Feld id="laenge" label="Kabellänge zum Lautsprecher" unit="Meter" value="10" hint="Einfache Länge vom Verstärker zur Box. Hin- und Rückleiter rechnet der Rechner selbst." />
+    <Wahl name="ohm" label="Impedanz der Lautsprecher" value="4" options={[{ value: '4', label: '4 Ohm' }, { value: '6', label: '6 Ohm' }, { value: '8', label: '8 Ohm' }]} />
+  </Fragment>
+  <Fragment slot="ergebnis">
+    <h2>Dein Ergebnis</h2>
+    <div id="out"></div>
+  </Fragment>
+  <Fragment slot="info">
+    <h2>So rechnet der Kabel-Rechner</h2>
+    <p>Jedes Kabel hat einen kleinen Widerstand. Wird er zu groß, verliert der Lautsprecher Leistung, und der Bass wird weicher, weil der Verstärker die Membran schlechter kontrolliert. Als Faustregel gilt: Der Widerstand des Kabels (hin und zurück) soll höchstens <strong>5 % der Impedanz</strong> des Lautsprechers betragen.</p>
+    <p>Mindest-Querschnitt = <strong>0,0175 × 2 × Länge ÷ (0,05 × Impedanz)</strong>. 0,0175 ist der spezifische Widerstand von Kupfer in Ω·mm²/m. Der Rechner rundet auf die nächste übliche Kabelstärke auf.</p>
+    <h3>Tabelle: Empfohlener Querschnitt</h3>
+    <table>
+      <tr><th>Länge</th><th>4 Ohm</th><th>6 Ohm</th><th>8 Ohm</th></tr>
+      {LAENGEN.map((l) => <tr><td>{l} m</td><td>{q(kabelQuerschnitt({ laengeM: l, ohm: 4 }).empfohlen)}</td><td>{q(kabelQuerschnitt({ laengeM: l, ohm: 6 }).empfohlen)}</td><td>{q(kabelQuerschnitt({ laengeM: l, ohm: 8 }).empfohlen)}</td></tr>)}
+    </table>
+    <p>Teure Spezialkabel bringen bei gleichem Querschnitt keinen hörbaren Vorteil. Wichtig sind ein ausreichender Querschnitt aus <strong>reinem Kupfer</strong> (kein CCA, also kupferbeschichtetes Aluminium) und saubere Anschlüsse. Alle Lautsprecher eines Systems sollten möglichst gleich lange Kabel bekommen.</p>
+  </Fragment>
+</Seite>
+<script>
+  import { kabelQuerschnitt } from '../../rechner/heimkino.js';
+  import { $, num, radio, bind, fmt } from '../../rechner/ui.js';
+  function run() {
+    const laengeM = num('laenge'), ohm = Number(radio('ohm'));
+    if (!laengeM) { $('out').innerHTML = '<p class="em-res-empty">Bitte die Kabellänge eingeben.</p>'; return; }
+    const r = kabelQuerschnitt({ laengeM, ohm });
+    $('out').innerHTML = `<div class="em-big"><strong>${fmt(r.empfohlen, 2)} mm²</strong><span>Empfohlener Querschnitt</span></div>
+      <ul class="em-res-list"><li><span>Rechnerisches Minimum</span><b>${fmt(r.minimum, 2)} mm²</b></li><li><span>Widerstand des Kabels</span><b>${fmt(r.widerstand, 3)} Ohm</b></li><li><span>Leistungsverlust im Kabel</span><b>${fmt(r.verlust * 100, 1)} %</b></li></ul>
+      ${r.minimum > 10 ? '<p class="em-res-note">Sehr lange Strecke: Überlege, den Verstärker näher an die Lautsprecher zu stellen.</p>' : ''}`;
+  }
+  bind(document.querySelector('.em-calc-form'), run);
+</script>

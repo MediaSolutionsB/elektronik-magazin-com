@@ -26,7 +26,7 @@ const year = new Date().getFullYear();
     <meta name="description" content={description} />
     {noindex ? <meta name="robots" content="noindex, follow" /> : <meta name="robots" content="index, follow, max-image-preview:large" />}
     <link rel="canonical" href={canonical} />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.png" type="image/png" />
     <meta property="og:locale" content="de_DE" />
     <meta property="og:type" content={type} />
     <meta property="og:title" content={title || site.name} />
@@ -42,7 +42,8 @@ const year = new Date().getFullYear();
     <header class="em-header">
       <div class="em-wrap em-header-inner">
         <a class="em-logo" href="/">
-          <img src="/bilder/logo-2020-jpg.webp" alt="Elektronik Magazin Logo" />
+          <img src="/bilder/em-icon.webp" alt="Elektronik Magazin Emblem" width="38" height="38" class="em-logo-icon" />
+          <span class="em-logo-text">Elektronik<span class="em-logo-accent">-Magazin</span></span>
         </a>
         <input type="checkbox" id="em-nav-toggle" class="em-nav-toggle" />
         <label for="em-nav-toggle" class="em-nav-button"><span>Menü</span></label>
@@ -62,7 +63,10 @@ const year = new Date().getFullYear();
       <div class="em-wrap">
         <div class="em-footer-cols">
           <div class="em-footer-about">
-            <span class="em-footer-name">{site.name}</span>
+            <a class="em-logo em-logo-footer" href="/">
+              <img src="/bilder/em-icon.webp" alt="Elektronik Magazin Emblem" width="32" height="32" class="em-logo-icon" />
+              <span class="em-logo-text">Elektronik<span class="em-logo-accent">-Magazin</span></span>
+            </a>
             <p>{site.tagline}</p>
           </div>
           <div>

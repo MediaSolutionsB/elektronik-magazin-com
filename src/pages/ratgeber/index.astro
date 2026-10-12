@@ -7,8 +7,9 @@ import path from 'node:path';
 const indexFile = path.resolve('content/ratgeber/index.json');
 const guides = JSON.parse(fs.readFileSync(indexFile, 'utf-8'));
 
-const reviewsFile = path.resolve('content/reviews/index.json');
-const reviews = JSON.parse(fs.readFileSync(reviewsFile, 'utf-8'));
+import Card from '../../lib/Card.astro';
+import { allReviews } from '../../lib/reviews.js';
+const reviews = allReviews();
 ---
 <Base title="Ratgeber & Praxistests" description="Unabhängige Kaufberater, Tests und Technik-Ratgeber von Elektronik Magazin." path="/ratgeber/">
   <div class="em-wrap" style="padding-top: 56px; padding-bottom: 72px;">
@@ -38,17 +39,7 @@ const reviews = JSON.parse(fs.readFileSync(reviewsFile, 'utf-8'));
       <h2>Aktuelle Hardware-Praxistests</h2>
     </div>
     <div class="em-cards">
-      {reviews.map((r) => (
-        <a class="em-card" href={`/${r.slug}/`}>
-          <img src={r.featured_image} alt={r.title} />
-          <div class="em-card-body">
-            <span class="em-pill">{r.categories[0] || 'Praxistest'}</span>
-            <div class="em-card-title" style="margin-top: 8px;">{r.title}</div>
-            <div class="em-card-text">{r.excerpt?.slice(0, 110)}...</div>
-            <div class="em-card-more">Zum Testbericht &rarr;</div>
-          </div>
-        </a>
-      ))}
+      {reviews.map((r) => <Card review={r} />)}
     </div>
   </div>
 </Base>

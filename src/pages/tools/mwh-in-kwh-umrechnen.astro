@@ -1,0 +1,66 @@
+---
+import Seite from '../../components/RechnerSeite.astro';
+import Feld from '../../components/Feld.astro';
+import Wahl from '../../components/Wahl.astro';
+---
+<Seite slug="mwh-in-kwh-umrechnen" title="mWh in kWh umrechnen (auch MWh und mAh in Wh) | Elektronik-Magazin"
+  h1="mWh, Wh, kWh und MWh umrechnen"
+  intro="Energie-Einheiten in alle Richtungen umrechnen. Und für Powerbanks und Handy-Akkus: Kapazität von mAh in Wattstunden, mit Hinweis für das Handgepäck."
+  description="mWh in kWh umrechnen, MWh in kWh und Wh, dazu Akku-Kapazität von mAh in Wh berechnen. Mit Hinweis, welche Powerbank ins Flugzeug darf.">
+  <Fragment slot="eingaben">
+    <Wahl name="modus" label="Was möchtest du umrechnen?" value="akku" options={[{ value: 'akku', label: 'Akku: mAh in Wh' }, { value: 'energie', label: 'Energie-Einheiten' }]} />
+    <div data-modus="akku">
+      <Feld id="mah" label="Kapazität" unit="mAh" value="20000" hint="Steht auf dem Akku oder der Powerbank, z. B. 10.000 mAh." />
+      <Feld id="v" label="Nennspannung" unit="Volt" value="3,7" hint="Bei Powerbanks und Handy-Akkus fast immer 3,6 bis 3,85 V (Lithium-Ionen)." />
+    </div>
+    <div data-modus="energie" hidden>
+      <Feld id="wert" label="Wert" unit="" value="5" />
+      <label class="em-field" for="einheit"><span>Einheit</span>
+        <select id="einheit"><option value="mWh">Milliwattstunden (mWh)</option><option value="Wh">Wattstunden (Wh)</option><option value="kWh">Kilowattstunden (kWh)</option><option value="MWh" selected>Megawattstunden (MWh)</option></select>
+      </label>
+    </div>
+  </Fragment>
+  <Fragment slot="ergebnis">
+    <h2>Dein Ergebnis</h2>
+    <div id="out"></div>
+  </Fragment>
+  <Fragment slot="info">
+    <h2>Klein m oder groß M?</h2>
+    <p>Hier verwechselt man schnell etwas: <strong>mWh</strong> (klein m) sind <strong>Milliwattstunden</strong>, also ein Tausendstel Wattstunde. Das steht auf Handy-Akkus und Powerbanks. <strong>MWh</strong> (groß M) sind <strong>Megawattstunden</strong>, also eine Million Wattstunden. So rechnet man bei Kraftwerken und großen Solaranlagen.</p>
+    <table>
+      <tr><th>Einheit</th><th>in Wattstunden</th><th>Beispiel</th></tr>
+      <tr><td>1 mWh</td><td>0,001 Wh</td><td>Powerbank mit 74.000 mWh = 74 Wh</td></tr>
+      <tr><td>1 kWh</td><td>1.000 Wh</td><td>Fernseher 100 W, 10 Stunden</td></tr>
+      <tr><td>1 MWh</td><td>1.000.000 Wh = 1.000 kWh</td><td>Grob der Jahresverbrauch einer Person</td></tr>
+    </table>
+    <h2>mAh in Wh: Formel</h2>
+    <p><strong>Wh = mAh × Volt ÷ 1.000</strong>. Eine Powerbank mit 20.000 mAh bei 3,7 V hat 20.000 × 3,7 ÷ 1.000 = <strong>74 Wh</strong>.</p>
+    <h3>Darf die Powerbank ins Flugzeug?</h3>
+    <p>Bei den meisten Airlines gilt (Regel der IATA): Powerbanks nur ins Handgepäck. Bis 100 Wh ist sie erlaubt, von 100 bis 160 Wh nur mit Zustimmung der Airline, über 160 Wh gar nicht. Prüfe vor dem Flug die Regeln deiner Airline, manche sind strenger.</p>
+  </Fragment>
+</Seite>
+<script>
+  import { energieUmrechnen, akkuWh } from '../../rechner/logic.js';
+  import { $, num, radio, val, bind, fmt } from '../../rechner/ui.js';
+  const lang = { mWh: 'Milliwattstunden', Wh: 'Wattstunden', kWh: 'Kilowattstunden', MWh: 'Megawattstunden' };
+  const zahl = (n) => (n >= 1 ? fmt(n, 4) : n.toLocaleString('de-DE', { maximumSignificantDigits: 6 }));
+  function run() {
+    const m = radio('modus');
+    document.querySelectorAll('[data-modus]').forEach((el) => { el.hidden = el.dataset.modus !== m; });
+    if (m === 'akku') {
+      const mah = num('mah'), v = num('v');
+      if (!mah || !v) { $('out').innerHTML = '<p class="em-res-empty">Bitte Kapazität und Spannung eingeben.</p>'; return; }
+      const r = akkuWh({ mah, volt: v });
+      const flug = { ok: 'Bis 100 Wh: im Handgepäck erlaubt.', zustimmung: '100 bis 160 Wh: nur mit Zustimmung der Airline im Handgepäck.', verboten: 'Über 160 Wh: darf nicht mit ins Flugzeug.' }[r.flug];
+      $('out').innerHTML = `<div class="em-big"><strong>${fmt(r.wh, 2)} Wh</strong><span>${fmt(mah)} mAh bei ${fmt(v, 2)} V</span></div>
+        <ul class="em-res-list"><li><span>In Milliwattstunden</span><b>${fmt(r.mwh)} mWh</b></li><li><span>In Kilowattstunden</span><b>${zahl(r.wh / 1000)} kWh</b></li><li><span>Flugzeug</span><b>${flug}</b></li></ul>`;
+    } else {
+      const w = num('wert'), e = val('einheit');
+      if (!w) { $('out').innerHTML = '<p class="em-res-empty">Bitte einen Wert eingeben.</p>'; return; }
+      const r = energieUmrechnen({ wert: w, einheit: e });
+      $('out').innerHTML = `<div class="em-big"><strong>${zahl(r.kWh)} kWh</strong><span>${fmt(w, 4)} ${e} (${lang[e]})</span></div>
+        <ul class="em-res-list">${Object.keys(lang).filter((k) => k !== e).map((k) => `<li><span>${lang[k]}</span><b>${zahl(r[k])} ${k}</b></li>`).join('')}</ul>`;
+    }
+  }
+  bind(document.querySelector('.em-calc-form'), run);
+</script>

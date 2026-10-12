@@ -1,23 +1,13 @@
 ---
 import Base from '../layouts/Base.astro';
 import { site } from '../site.config.js';
-import fs from 'node:fs';
-import path from 'node:path';
+import Card from '../lib/Card.astro';
+import { allReviews, urlOf } from '../lib/reviews.js';
+import { tools } from '../rechner/tools.js';
 
-const indexFile = path.resolve('content/reviews/index.json');
-const allPosts = JSON.parse(fs.readFileSync(indexFile, 'utf-8'));
+const allPosts = allReviews();
 const featuredPost = allPosts[0];
-const recentPosts = allPosts.slice(1);
-
-const tools = [
-  { slug: 'stromkosten-rechner', title: 'Stromkosten Rechner', desc: 'Berechne den genauen Stromverbrauch und die Kosten deiner Elektrogeräte.' },
-  { slug: 'sitzabstand-rechner-fernseher', title: 'Sitzabstand zum Fernseher', desc: 'Der optimale Abstand zum TV für 4K-, OLED- und Full-HD-Geräte.' },
-  { slug: 'watt-in-kwh-umrechnen', title: 'Watt in kWh umrechnen', desc: 'Einfacher Online-Rechner für Kilowattstunden und Watt-Leistung.' },
-  { slug: 'volt-watt-in-ampere-umrechnen', title: 'Volt, Watt & Ampere Rechner', desc: 'Formelrechner für elektrische Stromstärke, Leistung und Spannung.' },
-  { slug: 'mwh-in-kwh-umrechnen', title: 'mWh in kWh umrechnen', desc: 'Umrechner für Akkukapazitäten von Smartphones, Laptops und Powerbanks.' },
-  { slug: 'lumen-in-watt-umrechnen-led', title: 'Lumen in Watt (LED)', desc: 'Helligkeit von LED-Lampen mit herkömmlichen Glühbirnen vergleichen.' },
-  { slug: 'rechner-kilobyte-kb-megabyte-mb-gigabyte-gb-und-terabyte-tb-umrechnen', title: 'Speichergrößen-Rechner', desc: 'kB, MB, GB und TB sekundenschnell exakt umrechnen.' },
-];
+const recentPosts = allPosts.slice(1, 7);
 ---
 <Base title="Elektronik Magazin – Unabhängige Tests, Ratgeber & Rechner" path="/">
   <section class="em-hero">
@@ -28,12 +18,12 @@ const tools = [
         <p>Unabhängige Praxistests von Smartphones, Audio, Netzwerk & Smart Home – plus präzise Online-Rechner für Stromkosten und Akkukapazität.</p>
         <div class="em-hero-actions">
           <a class="em-btn" href="/tools/">Zu den Online-Rechnern</a>
-          <a class="em-btn em-btn-ghost" href="/ratgeber/">Alle Ratgeber & Tests</a>
+          <a class="em-btn em-btn-ghost" href="/test/">Alle Tests</a>
         </div>
       </div>
       {featuredPost && (
-        <a class="em-feature" href={`/${featuredPost.slug}/`}>
-          <img src={featuredPost.featured_image} alt={featuredPost.title} />
+        <a class="em-feature" href={urlOf(featuredPost)}>
+          <img src={featuredPost.image} alt={featuredPost.title} />
           <div class="em-feature-body">
             <span class="em-eyebrow">Aktueller Praxistest</span>
             <div class="em-feature-title">{featuredPost.title}</div>
@@ -51,23 +41,10 @@ const tools = [
           <span class="em-eyebrow">Neueste Hardware-Tests</span>
           <h2>Praxistests & Erfahrungsberichte</h2>
         </div>
-        <a href="/ratgeber/">Alle Tests ansehen &rarr;</a>
+        <a href="/test/">Alle Tests ansehen &rarr;</a>
       </div>
       <div class="em-cards">
-        {recentPosts.map((post) => (
-          <a class="em-card" href={`/${post.slug}/`}>
-            <img src={post.featured_image} alt={post.title} />
-            <div class="em-card-body">
-              <div class="em-card-top">
-                <span class="em-pill">{post.categories[0] || 'Hardware'}</span>
-                <span style="font-size: 14px; color: var(--muted);">{post.date}</span>
-              </div>
-              <div class="em-card-title">{post.title}</div>
-              <div class="em-card-text">{post.excerpt?.slice(0, 110)}...</div>
-              <div class="em-card-more">Testbericht lesen &rarr;</div>
-            </div>
-          </a>
-        ))}
+        {recentPosts.map((post) => <Card review={post} />)}
       </div>
     </div>
   </section>
@@ -86,8 +63,8 @@ const tools = [
           <a class="em-card" href={`/tools/${tool.slug}/`}>
             <div class="em-card-body">
               <span class="em-pill em-pill-blue">Interaktives Tool</span>
-              <div class="em-card-title" style="margin-top: 8px;">{tool.title}</div>
-              <div class="em-card-text">{tool.desc}</div>
+              <div class="em-card-title" style="margin-top: 8px;">{tool.name}</div>
+              <div class="em-card-text">{tool.kurz}</div>
               <div class="em-card-more">Rechner öffnen &rarr;</div>
             </div>
           </a>

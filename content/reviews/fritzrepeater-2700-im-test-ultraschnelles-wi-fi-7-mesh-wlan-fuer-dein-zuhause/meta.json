@@ -1,14 +1,18 @@
 {
-  "id": 13960,
-  "title": "FRITZ!Repeater 2700 im Test: Ultraschnelles Wi-Fi 7 Mesh-WLAN für dein Zuhause",
   "slug": "fritzrepeater-2700-im-test-ultraschnelles-wi-fi-7-mesh-wlan-fuer-dein-zuhause",
-  "permalink": "/fritzrepeater-2700-im-test-ultraschnelles-wi-fi-7-mesh-wlan-fuer-dein-zuhause/",
-  "date": "2026-10-12",
-  "modified": "2026-10-12",
-  "categories": [
-    "Allgemein"
-  ],
-  "author": "Oliver Bechstein",
-  "excerpt": "Einleitung Meiner Meinung nach ist der FRITZ!Repeater 2700 das perfekte Upgrade für alle, die genug von nervigen Funklöchern und stockenden Streams in den eigenen vier Wänden haben. In meinem Test für elektronik-magazin.com habe ich den neuen Wi-Fi 7 Repeater über mehrere Monate im täglichen Einsatz auf Herz und Nieren geprüft. Ob beim unterbrechungsfreien 4K-Streaming auf Netflix oder beim Zocken – das Gerät liefert eine extrem stabile und blitzschnelle Verbindung bis in die entlegensten Ecken der Wohnung. Das Einrichten geht dank der WPS-Funktion in Sekundenschnelle von der Hand und macht Schluss mit komplizierten Netzwerkkonfigurationen. Hinweis: Die Bewertung erfolgte neutral und ohne",
-  "featured_image": "/bilder/31iufunpmbl.webp"
+  "type": "test",
+  "title": "FRITZ!Repeater 2700 im Test: Ultraschnelles Wi-Fi 7 Mesh-WLAN für dein Zuhause",
+  "published": "2026-10-12",
+  "category": "netzwerk",
+  "productName": "FRITZ!Repeater 2700",
+  "brand": "AVM",
+  "asin": "B0FPMVM2YV",
+  "image": "/bilder/31iufunpmbl.webp",
+  "imageSmall": "/bilder/31iufunpmbl.webp",
+  "excerpt": "Einleitung Meiner Meinung nach ist der FRITZ!Repeater 2700 das perfekte Upgrade für alle, die genug von nervigen Funklöchern und stockenden Streams in den eigenen vier Wänden haben. In meinem Test …",
+  "legacy": true,
+  "path": "/fritzrepeater-2700-im-test-ultraschnelles-wi-fi-7-mesh-wlan-fuer-dein-zuhause/",
+  "auchInteressant": [
+    "Wenn dir Wi-Fi 6 reicht, ist der günstigere [[avm-fritzrepeater-1200-ax-im-test]] eine Alternative."
+  ]
 }

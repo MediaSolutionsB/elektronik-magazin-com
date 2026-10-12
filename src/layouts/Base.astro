@@ -107,9 +107,24 @@ const year = new Date().getFullYear();
         </div>
         <div class="em-footer-bottom">
           <span>&copy; {year} {site.name}. Alle Rechte vorbehalten.</span>
-          <span>Unabhängige Tests & Technologie-Wissen.</span>
+          <span>Links zu Händlern sind Partnerlinks. Kaufst du darüber ein, erhalten wir eine kleine Provision. Dein Preis ändert sich dadurch nicht. Als Amazon-Partner verdiene ich an qualifizierten Verkäufen.</span>
         </div>
       </div>
     </footer>
+    <script is:inline>
+      // YouTube erst nach Klick laden (vorher keine Verbindung zu YouTube)
+      document.addEventListener('click', function (e) {
+        var b = e.target.closest('.em-video-play');
+        if (!b) return;
+        var box = b.closest('.em-video');
+        var f = document.createElement('iframe');
+        f.src = 'https://www.youtube-nocookie.com/embed/' + box.dataset.video + '?autoplay=1&rel=0';
+        f.title = box.dataset.title || 'Video';
+        f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+        f.allowFullscreen = true;
+        box.innerHTML = '';
+        box.appendChild(f);
+      });
+    </script>
   </body>
 </html>

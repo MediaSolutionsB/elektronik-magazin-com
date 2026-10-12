@@ -1,0 +1,26 @@
+---
+import Base from '../../layouts/Base.astro';
+import Card from '../../lib/Card.astro';
+import { site } from '../../site.config.js';
+import { allReviews } from '../../lib/reviews.js';
+
+export function getStaticPaths() {
+  return Object.entries(site.types).filter(([key]) => key !== 'info').map(([key, t]) => ({ params: { base: t.base }, props: { key, t } }));
+}
+const { key, t } = Astro.props;
+const reviews = allReviews().filter((r) => r.type === key);
+---
+<Base title={`Alle ${t.plural} - Elektronik-Magazin`} description={t.intro} path={`/${t.base}/`} noindex={reviews.length === 0}>
+  <section class="em-pagehead">
+    <div class="em-wrap">
+      <nav class="em-crumbs" aria-label="Brotkrumen"><a href="/">Startseite</a><span aria-hidden="true">/</span><span>{t.plural}</span></nav>
+      <h1>Alle {t.plural}</h1>
+      <p>{t.intro}</p>
+    </div>
+  </section>
+  <section class="em-wrap em-section">
+    {reviews.length
+      ? <div class="em-cards">{reviews.map((r) => <Card review={r} />)}</div>
+      : <div class="em-empty">Hier erscheinen bald die ersten Beiträge.</div>}
+  </section>
+</Base>

@@ -1,14 +1,15 @@
 {
-  "id": 178,
-  "title": "Toshiba Festplatte Test: Canvio Basics 2,5&#8243;",
   "slug": "toshiba-festplatte-test-canvio-basics-25",
-  "permalink": "/toshiba-festplatte-test-canvio-basics-25/",
-  "date": "2026-10-12",
-  "modified": "2026-10-12",
-  "categories": [
-    "Review"
-  ],
-  "author": "Oliver Bechstein",
-  "excerpt": "Wir haben die Toshiba Festplatte die Canvio Basic 2,5″ getestet. Es handelt sich um eine 2,5“ große externe Festplatte. Sie ist in fünf verschiedenen Speichergrößen, 500 GB, 750 GB, 1 TB, 2 TB und auch 3 TB, erhältlich. In Folgendem werden aber hauptsächlich die Produkteigenschaften der 1 TB Version herausgehoben, da es sich hierbei um das High-Runner Modell handelt und wir diese für unsere Analyse verwendet haben.",
-  "featured_image": "/bilder/toshiba-festplatte-test-canvio-basics.webp"
+  "type": "test",
+  "title": "Toshiba Festplatte Test: Canvio Basics 2,5\"",
+  "published": "2026-10-12",
+  "category": "pc",
+  "productName": "Toshiba Canvio Basics 2,5\"",
+  "brand": "Toshiba",
+  "asin": "B00KWHJY7Q",
+  "image": "/bilder/toshiba-festplatte-test-canvio-basics.webp",
+  "imageSmall": "/bilder/toshiba-festplatte-test-canvio-basics.webp",
+  "excerpt": "Wir haben die Toshiba Festplatte die Canvio Basic 2,5″ getestet. Es handelt sich um eine 2,5“ große externe Festplatte. Sie ist in fünf verschiedenen Speichergrößen, 500 GB, 750 GB, 1 TB, 2 TB und …",
+  "legacy": true,
+  "path": "/toshiba-festplatte-test-canvio-basics-25/"
 }

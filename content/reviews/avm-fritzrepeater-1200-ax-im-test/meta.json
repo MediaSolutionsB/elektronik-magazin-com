@@ -1,14 +1,19 @@
 {
-  "id": 13915,
-  "title": "AVM FRITZ!Repeater 1200 AX im Test",
   "slug": "avm-fritzrepeater-1200-ax-im-test",
-  "permalink": "/avm-fritzrepeater-1200-ax-im-test/",
-  "date": "2025-10-27",
+  "type": "test",
+  "title": "AVM FRITZ!Repeater 1200 AX im Test",
+  "published": "2025-10-27",
+  "category": "netzwerk",
+  "productName": "AVM FRITZ!Repeater 1200 AX",
+  "brand": "AVM",
+  "asin": "",
+  "image": "/bilder/logo-2020-jpg.webp",
+  "imageSmall": "/bilder/logo-2020-jpg.webp",
+  "excerpt": "Ich nutze den AVM FRITZ!Repeater 1200 AX seit rund sieben Monaten – Zeit genug, um im Alltag ein recht differenziertes Bild zu gewinnen. Im Folgenden fasse ich meine konkreten Eindrücke zusammen: was …",
+  "legacy": true,
+  "path": "/avm-fritzrepeater-1200-ax-im-test/",
   "modified": "2026-10-12",
-  "categories": [
-    "Review"
-  ],
-  "author": "Oliver Bechstein",
-  "excerpt": "Ich nutze den AVM FRITZ!Repeater 1200 AX seit rund sieben Monaten – Zeit genug, um im Alltag ein recht differenziertes Bild zu gewinnen. Im Folgenden fasse ich meine konkreten Eindrücke zusammen: was gut läuft, worauf man achten sollte und welche Kompromisse ich eingehen musste. Hier mein Video:  HIER BEI AMAZON KAUFEN: LINK Technische Eckdaten & Setup Der Repeater unterstützt Wi-Fi 6 (802.11ax) sowohl im 2,4-GHz- als auch im 5-GHz-Band. Laut Hersteller sind Geschwindigkeiten bis zu 600 Mbit/s im 2,4 GHz-Band und bis zu 2.400 Mbit/s im 5 GHz-Band möglich. Es ist ein Gigabit-LAN-Port vorhanden – praktisch, wenn man ein kabelgebundenes",
-  "featured_image": "/bilder/logo-2020-jpg.webp"
+  "auchInteressant": [
+    "Mehr Tempo mit dem neuen Funkstandard Wi-Fi 7 bietet der [[fritzrepeater-2700-im-test-ultraschnelles-wi-fi-7-mesh-wlan-fuer-dein-zuhause]]."
+  ]
 }

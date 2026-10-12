@@ -1,14 +1,18 @@
 {
-  "id": 7942,
-  "title": "JBL Live Pro 2 TWS Test",
   "slug": "jbl-live-pro-2-tws-test",
-  "permalink": "/jbl-live-pro-2-tws-test/",
-  "date": "2026-10-12",
-  "modified": "2026-10-12",
-  "categories": [
-    "Allgemein"
-  ],
-  "author": "Oliver Bechstein",
-  "excerpt": "In diesem JBL Live Pro 2 TWS Test zeigen wir ob sich die In-Ear Kopfhörer lohnen. Wie bei den meisten Produkten, die in letzter Zeit auf den Markt kommen, gibt es viele Dinge, die sich im Vergleich zu früherer Technik geändert haben – vorweg finden wir bei den JBL In-Ears beispielsweise das Noise Cancelling erstklassig. Im folgenden JBL Live Pro 2 TWS Test werfen wir einen Blick auf die ersten Eindrücke, schauen uns das Noise Cancelling und den Klang an, beschreiben Ihnen die Bedienung sowie das Pairing und gehen auch auf die Akkulaufzeit sowie die Einstellungsmöglichkeiten in der Smartphone App",
-  "featured_image": "/bilder/jbl-wireless-kopfhoerer-test.webp"
+  "type": "test",
+  "title": "JBL Live Pro 2 TWS Test",
+  "published": "2026-10-12",
+  "category": "audio",
+  "productName": "JBL Live Pro 2 TWS",
+  "brand": "JBL",
+  "asin": "B0B1SJ7YSK",
+  "image": "/bilder/jbl-wireless-kopfhoerer-test.webp",
+  "imageSmall": "/bilder/jbl-wireless-kopfhoerer-test.webp",
+  "excerpt": "In diesem JBL Live Pro 2 TWS Test zeigen wir ob sich die In-Ear Kopfhörer lohnen. Wie bei den meisten Produkten, die in letzter Zeit auf den Markt kommen, gibt es viele Dinge, die sich im Vergleich …",
+  "legacy": true,
+  "path": "/jbl-live-pro-2-tws-test/",
+  "auchInteressant": [
+    "Eine Alternative mit ebenfalls starkem Noise Cancelling sind die [[huawei-free-buds-2-pro-test]]."
+  ]
 }

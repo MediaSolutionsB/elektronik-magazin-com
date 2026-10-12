@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /beitraege.json
 
 Sitemap: https://elektronik-magazin.com/sitemap.xml

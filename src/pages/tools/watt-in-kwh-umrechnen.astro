@@ -1,0 +1,54 @@
+---
+import Seite from '../../components/RechnerSeite.astro';
+import Feld from '../../components/Feld.astro';
+import Wahl from '../../components/Wahl.astro';
+---
+<Seite slug="watt-in-kwh-umrechnen" title="Watt in kWh umrechnen: Rechner mit Formel | Elektronik-Magazin"
+  h1="Watt in kWh umrechnen"
+  intro="Watt ist die Leistung, kWh ist die Energie, die in einer bestimmten Zeit verbraucht wird. Gib Leistung und Dauer ein, der Rechner zeigt dir die Kilowattstunden. Oder umgekehrt."
+  description="Watt in kWh umrechnen: Leistung und Betriebsdauer eingeben und Kilowattstunden berechnen, oder kWh in Watt. Mit Formel und Beispielen.">
+  <Fragment slot="eingaben">
+    <Wahl name="richtung" label="Was möchtest du umrechnen?" value="w" options={[{ value: 'w', label: 'Watt → kWh' }, { value: 'k', label: 'kWh → Watt' }]} />
+    <div data-zeige="w"><Feld id="watt" label="Leistung" unit="Watt" value="2000" /></div>
+    <div data-zeige="k" hidden><Feld id="kwh" label="Energie" unit="kWh" value="3" /></div>
+    <Feld id="stunden" label="Dauer" unit="Stunden" value="1" hint="Minuten in Stunden: 30 Minuten = 0,5 Stunden, 15 Minuten = 0,25 Stunden." />
+  </Fragment>
+  <Fragment slot="ergebnis">
+    <h2>Dein Ergebnis</h2>
+    <div id="out"></div>
+  </Fragment>
+  <Fragment slot="info">
+    <h2>Formel: Watt in kWh</h2>
+    <p><strong>kWh = Watt × Stunden ÷ 1.000</strong>. Umgekehrt: <strong>Watt = kWh × 1.000 ÷ Stunden</strong>.</p>
+    <table>
+      <tr><th>Gerät</th><th>Rechnung</th><th>Ergebnis</th></tr>
+      <tr><td>Wasserkocher, 2.000 W, 3 Minuten</td><td>2.000 × 0,05 ÷ 1.000</td><td>0,1 kWh</td></tr>
+      <tr><td>LED-Lampe, 8 W, 5 Stunden</td><td>8 × 5 ÷ 1.000</td><td>0,04 kWh</td></tr>
+      <tr><td>Heizlüfter, 2.000 W, 1,5 Stunden</td><td>2.000 × 1,5 ÷ 1.000</td><td>3 kWh</td></tr>
+    </table>
+    <p>Watt allein sagt noch nichts über den Verbrauch, erst mit der Zeit wird daraus Energie. Ein Gerät mit 1.000 Watt verbraucht in einer Stunde genau 1 kWh. Was das kostet, rechnest du mit dem <a href="/tools/stromkosten-rechner/">Stromkosten-Rechner</a> aus.</p>
+  </Fragment>
+</Seite>
+<script>
+  import { wattInKwh, kwhInWatt } from '../../rechner/logic.js';
+  import { $, num, radio, bind, fmt } from '../../rechner/ui.js';
+  function run() {
+    const r = radio('richtung');
+    document.querySelectorAll('[data-zeige]').forEach((el) => { el.hidden = el.dataset.zeige !== r; });
+    const h = num('stunden');
+    if (!h) { $('out').innerHTML = '<p class="em-res-empty">Bitte die Dauer eingeben.</p>'; return; }
+    if (r === 'w') {
+      const w = num('watt');
+      if (!w) { $('out').innerHTML = '<p class="em-res-empty">Bitte die Leistung in Watt eingeben.</p>'; return; }
+      const k = wattInKwh({ watt: w, stunden: h });
+      $('out').innerHTML = `<div class="em-big"><strong>${fmt(k, 4)} kWh</strong><span>${fmt(w, 2)} W über ${fmt(h, 2)} Stunden</span></div>
+        <ul class="em-res-list"><li><span>In Wattstunden</span><b>${fmt(k * 1000, 2)} Wh</b></li><li><span>Pro Stunde</span><b>${fmt(w / 1000, 4)} kWh</b></li></ul>`;
+    } else {
+      const k = num('kwh');
+      if (!k) { $('out').innerHTML = '<p class="em-res-empty">Bitte die Energie in kWh eingeben.</p>'; return; }
+      const w = kwhInWatt({ kwh: k, stunden: h });
+      $('out').innerHTML = `<div class="em-big"><strong>${fmt(w, 2)} Watt</strong><span>Durchschnittliche Leistung für ${fmt(k, 4)} kWh in ${fmt(h, 2)} Stunden</span></div>`;
+    }
+  }
+  bind(document.querySelector('.em-calc-form'), run);
+</script>

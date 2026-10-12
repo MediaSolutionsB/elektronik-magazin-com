@@ -1,0 +1,26 @@
+---
+import Base from '../../layouts/Base.astro';
+import Card from '../../lib/Card.astro';
+import { site } from '../../site.config.js';
+import { allReviews } from '../../lib/reviews.js';
+
+export function getStaticPaths() {
+  return site.categories.map((c) => ({ params: { slug: c.slug }, props: { cat: c } }));
+}
+const { cat } = Astro.props;
+const reviews = allReviews().filter((r) => r.category && r.category.slug === cat.slug);
+---
+<Base title={`${cat.name} - Elektronik-Magazin`} description={`Tests, Checks und Ratgeber in der Kategorie ${cat.name}: ${cat.text}.`} path={`/kategorie/${cat.slug}/`} noindex={reviews.length === 0}>
+  <section class="em-pagehead">
+    <div class="em-wrap">
+      <nav class="em-crumbs" aria-label="Brotkrumen"><a href="/">Startseite</a><span aria-hidden="true">/</span><span>{cat.name}</span></nav>
+      <h1>{cat.name}</h1>
+      <p>{cat.text}</p>
+    </div>
+  </section>
+  <section class="em-wrap em-section">
+    {reviews.length
+      ? <div class="em-cards">{reviews.map((r) => <Card review={r} />)}</div>
+      : <div class="em-empty">In dieser Kategorie gibt es noch keinen Beitrag.</div>}
+  </section>
+</Base>

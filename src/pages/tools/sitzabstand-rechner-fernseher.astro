@@ -1,0 +1,63 @@
+---
+import Seite from '../../components/RechnerSeite.astro';
+import Feld from '../../components/Feld.astro';
+import Wahl from '../../components/Wahl.astro';
+import { sitzabstand } from '../../rechner/logic.js';
+const ZEILEN = [43, 50, 55, 65, 75, 85];
+const m = (cm) => (cm / 100).toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+---
+<Seite slug="sitzabstand-rechner-fernseher" title="Sitzabstand zum Fernseher berechnen: Rechner und Tabelle | Elektronik-Magazin"
+  h1="Sitzabstand-Rechner für Fernseher"
+  intro="Bildschirmgröße und Auflösung wählen, und du siehst den idealen Abstand zum Fernseher. Oder andersherum: Abstand eingeben und die passende TV-Größe finden."
+  description="Optimalen Sitzabstand zum Fernseher berechnen für 4K, Full-HD und 8K, oder die passende TV-Größe zum Sofa-Abstand. Mit Tabelle für 43 bis 85 Zoll.">
+  <Fragment slot="eingaben">
+    <Wahl name="modus" label="Was möchtest du wissen?" value="abstand" options={[{ value: 'abstand', label: 'Abstand zu meinem TV' }, { value: 'groesse', label: 'Welche TV-Größe passt?' }]} />
+    <div data-modus="abstand"><Feld id="zoll" label="Bildschirmdiagonale" unit="Zoll" value="55" /></div>
+    <div data-modus="groesse" hidden><Feld id="abstand" label="Abstand vom Sofa zum TV" unit="Meter" value="2,5" /></div>
+    <Wahl name="aufl" label="Auflösung" value="4k" options={[{ value: '8k', label: '8K' }, { value: '4k', label: '4K / UHD' }, { value: 'fhd', label: 'Full-HD' }, { value: 'hd', label: 'HD ready' }]} />
+  </Fragment>
+  <Fragment slot="ergebnis">
+    <h2>Dein Ergebnis</h2>
+    <div id="out"></div>
+  </Fragment>
+  <Fragment slot="info">
+    <h2>So rechnet der Sitzabstand-Rechner</h2>
+    <p>Idealer Abstand = <strong>Bildschirmdiagonale × Faktor</strong>. Der Faktor hängt von der Auflösung ab: Je feiner das Bild, desto näher kannst du sitzen, ohne einzelne Pixel zu sehen.</p>
+    <table>
+      <tr><th>Auflösung</th><th>Faktor</th></tr>
+      <tr><td>8K</td><td>1,0 × Diagonale</td></tr>
+      <tr><td>4K / UHD</td><td>1,5 × Diagonale</td></tr>
+      <tr><td>Full-HD</td><td>1,8 × Diagonale</td></tr>
+      <tr><td>HD ready</td><td>2,1 × Diagonale</td></tr>
+    </table>
+    <p>Als Spielraum nennen wir 20 % näher und 20 % weiter weg. Wer gerne Filme wie im Kino schaut, sitzt eher am vorderen Ende. Wer viel Nachrichten schaut, am hinteren.</p>
+    <h3>Tabelle: Sitzabstand bei 4K</h3>
+    <table>
+      <tr><th>Größe</th><th>Ideal</th><th>Bereich</th></tr>
+      {ZEILEN.map((z) => { const r = sitzabstand({ zoll: z, aufloesung: '4k' }); return <tr><td>{z} Zoll</td><td>{m(r.ideal)} m</td><td>{m(r.min)} bis {m(r.max)} m</td></tr>; })}
+    </table>
+  </Fragment>
+</Seite>
+<script>
+  import { sitzabstand, tvGroesse } from '../../rechner/logic.js';
+  import { $, num, radio, bind, fmt } from '../../rechner/ui.js';
+  const m = (cm) => `${fmt(cm / 100, 2)} m`;
+  function run() {
+    const mod = radio('modus'), aufloesung = radio('aufl');
+    document.querySelectorAll('[data-modus]').forEach((el) => { el.hidden = el.dataset.modus !== mod; });
+    if (mod === 'abstand') {
+      const zoll = num('zoll');
+      if (!zoll) { $('out').innerHTML = '<p class="em-res-empty">Bitte die Bildschirmdiagonale eingeben.</p>'; return; }
+      const r = sitzabstand({ zoll, aufloesung });
+      $('out').innerHTML = `<div class="em-big"><strong>${m(r.ideal)}</strong><span>Idealer Abstand bei ${fmt(zoll)} Zoll</span></div>
+        <ul class="em-res-list"><li><span>Guter Bereich</span><b>${m(r.min)} bis ${m(r.max)}</b></li><li><span>Bildschirmdiagonale</span><b>${fmt(r.diagonaleCm)} cm</b></li></ul>`;
+    } else {
+      const a = num('abstand');
+      if (!a) { $('out').innerHTML = '<p class="em-res-empty">Bitte den Abstand in Metern eingeben.</p>'; return; }
+      const r = tvGroesse({ abstandCm: a * 100, aufloesung });
+      $('out').innerHTML = `<div class="em-big"><strong>${r.naechste} Zoll</strong><span>Passende TV-Größe bei ${fmt(a, 2)} m Abstand</span></div>
+        <ul class="em-res-list"><li><span>Rechnerisch ideal</span><b>${fmt(r.idealZoll)} Zoll</b></li><li><span>Passt auch</span><b>${r.passend.length ? r.passend.join(', ') + ' Zoll' : `${fmt(r.minZoll)} bis ${fmt(r.maxZoll)} Zoll`}</b></li></ul>`;
+    }
+  }
+  bind(document.querySelector('.em-calc-form'), run);
+</script>

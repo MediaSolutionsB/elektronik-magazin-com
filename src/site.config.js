@@ -6,7 +6,7 @@ export const site = {
   lang: 'de',
   tagline: 'Das Magazin für Techniker & Verbraucher – Tests, Praxis-Ratgeber und Online-Rechner.',
   youtube: 'https://www.youtube.com',
-  amazonTag: 'wwwonlinefitn-21',
+  amazonTag: 'elektr04-21', // Partner-Tag aus den bisherigen Beiträgen
   service: {
     name: 'Elektronik-Magazin Vor-Ort-Service',
     company: '',
@@ -30,9 +30,14 @@ export const site = {
     check: { base: 'check', label: 'Praxis-Check', plural: 'Checks', more: 'Zum Check', intro: 'Kompakte Ersteindrücke und Hardware-Checks.' },
     info: { base: 'ratgeber', label: 'Ratgeber', plural: 'Ratgeber', more: 'Zum Ratgeber', intro: 'Praxisnahes Technik-Wissen, Anleitungen und Kaufhilfen.' },
   },
+  // Produkt-Kategorien für Tests und Checks (Kurzname = Kategorie im YT-Tool)
   categories: [
-    { slug: 'ratgeber', name: 'Ratgeber', text: 'Tipps, Anleitungen und Kaufentscheidungen', icon: 'book' },
-    { slug: 'tools', name: 'Tools & Rechner', text: 'Interaktive Stromkosten- und Umrechnungs-Tools', icon: 'calc' },
-    { slug: 'tests', name: 'Tests & Reviews', text: 'Praxistests von Smartphones, Audio & Netzwerk', icon: 'check' },
+    { slug: 'audio', name: 'Kopfhörer & Audio', text: 'In-Ears, Kopfhörer und Lautsprecher', icon: 'check' },
+    { slug: 'smartphone', name: 'Smartphones & Gadgets', text: 'Smartphones, Tablets, Tracker und Zubehör', icon: 'check' },
+    { slug: 'netzwerk', name: 'WLAN & Netzwerk', text: 'Repeater, Router, Mesh und Powerline', icon: 'check' },
+    { slug: 'pc', name: 'PC & Speicher', text: 'Festplatten, SSDs, Monitore und Zubehör', icon: 'check' },
+    { slug: 'tv', name: 'TV & Heimkino', text: 'Fernseher, Soundbars und Streaming', icon: 'check' },
+    { slug: 'haushalt', name: 'Haushalt & Saugroboter', text: 'Saugroboter, Küchen- und Haushaltsgeräte', icon: 'check' },
+    { slug: 'smarthome', name: 'Smart Home', text: 'Kameras, Thermostate, Beleuchtung', icon: 'check' },
   ],
 };

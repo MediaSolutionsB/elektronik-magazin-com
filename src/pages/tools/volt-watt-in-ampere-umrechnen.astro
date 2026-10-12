@@ -1,0 +1,50 @@
+---
+import Seite from '../../components/RechnerSeite.astro';
+import Feld from '../../components/Feld.astro';
+import Wahl from '../../components/Wahl.astro';
+---
+<Seite slug="volt-watt-in-ampere-umrechnen" title="Watt in Ampere umrechnen (und Volt): Rechner mit Formel | Elektronik-Magazin"
+  h1="Volt, Watt und Ampere umrechnen"
+  intro="Wähle, was du suchst, und trag die beiden anderen Werte ein. Der Rechner nutzt die Formel Leistung = Spannung × Stromstärke."
+  description="Watt in Ampere umrechnen, Ampere in Watt oder die Spannung in Volt berechnen. Mit Formel P = U × I und Beispielen für 230 V, 12 V und USB.">
+  <Fragment slot="eingaben">
+    <Wahl name="gesucht" label="Was möchtest du berechnen?" value="ampere" options={[{ value: 'ampere', label: 'Stromstärke (A)' }, { value: 'watt', label: 'Leistung (W)' }, { value: 'volt', label: 'Spannung (V)' }]} />
+    <div data-feld="watt"><Feld id="watt" label="Leistung" unit="Watt" value="2300" /></div>
+    <div data-feld="volt"><Feld id="volt" label="Spannung" unit="Volt" value="230" hint="Steckdose in Deutschland: 230 V. Auto: 12 V. USB: 5 V (Schnellladen bis 20 V)." /></div>
+    <div data-feld="ampere" hidden><Feld id="ampere" label="Stromstärke" unit="Ampere" value="10" /></div>
+  </Fragment>
+  <Fragment slot="ergebnis">
+    <h2>Dein Ergebnis</h2>
+    <div id="out"></div>
+  </Fragment>
+  <Fragment slot="info">
+    <h2>Die Formeln</h2>
+    <table>
+      <tr><th>Gesucht</th><th>Formel</th><th>Beispiel</th></tr>
+      <tr><td>Ampere</td><td>Watt ÷ Volt</td><td>2.300 W ÷ 230 V = 10 A</td></tr>
+      <tr><td>Watt</td><td>Volt × Ampere</td><td>5 V × 3 A = 15 W</td></tr>
+      <tr><td>Volt</td><td>Watt ÷ Ampere</td><td>60 W ÷ 5 A = 12 V</td></tr>
+    </table>
+    <p>Die Formeln gelten genau für Gleichstrom (Akku, USB, Auto) und für Geräte wie Wasserkocher und Heizlüfter. Bei Geräten mit Motor oder Netzteil kann die echte Stromstärke am 230-V-Netz etwas höher liegen, weil ein Teil der Leistung als sogenannte Blindleistung pendelt.</p>
+    <h3>Wie viel hält eine Steckdose aus?</h3>
+    <p>Eine normale Haushaltssteckdose ist meist mit 16 Ampere abgesichert, das sind bei 230 Volt rechnerisch 3.680 Watt. Für Dauerlast wie Heizlüfter oder Ladegeräte sollte man deutlich darunter bleiben. Mehrfachsteckdosen haben oft eine niedrigere Grenze, sie steht auf der Rückseite.</p>
+  </Fragment>
+</Seite>
+<script>
+  import { ohmLeistung } from '../../rechner/logic.js';
+  import { $, num, radio, bind, fmt } from '../../rechner/ui.js';
+  function run() {
+    const g = radio('gesucht');
+    document.querySelectorAll('[data-feld]').forEach((el) => { el.hidden = el.dataset.feld === g; });
+    const r = ohmLeistung({ gesucht: g, watt: num('watt'), volt: num('volt'), ampere: num('ampere') });
+    const fehlt = (g === 'ampere' && (!num('watt') || !num('volt'))) || (g === 'volt' && (!num('watt') || !num('ampere'))) || (g === 'watt' && (!num('volt') || !num('ampere')));
+    if (!r || fehlt) { $('out').innerHTML = '<p class="em-res-empty">Bitte die beiden anderen Werte eingeben.</p>'; return; }
+    const name = { ampere: 'Ampere', watt: 'Watt', volt: 'Volt' }[g];
+    const wert = r[g];
+    let hinweis = '';
+    if (g === 'ampere' && num('volt') >= 200) hinweis = wert > 16 ? 'Mehr als 16 A: Das schafft eine normale Haushaltssteckdose nicht.' : wert > 10 ? 'Für Dauerlast an einer Steckdose schon recht viel. Nicht über eine Mehrfachsteckdose betreiben.' : 'Das schafft eine normale 230-V-Steckdose problemlos.';
+    $('out').innerHTML = `<div class="em-big"><strong>${fmt(wert, 3)} ${name}</strong><span>${g === 'ampere' ? `${fmt(r.watt, 2)} W bei ${fmt(r.volt, 2)} V` : g === 'watt' ? `${fmt(r.volt, 2)} V × ${fmt(r.ampere, 3)} A` : `${fmt(r.watt, 2)} W bei ${fmt(r.ampere, 3)} A`}</span></div>
+      ${hinweis ? `<p class="em-res-note">${hinweis}</p>` : ''}`;
+  }
+  bind(document.querySelector('.em-calc-form'), run);
+</script>

@@ -1,0 +1,52 @@
+---
+import Seite from '../../components/RechnerSeite.astro';
+import Feld from '../../components/Feld.astro';
+---
+<Seite slug="rechner-kilobyte-kb-megabyte-mb-gigabyte-gb-und-terabyte-tb-umrechnen" title="Rechner: Kilobyte, Megabyte, Gigabyte und Terabyte umrechnen | Elektronik-Magazin"
+  h1="kB, MB, GB und TB umrechnen"
+  intro="Datengröße und Einheit eingeben. Du siehst den Wert in allen Einheiten, und warum deine neue Festplatte unter Windows kleiner angezeigt wird."
+  description="Kilobyte, Megabyte, Gigabyte und Terabyte umrechnen. Mit Erklärung, warum eine 1-TB-Festplatte unter Windows nur 931 GB hat (1000 oder 1024).">
+  <Fragment slot="eingaben">
+    <Feld id="wert" label="Datengröße" unit="" value="1" />
+    <label class="em-field" for="einheit"><span>Einheit</span>
+      <select id="einheit"><option value="B">Byte</option><option value="kB">Kilobyte (kB)</option><option value="MB">Megabyte (MB)</option><option value="GB">Gigabyte (GB)</option><option value="TB" selected>Terabyte (TB)</option><option value="KiB">Kibibyte (KiB, Windows „KB“)</option><option value="MiB">Mebibyte (MiB, Windows „MB“)</option><option value="GiB">Gibibyte (GiB, Windows „GB“)</option><option value="TiB">Tebibyte (TiB, Windows „TB“)</option></select>
+    </label>
+  </Fragment>
+  <Fragment slot="ergebnis">
+    <h2>Dein Ergebnis</h2>
+    <div id="out"></div>
+  </Fragment>
+  <Fragment slot="info">
+    <h2>1000 oder 1024?</h2>
+    <p>Hersteller von Festplatten, SSDs und USB-Sticks rechnen mit <strong>1.000</strong>: 1 TB = 1.000 GB = 1.000.000.000.000 Byte. Windows rechnet mit <strong>1.024</strong> und nennt das Ergebnis trotzdem „GB“ oder „TB“. Deshalb zeigt Windows eine neue 1-TB-Festplatte mit nur rund <strong>931 GB</strong> an. Es fehlt nichts, es ist nur anders gezählt.</p>
+    <table>
+      <tr><th>Auf der Packung</th><th>Windows zeigt etwa</th></tr>
+      <tr><td>256 GB</td><td>238 GB</td></tr>
+      <tr><td>512 GB</td><td>476 GB</td></tr>
+      <tr><td>1 TB</td><td>931 GB</td></tr>
+      <tr><td>2 TB</td><td>1,81 TB</td></tr>
+      <tr><td>4 TB</td><td>3,63 TB</td></tr>
+    </table>
+    <p>Die genauen Namen für die 1.024er-Einheiten sind KiB, MiB, GiB und TiB. macOS rechnet übrigens wie die Hersteller mit 1.000, dort stimmt die Anzeige mit der Packung überein.</p>
+  </Fragment>
+</Seite>
+<script>
+  import { datengroesse } from '../../rechner/logic.js';
+  import { $, num, val, bind, fmt } from '../../rechner/ui.js';
+  const zahl = (n) => (n >= 1 ? fmt(n, 3) : n.toLocaleString('de-DE', { maximumSignificantDigits: 6 }));
+  function run() {
+    const wert = num('wert'), einheit = val('einheit');
+    if (!wert) { $('out').innerHTML = '<p class="em-res-empty">Bitte eine Datengröße eingeben.</p>'; return; }
+    const r = datengroesse({ wert, einheit });
+    const win = r.bin.TiB >= 1 ? `${fmt(r.bin.TiB, 2)} TB` : r.bin.GiB >= 1 ? `${fmt(r.bin.GiB, 1)} GB` : `${fmt(r.bin.MiB, 1)} MB`;
+    $('out').innerHTML = `<div class="em-big"><strong>${zahl(r.dez.GB)} GB</strong><span>${fmt(wert, 3)} ${einheit} (Hersteller-Rechnung, 1 GB = 1.000 MB)</span></div>
+      <ul class="em-res-list">
+        <li><span>Byte</span><b>${fmt(r.bytes)}</b></li>
+        <li><span>Kilobyte (kB)</span><b>${zahl(r.dez.kB)}</b></li>
+        <li><span>Megabyte (MB)</span><b>${zahl(r.dez.MB)}</b></li>
+        <li><span>Terabyte (TB)</span><b>${zahl(r.dez.TB)}</b></li>
+        <li><span>So zeigt es Windows an</span><b>${win}</b></li>
+      </ul>`;
+  }
+  bind(document.querySelector('.em-calc-form'), run);
+</script>

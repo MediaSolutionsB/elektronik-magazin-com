@@ -1,0 +1,74 @@
+---
+import Seite from '../../components/RechnerSeite.astro';
+import Feld from '../../components/Feld.astro';
+const BEISPIELE = [
+  { name: 'Eigene Angaben', w: '', h: '', t: '', s: '' },
+  { name: 'Fernseher (100 W, 4 h am Tag)', w: 100, h: 4, t: 7, s: 0.5 },
+  { name: 'WLAN-Router / Repeater (rund um die Uhr)', w: 10, h: 24, t: 7, s: 0 },
+  { name: 'Gaming-PC (300 W, 3 h am Tag)', w: 300, h: 3, t: 7, s: 2 },
+  { name: 'Laptop (45 W, 6 h an 5 Tagen)', w: 45, h: 6, t: 5, s: 0.5 },
+  { name: 'Saugroboter mit Station (30 W, 1,5 h am Tag)', w: 30, h: 1.5, t: 7, s: 3 },
+  { name: 'Kühlschrank (Ø 20 W rund um die Uhr)', w: 20, h: 24, t: 7, s: 0 },
+];
+---
+<Seite slug="stromkosten-rechner" title="Stromkosten-Rechner: Was kostet ein Gerät im Jahr? | Elektronik-Magazin"
+  h1="Stromkosten-Rechner: Was kostet dein Gerät an Strom?"
+  intro="Leistung, Nutzungsdauer und Strompreis eintragen. Der Rechner zeigt dir Verbrauch und Kosten pro Tag, Monat und Jahr, auf Wunsch mit Standby."
+  description="Stromkosten berechnen: Verbrauch in kWh und Kosten pro Tag, Monat und Jahr für Fernseher, Router, PC, Laptop und jedes andere Gerät, mit Standby-Verbrauch.">
+  <Fragment slot="eingaben">
+    <label class="em-field" for="beispiel"><span>Beispiel-Gerät (füllt die Felder aus)</span>
+      <select id="beispiel">{BEISPIELE.map((b, i) => <option value={i} data-w={b.w} data-h={b.h} data-t={b.t} data-s={b.s} selected={i === 1}>{b.name}</option>)}</select>
+    </label>
+    <Feld id="watt" label="Leistung im Betrieb" unit="Watt" value="100" hint="Steht auf dem Typenschild oder in der Anleitung. Genauer misst ein Strommessgerät aus dem Baumarkt." />
+    <div class="em-row">
+      <Feld id="stunden" label="Betrieb pro Tag" unit="Stunden" value="4" />
+      <Feld id="tage" label="Tage pro Woche" unit="Tage" value="7" />
+    </div>
+    <Feld id="standby" label="Standby-Verbrauch (optional)" unit="Watt" value="0,5" hint="Gilt für die restliche Zeit, in der das Gerät nicht läuft. Bei Geräten ohne Standby leer lassen." />
+    <Feld id="preis" label="Strompreis" unit="Cent/kWh" value="35" hint="Beispielwert. Deinen genauen Preis findest du auf der Stromrechnung (Arbeitspreis)." />
+  </Fragment>
+  <Fragment slot="ergebnis">
+    <h2>Dein Ergebnis</h2>
+    <div id="out"></div>
+  </Fragment>
+  <Fragment slot="info">
+    <h2>So rechnet der Stromkosten-Rechner</h2>
+    <p>Verbrauch in kWh = <strong>Leistung in Watt × Stunden ÷ 1.000</strong>. Kosten = <strong>kWh × Strompreis</strong>. Für das Jahr rechnen wir mit 365 Tagen, also 52,14 Wochen. Der Monat ist ein Zwölftel davon.</p>
+    <p>Der Standby läuft in allen Stunden, in denen das Gerät nicht in Betrieb ist, also auch an den Tagen, an denen du es nicht nutzt.</p>
+    <table>
+      <tr><th>Beispiel</th><th>Rechnung</th><th>Ergebnis</th></tr>
+      <tr><td>Fernseher, 100 W, 4 h täglich</td><td>100 × 4 ÷ 1.000 = 0,4 kWh pro Tag</td><td>146 kWh im Jahr</td></tr>
+      <tr><td>Router, 10 W, rund um die Uhr</td><td>10 × 24 ÷ 1.000 = 0,24 kWh pro Tag</td><td>87,6 kWh im Jahr</td></tr>
+    </table>
+    <h3>Woher weiß ich die Leistung?</h3>
+    <p>Auf dem Typenschild steht meist die <strong>maximale</strong> Leistung. Im Alltag ziehen viele Geräte weniger, ein Fernseher zum Beispiel je nach Helligkeit. Am genauesten ist ein Zwischenstecker-Strommessgerät: Gerät einstecken, ein paar Tage messen lassen, Durchschnitt ablesen.</p>
+  </Fragment>
+</Seite>
+<script>
+  import { stromkosten } from '../../rechner/logic.js';
+  import { $, num, bind, fmt, eur } from '../../rechner/ui.js';
+  const sel = $('beispiel');
+  sel.addEventListener('change', () => {
+    const o = sel.selectedOptions[0];
+    if (!o.dataset.w) return;
+    $('watt').value = String(o.dataset.w).replace('.', ',');
+    $('stunden').value = String(o.dataset.h).replace('.', ',');
+    $('tage').value = o.dataset.t;
+    $('standby').value = o.dataset.s && o.dataset.s !== '0' ? String(o.dataset.s).replace('.', ',') : '';
+  });
+  function run() {
+    const watt = num('watt'), stunden = num('stunden'), preisCent = num('preis');
+    if (!watt || !stunden || !preisCent) { $('out').innerHTML = '<p class="em-res-empty">Bitte Leistung, Stunden pro Tag und Strompreis eingeben.</p>'; return; }
+    const tage = num('tage') || 7;
+    const r = stromkosten({ watt, stunden, tage, preisCent, standbyWatt: num('standby') });
+    $('out').innerHTML = `
+      <div class="em-big"><strong>${eur(r.kostenJahr)}</strong><span>Stromkosten im Jahr (${fmt(r.kwhJahr, 1)} kWh)</span></div>
+      <ul class="em-res-list">
+        <li><span>Pro Monat</span><b>${eur(r.kostenMonat)} · ${fmt(r.kwhMonat, 1)} kWh</b></li>
+        <li><span>Pro Tag (Durchschnitt)</span><b>${eur(r.kostenTag)} · ${fmt(r.kwhTag, 2)} kWh</b></li>
+        ${r.anteilStandby > 0 ? `<li><span>Davon Standby</span><b>${fmt(r.anteilStandby * 100, 0)} %</b></li>` : ''}
+      </ul>
+      <p class="em-res-note">${r.anteilStandby > 0.2 ? 'Der Standby macht einen großen Teil aus. Eine schaltbare Steckdosenleiste lohnt sich hier.' : 'Tipp: Mit einem Strommessgerät aus dem Baumarkt kannst du die echte Leistung deines Geräts messen.'}</p>`;
+  }
+  bind(document.querySelector('.em-calc-form'), run);
+</script>

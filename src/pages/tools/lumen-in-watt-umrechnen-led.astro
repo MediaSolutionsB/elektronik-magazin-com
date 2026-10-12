@@ -1,0 +1,42 @@
+---
+import Seite from '../../components/RechnerSeite.astro';
+import Feld from '../../components/Feld.astro';
+import Wahl from '../../components/Wahl.astro';
+import { GLUEHLAMPE } from '../../rechner/logic.js';
+---
+<Seite slug="lumen-in-watt-umrechnen-led" title="Lumen in Watt umrechnen (LED): Rechner und Tabelle | Elektronik-Magazin"
+  h1="Lumen in Watt umrechnen (LED)"
+  intro="Gib die gewünschte Helligkeit in Lumen ein. Der Rechner zeigt dir, wie viel Watt eine LED dafür braucht und welcher alten Glühbirne das entspricht."
+  description="Lumen in Watt umrechnen für LED-Lampen: Wie viel Watt braucht eine LED für 806 Lumen? Mit Vergleich zur Glühbirne und Tabelle 25, 40, 60, 75 und 100 Watt.">
+  <Fragment slot="eingaben">
+    <Feld id="lumen" label="Gewünschte Helligkeit" unit="Lumen" value="806" hint="Steht auf jeder Verpackung, z. B. „806 lm“." />
+    <Wahl name="eff" label="Art der LED" value="100" options={[{ value: '80', label: 'Einfache LED (ca. 80 lm/W)' }, { value: '100', label: 'Standard-LED (ca. 100 lm/W)' }, { value: '150', label: 'Sehr effiziente LED (ca. 150 lm/W)' }]} />
+  </Fragment>
+  <Fragment slot="ergebnis">
+    <h2>Dein Ergebnis</h2>
+    <div id="out"></div>
+  </Fragment>
+  <Fragment slot="info">
+    <h2>So rechnet der Rechner</h2>
+    <p><strong>Watt = Lumen ÷ Lichtausbeute</strong>. Die Lichtausbeute sagt, wie viel Lumen eine Lampe pro Watt schafft. Gute LEDs liegen bei rund 100 lm/W, sehr effiziente bei 150 lm/W und mehr. Eine alte Glühbirne kam nur auf etwa 10 bis 15 lm/W. Der genaue Wert steht auf der Packung deiner LED.</p>
+    <h3>Tabelle: Glühbirne in Lumen</h3>
+    <table>
+      <tr><th>Alte Glühbirne</th><th>Helligkeit</th><th>LED bei 100 lm/W</th></tr>
+      {GLUEHLAMPE.map(([w, lm]) => <tr><td>{w} Watt</td><td>{lm.toLocaleString('de-DE')} Lumen</td><td>ca. {(lm / 100).toLocaleString('de-DE', { maximumFractionDigits: 1 })} Watt</td></tr>)}
+    </table>
+    <p>Wer früher eine 60-Watt-Birne hatte, braucht also eine LED mit etwa <strong>806 Lumen</strong>. Achte beim Kauf auf die Lumen-Angabe, nicht auf die Watt-Zahl.</p>
+    <p class="em-sources">Quelle der Vergleichswerte: EU-Verordnung 1194/2012, Tabelle der gleichwertigen Glühlampen.</p>
+  </Fragment>
+</Seite>
+<script>
+  import { lumenInWatt } from '../../rechner/logic.js';
+  import { $, num, radio, bind, fmt } from '../../rechner/ui.js';
+  function run() {
+    const lumen = num('lumen');
+    if (!lumen) { $('out').innerHTML = '<p class="em-res-empty">Bitte die Helligkeit in Lumen eingeben.</p>'; return; }
+    const r = lumenInWatt({ lumen, lmProWatt: Number(radio('eff')) });
+    $('out').innerHTML = `<div class="em-big"><strong>${fmt(r.ledWatt, 1)} Watt</strong><span>LED für ${fmt(lumen)} Lumen</span></div>
+      <ul class="em-res-list"><li><span>Entspricht einer alten Glühbirne mit</span><b>ca. ${fmt(Math.round(r.gluehWatt))} Watt</b></li><li><span>Strom gespart gegenüber Glühbirne</span><b>ca. ${fmt(r.ersparnis * 100)} %</b></li></ul>`;
+  }
+  bind(document.querySelector('.em-calc-form'), run);
+</script>

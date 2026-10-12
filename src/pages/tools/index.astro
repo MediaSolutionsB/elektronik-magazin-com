@@ -1,31 +1,32 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { site } from '../../site.config.js';
-import fs from 'node:fs';
-import path from 'node:path';
-
-const indexFile = path.resolve('content/tools/index.json');
-const tools = JSON.parse(fs.readFileSync(indexFile, 'utf-8'));
+import { tools, gruppen } from '../../rechner/tools.js';
+import { icons, arrow } from '../../lib/icons.js';
 ---
-<Base title="Online-Rechner & Tools" description="Kostenlose Rechner für Stromkosten, Watt in kWh, Sitzabstand zum TV, Akkukapazität und Speichergrößen." path="/tools/">
-  <div class="em-wrap" style="padding-top: 56px; padding-bottom: 72px;">
-    <header style="margin-bottom: 40px; text-align: center;">
-      <span class="em-eyebrow">Praktische Hilfsmittel</span>
-      <h1 style="font-size: clamp(32px, 4vw, 48px); margin-top: 10px;">Online-Rechner für Technik & Energie</h1>
-      <p style="color: var(--muted); max-width: 600px; margin: 12px auto 0;">Präzise Berechnungen für deinen Alltag – vom TV-Sitzabstand bis hin zu Stromverbrauch und Akkukapazitäten.</p>
-    </header>
-
-    <div class="em-cards">
-      {tools.map((t) => (
-        <a class="em-card" href={`/tools/${t.slug}/`}>
-          <div class="em-card-body">
-            <span class="em-pill em-pill-blue">Rechner</span>
-            <div class="em-card-title" style="margin-top: 8px;">{t.title}</div>
-            <div class="em-card-text">{t.excerpt || 'Kostenloser Online-Rechner mit direkter Sofort-Berechnung.'}</div>
-            <div class="em-card-more">Jetzt berechnen &rarr;</div>
-          </div>
-        </a>
-      ))}
+<Base title="Online-Rechner: Stromkosten, Watt, Ampere, Lumen, Sitzabstand und Datengrößen" description="Kostenlose Online-Rechner von Elektronik-Magazin: Stromkosten, Watt in kWh, Volt Watt Ampere, mAh in Wh, Lumen in Watt, Sitzabstand zum Fernseher und kB MB GB TB umrechnen. Sofort im Browser." path="/tools/">
+  <section class="em-pagehead">
+    <div class="em-wrap">
+      <nav class="em-crumbs" aria-label="Brotkrumen"><a href="/">Startseite</a><span aria-hidden="true">/</span><span>Online-Rechner</span></nav>
+      <h1>Online-Rechner</h1>
+      <p>Schnell ausrechnen statt schätzen: Was kostet ein Gerät an Strom, wie viele Ampere zieht es, wie hell muss die LED sein, wie weit sitzt man vom Fernseher weg? Alle Rechner sind kostenlos und rechnen direkt in deinem Browser.</p>
     </div>
-  </div>
+  </section>
+  <nav class="em-wrap em-tool-jump" aria-label="Themen">
+    {gruppen.map((g) => <a href={`#${g.id}`}>{g.name}</a>)}
+  </nav>
+  {gruppen.map((g) => (
+    <section class="em-wrap em-section" id={g.id}>
+      <div class="em-section-head"><h2>{g.name}</h2></div>
+      <div class="em-tools">
+        {tools.filter((t) => t.gruppe === g.id).map((t) => (
+          <a class="em-tool" href={`/tools/${t.slug}/`}>
+            <span class="em-cat-ico"><Fragment set:html={icons[t.icon]} /></span>
+            <span class="em-tool-name">{t.name}</span>
+            <span class="em-tool-text">{t.kurz}</span>
+            <span class="em-tool-more">Jetzt ausrechnen <Fragment set:html={arrow} /></span>
+          </a>
+        ))}
+      </div>
+    </section>
+  ))}
 </Base>

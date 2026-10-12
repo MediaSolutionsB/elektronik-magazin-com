@@ -1,0 +1,12 @@
+---
+// Auswahl als Knöpfe (Radio). options: [{ value, label }]
+const { name, label, options = [], value } = Astro.props;
+---
+<div class="em-field" role="radiogroup" aria-label={label}>
+  <span>{label}</span>
+  <div class="em-choice">
+    {options.map((o) => (
+      <label><input type="radio" name={name} value={o.value} checked={o.value === value} /><span>{o.label}</span></label>
+    ))}
+  </div>
+</div>

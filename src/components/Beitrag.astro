@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import { site } from '../site.config.js';
-import { allReviews, renderArticle, renderLegacy, buyLink, formatDate, typeOf, urlOf, relatedReviews, alsoBlock, insertBeforeFazit, rechnerFor } from '../lib/reviews.js';
+import { allReviews, renderArticle, renderLegacy, buyLink, formatDate, typeOf, urlOf, relatedReviews, alsoBlock, insertBeforeFazit, rechnerFor, isoZeit } from '../lib/reviews.js';
 import { tools } from '../rechner/tools.js';
 
 const { review } = Astro.props;
@@ -22,7 +22,7 @@ const video = review.videoId
       name: review.title,
       description: review.excerpt,
       thumbnailUrl: site.url + review.image,
-      uploadDate: review.published,
+      uploadDate: isoZeit(review),
       ...(review.videoDuration ? { duration: iso(review.videoDuration) } : {}),
       embedUrl: `https://www.youtube-nocookie.com/embed/${review.videoId}`,
       contentUrl: `https://www.youtube.com/watch?v=${review.videoId}`,
@@ -39,7 +39,7 @@ const product = hasScore && review.productName
         '@type': 'Review',
         name: review.title,
         ...(review.excerpt ? { reviewBody: review.excerpt } : {}),
-        datePublished: review.published,
+        datePublished: isoZeit(review),
         author: person,
         publisher: { '@type': 'Organization', name: site.name, url: site.url },
         reviewRating: { '@type': 'Rating', ratingValue: review.score, bestRating: 100, worstRating: 0 },
@@ -47,7 +47,7 @@ const product = hasScore && review.productName
         ...(review.cons.length ? { negativeNotes: { '@type': 'ItemList', itemListElement: review.cons.map((p, i) => ({ '@type': 'ListItem', position: i + 1, name: p })) } } : {}),
       },
     }
-  : { '@type': 'Article', headline: review.title, datePublished: review.published, image: site.url + review.image, author: person, publisher: { '@type': 'Organization', name: site.name, url: site.url } };
+  : { '@type': 'Article', headline: review.title, datePublished: isoZeit(review), image: site.url + review.image, author: person, publisher: { '@type': 'Organization', name: site.name, url: site.url } };
 const jsonld = { '@context': 'https://schema.org', '@graph': [product, ...(video ? [video] : [])] };
 ---
 <Base title={review.title} description={review.excerpt} image={review.image} path={path} type="article" jsonld={jsonld}>

@@ -277,3 +277,13 @@ export function rechnerFor(review) {
   if (/led|lampe|leuchte|glühbirne/i.test(`${review.slug} ${review.productName || ''}`)) return 'lumen-in-watt-umrechnen-led';
   return null;
 }
+
+// Datum mit Uhrzeit und Zeitzone für strukturierte Daten (Google verlangt das z. B. bei uploadDate):
+// 2026-10-12 -> 2026-10-12T08:00:00+02:00 (Sommerzeit) bzw. +01:00 (Winterzeit)
+export function isoZeit(review) {
+  const lokal = String(review.publishAt || `${review.published}T08:00`).slice(0, 16);
+  const tz = new Intl.DateTimeFormat('en-US', { timeZone: 'Europe/Berlin', timeZoneName: 'shortOffset' })
+    .formatToParts(new Date(`${lokal}:00Z`)).find((p) => p.type === 'timeZoneName')?.value || 'GMT+1';
+  const m = tz.match(/GMT([+-])(\d+)/);
+  return `${lokal}:00${m ? `${m[1]}${m[2].padStart(2, '0')}:00` : '+01:00'}`;
+}

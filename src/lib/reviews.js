@@ -22,8 +22,21 @@ export function urlOf(review) {
 
 // Kauf-Link immer aus Produktnummer + Partner-Tag der Seite, nie aus dem Video.
 export function buyLink(meta) {
-  if (!validAsin(meta.asin)) return '';
-  return `https://www.amazon.de/dp/${meta.asin}${site.amazonTag ? `?tag=${site.amazonTag}` : ''}`;
+  if (validAsin(meta.asin)) return `https://www.amazon.de/dp/${meta.asin}${site.amazonTag ? `?tag=${site.amazonTag}` : ''}`;
+  // Produkt gibt es nicht bei Amazon: eigener Kauflink (z. B. Partnerlink zu einem anderen Shop)
+  if (typeof meta.kaufLink === 'string' && /^https:\/\/[^\s<>"']+$/.test(meta.kaufLink)) return meta.kaufLink;
+  return '';
+}
+
+// Name des Shops für den Kaufknopf
+export function shopOf(meta) {
+  if (validAsin(meta.asin)) return 'Amazon';
+  return (meta.shop || '').trim() || 'beim Händler';
+}
+
+export function buyLabel(meta) {
+  const shop = shopOf(meta);
+  return shop === 'beim Händler' ? 'Aktuellen Preis beim Händler prüfen' : `Aktuellen Preis bei ${shop} prüfen`;
 }
 
 function scoreBlock(score) {
@@ -37,7 +50,7 @@ function buyBlock(inner, meta) {
   if (!link) return '';
   const img = meta.imageSmall || meta.image;
   const picture = img ? `<a class="em-buy-img" href="${esc(link)}" target="_blank" rel="nofollow sponsored noopener" tabindex="-1" aria-hidden="true"><img src="${esc(img)}" alt="" width="640" height="360" loading="lazy" /></a>` : '';
-  const button = `<a class="em-btn" href="${esc(link)}" target="_blank" rel="nofollow sponsored noopener">Aktuellen Preis bei Amazon prüfen<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></a>`;
+  const button = `<a class="em-btn" href="${esc(link)}" target="_blank" rel="nofollow sponsored noopener">${esc(buyLabel(meta))}<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></a>`;
   const note = '<span class="em-buy-note">Partnerlink: Kaufst du darüber ein, erhalten wir eine kleine Provision.</span>';
   return `<div class="em-buy"><div class="em-buy-text"><strong>${esc(title)}</strong><span>${esc(meta.productName || '')}</span></div><div class="em-buy-action">${picture}${button}${note}</div></div>`;
 }

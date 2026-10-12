@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import { site } from '../site.config.js';
-import { allReviews, renderArticle, renderLegacy, buyLink, formatDate, typeOf, urlOf, relatedReviews, alsoBlock, insertBeforeFazit, rechnerFor, isoZeit } from '../lib/reviews.js';
+import { allReviews, renderArticle, renderLegacy, buyLink, buyLabel, formatDate, typeOf, urlOf, relatedReviews, alsoBlock, insertBeforeFazit, rechnerFor, isoZeit } from '../lib/reviews.js';
 import { tools } from '../rechner/tools.js';
 
 const { review } = Astro.props;
@@ -121,7 +121,7 @@ const jsonld = { '@context': 'https://schema.org', '@graph': [product, ...(video
           {review.brand && <div class="em-aside-sub">{review.brand}</div>}
         </div>
         {hasScore && <div class="em-aside-score"><span>Gesamtbewertung</span><strong>{review.score}/100</strong></div>}
-        {link && <a class="em-btn" href={link} target="_blank" rel="nofollow sponsored noopener">Aktuellen Preis bei Amazon prüfen</a>}
+        {link && <a class="em-btn" href={link} target="_blank" rel="nofollow sponsored noopener">{buyLabel(review)}</a>}
         {link && <span class="em-aside-note">Partnerlink: Kaufst du darüber ein, erhalten wir eine kleine Provision.</span>}
       </aside>
     )}

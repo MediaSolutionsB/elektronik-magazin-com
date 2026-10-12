@@ -1,134 +1,264 @@
 <p>Möchtest du wissen, wie viel Speicherplatz bestimmte Daten in Kilobyte, Megabyte, Gigabyte oder Terabyte belegen? Mit diesem praktischen Umrechner kannst du schnell und einfach zwischen diesen verschiedenen Größen umrechnen. Gib einfach den gewünschten Wert in eines der Felder ein, und der Rechner erledigt den Rest für dich. Egal, ob du mit kleinen oder großen Datenmengen arbeitest, hier bekommst du schnell die richtige Umrechnung!</p>
-
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Datengrößenrechner</title>
-<style>
-  .umrechner-container {
-    background-color: #c66253;
-    color: white;
-    padding: 20px;
-    border-radius: 8px;
-    text-align: center;
-  }
-  
-  .umrechner-container input[type="number"] {
-    display: block;
-    margin: 10px auto;
-    padding: 10px;
-    border-radius: 4px;
-    border: none;
-    text-align: center;
-    font-size: 24px;
-    width: 80%;
-  }
-  
-  .umrechner-container button {
-    background-color: white;
-    color: #c66253;
-    padding: 10px 20px;
-    border-radius: 5px;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    margin-top: 20px;
-  }
-
-  .umrechner-container button:disabled {
-    background-color: #eee;
-    color: #999;
-    cursor: not-allowed;
-  }
-
-  .button-group {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-  }
-
-  .umrechner-container h2 {
-    font-size: 32px;
-    color: white;
-    font-weight: bold;
-    text-decoration: none;
-  }
-</style>
-
-
-
-<div class="umrechner-container">
-  <h2>Datengrößen umrechnen</h2>
-
-  <label for="kb" style="font-size: 24px;">Kilobyte (kB):</label>
-  <input type="number" id="kb" placeholder="Gib Kilobyte ein" oninput="lockInputs('kb')">
-
-  <label for="mb" style="font-size: 24px;">Megabyte (MB):</label>
-  <input type="number" id="mb" placeholder="Gib Megabyte ein" oninput="lockInputs('mb')">
-
-  <label for="gb" style="font-size: 24px;">Gigabyte (GB):</label>
-  <input type="number" id="gb" placeholder="Gib Gigabyte ein" oninput="lockInputs('gb')">
-
-  <label for="tb" style="font-size: 24px;">Terabyte (TB):</label>
-  <input type="number" id="tb" placeholder="Gib Terabyte ein" oninput="lockInputs('tb')">
-
-  <div class="button-group">
-    <button onclick="calculate()">Berechnen</button>
-    <button onclick="resetFields()">Reset</button>
-  </div>
-</div>
-
-<script>
-function lockInputs(activeId) {
-  const inputs = ['kb', 'mb', 'gb', 'tb'];
-  inputs.forEach(id => {
-    if (id !== activeId) {
-      document.getElementById(id).disabled = true;
-    }
-  });
-}
-
-function calculate() {
-  let kb = parseFloat(document.getElementById('kb').value);
-  let mb = parseFloat(document.getElementById('mb').value);
-  let gb = parseFloat(document.getElementById('gb').value);
-  let tb = parseFloat(document.getElementById('tb').value);
-
-  if (!isNaN(kb)) {
-    mb = kb / 1000;
-    gb = kb / 1000000;
-    tb = kb / 1000000000;
-  } else if (!isNaN(mb)) {
-    kb = mb * 1000;
-    gb = mb / 1000;
-    tb = mb / 1000000;
-  } else if (!isNaN(gb)) {
-    kb = gb * 1000000;
-    mb = gb * 1000;
-    tb = gb / 1000;
-  } else if (!isNaN(tb)) {
-    kb = tb * 1000000000;
-    mb = tb * 1000000;
-    gb = tb * 1000;
-  }
-
-  if (!isNaN(kb)) document.getElementById('kb').value = kb.toFixed(2);
-  if (!isNaN(mb)) document.getElementById('mb').value = mb.toFixed(2);
-  if (!isNaN(gb)) document.getElementById('gb').value = gb.toFixed(2);
-  if (!isNaN(tb)) document.getElementById('tb').value = tb.toFixed(2);
-}
-
-function resetFields() {
-  const inputs = ['kb', 'mb', 'gb', 'tb'];
-  inputs.forEach(id => {
-    document.getElementById(id).value = '';
-    document.getElementById(id).disabled = false;
-  });
-}
-</script>
-
-
-
+
+
+
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Datengrößenrechner</title>
+
+<style>
+
+  .umrechner-container {
+
+    background-color: #c66253;
+
+    color: white;
+
+    padding: 20px;
+
+    border-radius: 8px;
+
+    text-align: center;
+
+  }
+
+  
+
+  .umrechner-container input[type="number"] {
+
+    display: block;
+
+    margin: 10px auto;
+
+    padding: 10px;
+
+    border-radius: 4px;
+
+    border: none;
+
+    text-align: center;
+
+    font-size: 24px;
+
+    width: 80%;
+
+  }
+
+  
+
+  .umrechner-container button {
+
+    background-color: white;
+
+    color: #c66253;
+
+    padding: 10px 20px;
+
+    border-radius: 5px;
+
+    border: none;
+
+    font-size: 24px;
+
+    cursor: pointer;
+
+    margin-top: 20px;
+
+  }
+
+
+
+  .umrechner-container button:disabled {
+
+    background-color: #eee;
+
+    color: #999;
+
+    cursor: not-allowed;
+
+  }
+
+
+
+  .button-group {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 20px;
+
+  }
+
+
+
+  .umrechner-container h2 {
+
+    font-size: 32px;
+
+    color: white;
+
+    font-weight: bold;
+
+    text-decoration: none;
+
+  }
+
+</style>
+
+
+
+
+
+
+
+<div class="umrechner-container">
+
+  <h2>Datengrößen umrechnen</h2>
+
+
+
+  <label for="kb" style="font-size: 24px;">Kilobyte (kB):</label>
+
+  <input type="number" id="kb" placeholder="Gib Kilobyte ein" oninput="lockInputs('kb')">
+
+
+
+  <label for="mb" style="font-size: 24px;">Megabyte (MB):</label>
+
+  <input type="number" id="mb" placeholder="Gib Megabyte ein" oninput="lockInputs('mb')">
+
+
+
+  <label for="gb" style="font-size: 24px;">Gigabyte (GB):</label>
+
+  <input type="number" id="gb" placeholder="Gib Gigabyte ein" oninput="lockInputs('gb')">
+
+
+
+  <label for="tb" style="font-size: 24px;">Terabyte (TB):</label>
+
+  <input type="number" id="tb" placeholder="Gib Terabyte ein" oninput="lockInputs('tb')">
+
+
+
+  <div class="button-group">
+
+    <button onclick="calculate()">Berechnen</button>
+
+    <button onclick="resetFields()">Reset</button>
+
+  </div>
+
+</div>
+
+
+
+<script>
+
+function lockInputs(activeId) {
+
+  const inputs = ['kb', 'mb', 'gb', 'tb'];
+
+  inputs.forEach(id => {
+
+    if (id !== activeId) {
+
+      document.getElementById(id).disabled = true;
+
+    }
+
+  });
+
+}
+
+
+
+function calculate() {
+
+  let kb = parseFloat(document.getElementById('kb').value);
+
+  let mb = parseFloat(document.getElementById('mb').value);
+
+  let gb = parseFloat(document.getElementById('gb').value);
+
+  let tb = parseFloat(document.getElementById('tb').value);
+
+
+
+  if (!isNaN(kb)) {
+
+    mb = kb / 1000;
+
+    gb = kb / 1000000;
+
+    tb = kb / 1000000000;
+
+  } else if (!isNaN(mb)) {
+
+    kb = mb * 1000;
+
+    gb = mb / 1000;
+
+    tb = mb / 1000000;
+
+  } else if (!isNaN(gb)) {
+
+    kb = gb * 1000000;
+
+    mb = gb * 1000;
+
+    tb = gb / 1000;
+
+  } else if (!isNaN(tb)) {
+
+    kb = tb * 1000000000;
+
+    mb = tb * 1000000;
+
+    gb = tb * 1000;
+
+  }
+
+
+
+  if (!isNaN(kb)) document.getElementById('kb').value = kb.toFixed(2);
+
+  if (!isNaN(mb)) document.getElementById('mb').value = mb.toFixed(2);
+
+  if (!isNaN(gb)) document.getElementById('gb').value = gb.toFixed(2);
+
+  if (!isNaN(tb)) document.getElementById('tb').value = tb.toFixed(2);
+
+}
+
+
+
+function resetFields() {
+
+  const inputs = ['kb', 'mb', 'gb', 'tb'];
+
+  inputs.forEach(id => {
+
+    document.getElementById(id).value = '';
+
+    document.getElementById(id).disabled = false;
+
+  });
+
+}
+
+</script>
+
+
+
+
+
+
+
 
 <hr>
 <h2>Umrechnung von Datengrößen</h2>
@@ -137,69 +267,4 @@ function resetFields() {
 <p>Nutze diesen Rechner, um einen besseren Überblick über deine Datengrößen zu bekommen und deine Speicherkapazitäten optimal zu verwalten!</p>
 
 
-<div class="kk-star-ratings kksr-auto kksr-align-right kksr-valign-bottom"
-    data-payload='{&quot;align&quot;:&quot;right&quot;,&quot;id&quot;:&quot;13883&quot;,&quot;slug&quot;:&quot;default&quot;,&quot;valign&quot;:&quot;bottom&quot;,&quot;ignore&quot;:&quot;&quot;,&quot;reference&quot;:&quot;auto&quot;,&quot;class&quot;:&quot;&quot;,&quot;count&quot;:&quot;95&quot;,&quot;legendonly&quot;:&quot;&quot;,&quot;readonly&quot;:&quot;&quot;,&quot;score&quot;:&quot;4.9&quot;,&quot;starsonly&quot;:&quot;&quot;,&quot;best&quot;:&quot;5&quot;,&quot;gap&quot;:&quot;5&quot;,&quot;greet&quot;:&quot;Bewerte diesen Beitrag&quot;,&quot;legend&quot;:&quot;4.9\/5 - (95 votes)&quot;,&quot;size&quot;:&quot;24&quot;,&quot;title&quot;:&quot;Rechner: Kilobyte (kB), Megabyte (MB), Gigabyte (GB) und Terabyte (TB) umrechnen&quot;,&quot;width&quot;:&quot;139.6&quot;,&quot;_legend&quot;:&quot;{score}\/{best} - ({count} {votes})&quot;,&quot;font_factor&quot;:&quot;1.25&quot;}'>
-            
-<div class="kksr-stars">
-    
-<div class="kksr-stars-inactive">
-            <div class="kksr-star" data-star="1" style="padding-right: 5px">
-            
 
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-            <div class="kksr-star" data-star="2" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-            <div class="kksr-star" data-star="3" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-            <div class="kksr-star" data-star="4" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-            <div class="kksr-star" data-star="5" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-    </div>
-    
-<div class="kksr-stars-active" style="width: 139.6px;">
-            <div class="kksr-star" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-            <div class="kksr-star" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-            <div class="kksr-star" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-            <div class="kksr-star" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-            <div class="kksr-star" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-    </div>
-</div>
-                
-
-<div class="kksr-legend" style="font-size: 19.2px;">
-            4.9/5 - (95 votes)    </div>
-    </div>

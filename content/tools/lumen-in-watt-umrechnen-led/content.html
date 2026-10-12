@@ -1,55 +1,105 @@
 <p>Sie möchten für ihr LED-Leuchtmittel Lumen in Watt umrechnen? Dann los geht&#8217;s. Mit diesem praktischen Tool können Sie die geschätzte Wattzahl für LED-Leuchtmittel basierend auf der Lumenzahl berechnen.</p>
 <p>Geben Sie einfach die Anzahl der Lumen ein, und der Rechner zeigt Ihnen die entsprechende Wattzahl für eine LED an. Bitte beachten Sie, dass dies nur eine  Schätzung ist, da die tatsächliche Effizienz je nach Hersteller und Produkt variieren kann.</p>
-
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lumen in LED-Watt umrechnen</title>
-<style>
-  .umrechner-container {
-    background-color: #c66253;
-    color: white;
-    padding: 20px;
-    border-radius: 8px;
-    text-align: center;
-  }
-  
-  .umrechner-container input[type="number"] {
-    display: block;
-    margin: 10px auto;
-    padding: 10px;
-    border-radius: 4px;
-    border: none;
-    text-align: center;
-    font-size: 24px;
-  }
-</style>
-
-
-
-<div class="umrechner-container">
-  <h2 style="font-size: 32px; color: white;">Lumen in LED-Watt umrechnen</h2>
-  <label for="lumen" style="font-size: 24px;">Lumen:</label>
-  <input type="number" id="lumen" placeholder="Gib Lumen ein" style="display: block; margin: 10px auto; padding: 10px; border-radius: 4px; border: none; text-align: center; font-size: 24px;" oninput="calculateWatt()">
-  <div id="result" style="font-size: 24px; margin-top: 20px;"></div>
-</div>
-
-<script>
-function calculateWatt() {
-  const lumen = parseFloat(document.getElementById('lumen').value);
-  if (!isNaN(lumen)) {
-    const lightEfficiency = lumen <= 800 ? 10 : 100; // Lumen pro Watt
-    const watt = (lumen / lightEfficiency).toFixed(2);
-    document.getElementById('result').innerHTML = `Eine LED mit ${lumen} Lumen entspricht ungefähr ${watt} Watt.`;
-  } else {
-    document.getElementById('result').innerText = '';
-  }
-}
-</script>
-
-
-
-
+
+
+
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Lumen in LED-Watt umrechnen</title>
+
+<style>
+
+  .umrechner-container {
+
+    background-color: #c66253;
+
+    color: white;
+
+    padding: 20px;
+
+    border-radius: 8px;
+
+    text-align: center;
+
+  }
+
+  
+
+  .umrechner-container input[type="number"] {
+
+    display: block;
+
+    margin: 10px auto;
+
+    padding: 10px;
+
+    border-radius: 4px;
+
+    border: none;
+
+    text-align: center;
+
+    font-size: 24px;
+
+  }
+
+</style>
+
+
+
+
+
+
+
+<div class="umrechner-container">
+
+  <h2 style="font-size: 32px; color: white;">Lumen in LED-Watt umrechnen</h2>
+
+  <label for="lumen" style="font-size: 24px;">Lumen:</label>
+
+  <input type="number" id="lumen" placeholder="Gib Lumen ein" style="display: block; margin: 10px auto; padding: 10px; border-radius: 4px; border: none; text-align: center; font-size: 24px;" oninput="calculateWatt()">
+
+  <div id="result" style="font-size: 24px; margin-top: 20px;"></div>
+
+</div>
+
+
+
+<script>
+
+function calculateWatt() {
+
+  const lumen = parseFloat(document.getElementById('lumen').value);
+
+  if (!isNaN(lumen)) {
+
+    const lightEfficiency = lumen <= 800 ? 10 : 100; // Lumen pro Watt
+
+    const watt = (lumen / lightEfficiency).toFixed(2);
+
+    document.getElementById('result').innerHTML = `Eine LED mit ${lumen} Lumen entspricht ungefähr ${watt} Watt.`;
+
+  } else {
+
+    document.getElementById('result').innerText = '';
+
+  }
+
+}
+
+</script>
+
+
+
+
+
+
+
+
+
 
 <hr>
 <div class="su-box su-box-style-default" id="" style="border-color:#932f20;border-radius:3px;max-width:none"><div class="su-box-title" style="background-color:#c66253;color:#FFFFFF;border-top-left-radius:1px;border-top-right-radius:1px">HINWEIS</div><div class="su-box-content su-u-clearfix su-u-trim" style="border-bottom-left-radius:1px;border-bottom-right-radius:1px">Moderne, hochwertige LEDs erreichen oft eine Lichtausbeute von 100 Lumen pro Watt oder mehr. Im Vergleich dazu haben Glühbirnen nur etwa 10-15 Lumen pro Watt.</p>
@@ -63,69 +113,4 @@ function calculateWatt() {
 <p>Es ist wichtig zu beachten, dass dies eine allgemeine Formel ist und die tatsächliche Effizienz je nach Leuchtmitteltyp variieren kann.</p>
 
 
-<div class="kk-star-ratings kksr-auto kksr-align-right kksr-valign-bottom"
-    data-payload='{&quot;align&quot;:&quot;right&quot;,&quot;id&quot;:&quot;13762&quot;,&quot;slug&quot;:&quot;default&quot;,&quot;valign&quot;:&quot;bottom&quot;,&quot;ignore&quot;:&quot;&quot;,&quot;reference&quot;:&quot;auto&quot;,&quot;class&quot;:&quot;&quot;,&quot;count&quot;:&quot;82&quot;,&quot;legendonly&quot;:&quot;&quot;,&quot;readonly&quot;:&quot;&quot;,&quot;score&quot;:&quot;4.9&quot;,&quot;starsonly&quot;:&quot;&quot;,&quot;best&quot;:&quot;5&quot;,&quot;gap&quot;:&quot;5&quot;,&quot;greet&quot;:&quot;Bewerte diesen Beitrag&quot;,&quot;legend&quot;:&quot;4.9\/5 - (82 votes)&quot;,&quot;size&quot;:&quot;24&quot;,&quot;title&quot;:&quot;Lumen in Watt umrechnen (LED)&quot;,&quot;width&quot;:&quot;139.6&quot;,&quot;_legend&quot;:&quot;{score}\/{best} - ({count} {votes})&quot;,&quot;font_factor&quot;:&quot;1.25&quot;}'>
-            
-<div class="kksr-stars">
-    
-<div class="kksr-stars-inactive">
-            <div class="kksr-star" data-star="1" style="padding-right: 5px">
-            
 
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-            <div class="kksr-star" data-star="2" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-            <div class="kksr-star" data-star="3" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-            <div class="kksr-star" data-star="4" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-            <div class="kksr-star" data-star="5" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-    </div>
-    
-<div class="kksr-stars-active" style="width: 139.6px;">
-            <div class="kksr-star" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-            <div class="kksr-star" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-            <div class="kksr-star" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-            <div class="kksr-star" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-            <div class="kksr-star" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-    </div>
-</div>
-                
-
-<div class="kksr-legend" style="font-size: 19.2px;">
-            4.9/5 - (82 votes)    </div>
-    </div>

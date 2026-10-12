@@ -2,50 +2,94 @@
 <p>Ob Sie nun die Leistung in Watt kennen und den Energieverbrauch in Kilowattstunden berechnen möchten oder umgekehrt, dieser Rechner ist genau das Richtige für Sie. Geben Sie einfach Ihre Werte ein und lassen Sie den Rechner die Umwandlung vornehmen.</p>
 <p>Unser Rechner geht Standard-Mäßig von einer Stunde aus.</p>
 <h2>Jetzt Watt in kwh umrechnen</h2>
-<div class="energieumrechner-container" style="background-color: #c66253; color: white; padding: 10px 20px 20px 20px; border-radius: 8px; text-align: center;">
-  <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 20px;">
-    <div style="margin-right: 20px;">
-      <label for="watt" style="font-size: 24px;">Watt (W)</label>
-      <input type="text" id="watt" placeholder="Gib Watt ein" style="display: block; padding: 10px; border-radius: 4px; border: none; text-align: center; font-size: 24px;" oninput="convertToKwh()">
-    </div>
-    <div style="display: flex; align-items: center;">
-      <span style="margin: 0 10px; font-size: 32px;">⇄</span>
-    </div>
-    <div style="margin-left: 20px;">
-      <label for="kwh" style="font-size: 24px;">Kilowattstunden (kWh)</label>
-      <input type="text" id="kwh" placeholder="Gib kWh ein" style="display: block; padding: 10px; border-radius: 4px; border: none; text-align: center; font-size: 24px;" oninput="convertToWatt()">
-    </div>
-  </div>
-  <button style="padding: 10px 20px; font-size: 24px; border-radius: 8px; background-color: #ffffff; color: #c66253; border: none;" onclick="resetValues()">Reset</button>
-</div>
-
-<script>
-  function convertToKwh() {
-    const wattInput = document.getElementById('watt').value.replace(',', '.');
-    const watt = parseFloat(wattInput);
-    if (!isNaN(watt)) {
-      const kwh = watt / 1000;
-      document.getElementById('kwh').value = kwh.toFixed(2).replace('.', ',');
-    }
-  }
-
-  function convertToWatt() {
-    const kwhInput = document.getElementById('kwh').value.replace(',', '.');
-    const kwh = parseFloat(kwhInput);
-    if (!isNaN(kwh)) {
-      const watt = kwh * 1000;
-      document.getElementById('watt').value = watt.toFixed(0).replace('.', ',');
-    }
-  }
-
-  function resetValues() {
-    document.getElementById('watt').value = '';
-    document.getElementById('kwh').value = '';
-  }
-</script>
-
-
-
+<div class="energieumrechner-container" style="background-color: #c66253; color: white; padding: 10px 20px 20px 20px; border-radius: 8px; text-align: center;">
+
+  <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 20px;">
+
+    <div style="margin-right: 20px;">
+
+      <label for="watt" style="font-size: 24px;">Watt (W)</label>
+
+      <input type="text" id="watt" placeholder="Gib Watt ein" style="display: block; padding: 10px; border-radius: 4px; border: none; text-align: center; font-size: 24px;" oninput="convertToKwh()">
+
+    </div>
+
+    <div style="display: flex; align-items: center;">
+
+      <span style="margin: 0 10px; font-size: 32px;">⇄</span>
+
+    </div>
+
+    <div style="margin-left: 20px;">
+
+      <label for="kwh" style="font-size: 24px;">Kilowattstunden (kWh)</label>
+
+      <input type="text" id="kwh" placeholder="Gib kWh ein" style="display: block; padding: 10px; border-radius: 4px; border: none; text-align: center; font-size: 24px;" oninput="convertToWatt()">
+
+    </div>
+
+  </div>
+
+  <button style="padding: 10px 20px; font-size: 24px; border-radius: 8px; background-color: #ffffff; color: #c66253; border: none;" onclick="resetValues()">Reset</button>
+
+</div>
+
+
+
+<script>
+
+  function convertToKwh() {
+
+    const wattInput = document.getElementById('watt').value.replace(',', '.');
+
+    const watt = parseFloat(wattInput);
+
+    if (!isNaN(watt)) {
+
+      const kwh = watt / 1000;
+
+      document.getElementById('kwh').value = kwh.toFixed(2).replace('.', ',');
+
+    }
+
+  }
+
+
+
+  function convertToWatt() {
+
+    const kwhInput = document.getElementById('kwh').value.replace(',', '.');
+
+    const kwh = parseFloat(kwhInput);
+
+    if (!isNaN(kwh)) {
+
+      const watt = kwh * 1000;
+
+      document.getElementById('watt').value = watt.toFixed(0).replace('.', ',');
+
+    }
+
+  }
+
+
+
+  function resetValues() {
+
+    document.getElementById('watt').value = '';
+
+    document.getElementById('kwh').value = '';
+
+  }
+
+</script>
+
+
+
+
+
+
+
 
 
 <hr>
@@ -58,69 +102,4 @@
 <p>Dies ermöglicht eine direkte und schnelle Umrechnung von Watt in Kilowattstunden, ohne zusätzliche Eingaben zur Dauer der Leistungsanwendung.</p>
 
 
-<div class="kk-star-ratings kksr-auto kksr-align-right kksr-valign-bottom"
-    data-payload='{&quot;align&quot;:&quot;right&quot;,&quot;id&quot;:&quot;13722&quot;,&quot;slug&quot;:&quot;default&quot;,&quot;valign&quot;:&quot;bottom&quot;,&quot;ignore&quot;:&quot;&quot;,&quot;reference&quot;:&quot;auto&quot;,&quot;class&quot;:&quot;&quot;,&quot;count&quot;:&quot;114&quot;,&quot;legendonly&quot;:&quot;&quot;,&quot;readonly&quot;:&quot;&quot;,&quot;score&quot;:&quot;4.9&quot;,&quot;starsonly&quot;:&quot;&quot;,&quot;best&quot;:&quot;5&quot;,&quot;gap&quot;:&quot;5&quot;,&quot;greet&quot;:&quot;Bewerte diesen Beitrag&quot;,&quot;legend&quot;:&quot;4.9\/5 - (114 votes)&quot;,&quot;size&quot;:&quot;24&quot;,&quot;title&quot;:&quot;Watt in kwh umrechnen (Kilowattstunden) | Online-Rechner&quot;,&quot;width&quot;:&quot;139.6&quot;,&quot;_legend&quot;:&quot;{score}\/{best} - ({count} {votes})&quot;,&quot;font_factor&quot;:&quot;1.25&quot;}'>
-            
-<div class="kksr-stars">
-    
-<div class="kksr-stars-inactive">
-            <div class="kksr-star" data-star="1" style="padding-right: 5px">
-            
 
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-            <div class="kksr-star" data-star="2" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-            <div class="kksr-star" data-star="3" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-            <div class="kksr-star" data-star="4" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-            <div class="kksr-star" data-star="5" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-    </div>
-    
-<div class="kksr-stars-active" style="width: 139.6px;">
-            <div class="kksr-star" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-            <div class="kksr-star" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-            <div class="kksr-star" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-            <div class="kksr-star" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-            <div class="kksr-star" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-    </div>
-</div>
-                
-
-<div class="kksr-legend" style="font-size: 19.2px;">
-            4.9/5 - (114 votes)    </div>
-    </div>

@@ -1,85 +1,165 @@
 <p>Watt in Ampere umrechnen oder Volt in Watt. All das und noch mehr ist mit unserem Umrechner möglich! Hier können Sie einfach und schnell zwischen den wichtigsten elektrischen Maßeinheiten umrechnen: Spannung, Stromstärke und Leistung.</p>
 <p>Wählen Sie einfach aus, was Sie berechnen möchten, geben Sie die notwendigen Werte ein, und unser Tool liefert Ihnen präzise Ergebnisse mit bis zu sechs Nachkommastellen.</p>
-<div class="umrechner-container" style="background-color: #c66253; color: white; padding: 10px 20px 20px 20px; border-radius: 8px; text-align: center;">
-  <h2 style="font-size: 32px; color: white;">UMRECHNEN VON WATT / AMPERE / VOLT </h2>
-	<br>
-  <div style="margin-bottom: 10px; font-size: 24px; color: white;">Wählen Sie aus, was Sie berechnen wollen:</div>
-  <select id="calculationType" style="padding: 10px; margin-bottom: 20px; font-size: 24px; color: #c66253; background-color: white; border-radius: 4px;" onchange="updateFields()">
-    <option value="volt">Spannung (Volt)</option>
-    <option value="ampere">Stromstärke (Ampere)</option>
-    <option value="watt">Leistung (Watt)</option>
-  </select>
-  <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 20px;">
-    <div style="margin-right: 20px;">
-      <label for="firstValue" id="firstLabel" style="font-size: 24px;">Watt (W)</label>
-      <input type="text" id="firstValue" placeholder="Gib einen Wert ein" style="display: block; padding: 10px; border-radius: 4px; border: none; text-align: center; font-size: 24px;">
-    </div>
-    <div style="margin-left: 20px;">
-      <label for="secondValue" id="secondLabel" style="font-size: 24px;">Ampere (A)</label>
-      <input type="text" id="secondValue" placeholder="Gib einen Wert ein" style="display: block; padding: 10px; border-radius: 4px; border: none; text-align: center; font-size: 24px;">
-    </div>
-  </div>
-  <button style="padding: 10px 20px; font-size: 24px; border-radius: 8px; background-color: #ffffff; color: #c66253; border: none;" onclick="calculateResult()">Berechnen</button>
-  <div id="result" style="margin-top: 20px; font-size: 24px; color: white;"></div>
-</div>
-
-<script>
-  function updateFields() {
-    const selection = document.getElementById('calculationType').value;
-    const firstLabel = document.getElementById('firstLabel');
-    const secondLabel = document.getElementById('secondLabel');
-    if (selection === 'volt') {
-      firstLabel.textContent = 'Leistung (Watt)';
-      secondLabel.textContent = 'Stromstärke (Ampere)';
-    } else if (selection === 'ampere') {
-      firstLabel.textContent = 'Leistung (Watt)';
-      secondLabel.textContent = 'Spannung (Volt)';
-    } else if (selection === 'watt') {
-      firstLabel.textContent = 'Spannung (Volt)';
-      secondLabel.textContent = 'Stromstärke (Ampere)';
-    }
-  }
-
-  function calculateResult() {
-    const type = document.getElementById('calculationType').value;
-    const firstValue = parseFloat(document.getElementById('firstValue').value.replace(',', '.'));
-    const secondValue = parseFloat(document.getElementById('secondValue').value.replace(',', '.'));
-    let result = '';
-    if (!isNaN(firstValue) && !isNaN(secondValue)) {
-      const options = { minimumFractionDigits: 6, maximumFractionDigits: 6 };
-      if (type === 'volt' && secondValue !== 0) {
-        result = new Intl.NumberFormat('de-DE', options).format(firstValue / secondValue) + " V";
-      } else if (type === 'ampere' && secondValue !== 0) {
-        result = new Intl.NumberFormat('de-DE', options).format(firstValue / secondValue) + " A";
-      } else if (type === 'watt') {
-        result = new Intl.NumberFormat('de-DE', options).format(firstValue * secondValue) + " W";
-      }
-    } else {
-      result = 'Bitte gültige Werte eingeben!';
-    }
-    document.getElementById('result').textContent = result;
-  }
-  
-  window.onload = function() {
-    updateFields(); // Initialize labels on page load
-  };
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<div class="umrechner-container" style="background-color: #c66253; color: white; padding: 10px 20px 20px 20px; border-radius: 8px; text-align: center;">
+
+  <h2 style="font-size: 32px; color: white;">UMRECHNEN VON WATT / AMPERE / VOLT </h2>
+
+	<br>
+
+  <div style="margin-bottom: 10px; font-size: 24px; color: white;">Wählen Sie aus, was Sie berechnen wollen:</div>
+
+  <select id="calculationType" style="padding: 10px; margin-bottom: 20px; font-size: 24px; color: #c66253; background-color: white; border-radius: 4px;" onchange="updateFields()">
+
+    <option value="volt">Spannung (Volt)</option>
+
+    <option value="ampere">Stromstärke (Ampere)</option>
+
+    <option value="watt">Leistung (Watt)</option>
+
+  </select>
+
+  <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 20px;">
+
+    <div style="margin-right: 20px;">
+
+      <label for="firstValue" id="firstLabel" style="font-size: 24px;">Watt (W)</label>
+
+      <input type="text" id="firstValue" placeholder="Gib einen Wert ein" style="display: block; padding: 10px; border-radius: 4px; border: none; text-align: center; font-size: 24px;">
+
+    </div>
+
+    <div style="margin-left: 20px;">
+
+      <label for="secondValue" id="secondLabel" style="font-size: 24px;">Ampere (A)</label>
+
+      <input type="text" id="secondValue" placeholder="Gib einen Wert ein" style="display: block; padding: 10px; border-radius: 4px; border: none; text-align: center; font-size: 24px;">
+
+    </div>
+
+  </div>
+
+  <button style="padding: 10px 20px; font-size: 24px; border-radius: 8px; background-color: #ffffff; color: #c66253; border: none;" onclick="calculateResult()">Berechnen</button>
+
+  <div id="result" style="margin-top: 20px; font-size: 24px; color: white;"></div>
+
+</div>
+
+
+
+<script>
+
+  function updateFields() {
+
+    const selection = document.getElementById('calculationType').value;
+
+    const firstLabel = document.getElementById('firstLabel');
+
+    const secondLabel = document.getElementById('secondLabel');
+
+    if (selection === 'volt') {
+
+      firstLabel.textContent = 'Leistung (Watt)';
+
+      secondLabel.textContent = 'Stromstärke (Ampere)';
+
+    } else if (selection === 'ampere') {
+
+      firstLabel.textContent = 'Leistung (Watt)';
+
+      secondLabel.textContent = 'Spannung (Volt)';
+
+    } else if (selection === 'watt') {
+
+      firstLabel.textContent = 'Spannung (Volt)';
+
+      secondLabel.textContent = 'Stromstärke (Ampere)';
+
+    }
+
+  }
+
+
+
+  function calculateResult() {
+
+    const type = document.getElementById('calculationType').value;
+
+    const firstValue = parseFloat(document.getElementById('firstValue').value.replace(',', '.'));
+
+    const secondValue = parseFloat(document.getElementById('secondValue').value.replace(',', '.'));
+
+    let result = '';
+
+    if (!isNaN(firstValue) && !isNaN(secondValue)) {
+
+      const options = { minimumFractionDigits: 6, maximumFractionDigits: 6 };
+
+      if (type === 'volt' && secondValue !== 0) {
+
+        result = new Intl.NumberFormat('de-DE', options).format(firstValue / secondValue) + " V";
+
+      } else if (type === 'ampere' && secondValue !== 0) {
+
+        result = new Intl.NumberFormat('de-DE', options).format(firstValue / secondValue) + " A";
+
+      } else if (type === 'watt') {
+
+        result = new Intl.NumberFormat('de-DE', options).format(firstValue * secondValue) + " W";
+
+      }
+
+    } else {
+
+      result = 'Bitte gültige Werte eingeben!';
+
+    }
+
+    document.getElementById('result').textContent = result;
+
+  }
+
+  
+
+  window.onload = function() {
+
+    updateFields(); // Initialize labels on page load
+
+  };
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 <hr>
@@ -125,69 +205,4 @@
 </ul>
 
 
-<div class="kk-star-ratings kksr-auto kksr-align-right kksr-valign-bottom"
-    data-payload='{&quot;align&quot;:&quot;right&quot;,&quot;id&quot;:&quot;13744&quot;,&quot;slug&quot;:&quot;default&quot;,&quot;valign&quot;:&quot;bottom&quot;,&quot;ignore&quot;:&quot;&quot;,&quot;reference&quot;:&quot;auto&quot;,&quot;class&quot;:&quot;&quot;,&quot;count&quot;:&quot;109&quot;,&quot;legendonly&quot;:&quot;&quot;,&quot;readonly&quot;:&quot;&quot;,&quot;score&quot;:&quot;4.8&quot;,&quot;starsonly&quot;:&quot;&quot;,&quot;best&quot;:&quot;5&quot;,&quot;gap&quot;:&quot;5&quot;,&quot;greet&quot;:&quot;Bewerte diesen Beitrag&quot;,&quot;legend&quot;:&quot;4.8\/5 - (109 votes)&quot;,&quot;size&quot;:&quot;24&quot;,&quot;title&quot;:&quot;Watt \/ Ampere \/ Volt umrechnen&quot;,&quot;width&quot;:&quot;136.7&quot;,&quot;_legend&quot;:&quot;{score}\/{best} - ({count} {votes})&quot;,&quot;font_factor&quot;:&quot;1.25&quot;}'>
-            
-<div class="kksr-stars">
-    
-<div class="kksr-stars-inactive">
-            <div class="kksr-star" data-star="1" style="padding-right: 5px">
-            
 
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-            <div class="kksr-star" data-star="2" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-            <div class="kksr-star" data-star="3" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-            <div class="kksr-star" data-star="4" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-            <div class="kksr-star" data-star="5" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-    </div>
-    
-<div class="kksr-stars-active" style="width: 136.7px;">
-            <div class="kksr-star" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-            <div class="kksr-star" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-            <div class="kksr-star" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-            <div class="kksr-star" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-            <div class="kksr-star" style="padding-right: 5px">
-            
-
-<div class="kksr-icon" style="width: 24px; height: 24px;"></div>
-        </div>
-    </div>
-</div>
-                
-
-<div class="kksr-legend" style="font-size: 19.2px;">
-            4.8/5 - (109 votes)    </div>
-    </div>

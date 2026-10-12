@@ -22,7 +22,7 @@ export const site = {
   },
   author: {
     name: 'Oliver Bechstein',
-    image: '/bilder/oliver.webp',
+    image: '/bilder/oliver-bechstein.webp',
     bio: 'Oliver Bechstein ist IT-Spezialist, Techniker und leitender Redakteur von Elektronik-Magazin. Seit vielen Jahren testet er Hardware, Heimkino-Systeme und Smart-Home-Technik im echten Praxiseinsatz.',
   },
   types: {

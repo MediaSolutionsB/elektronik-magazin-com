@@ -62,7 +62,6 @@ const year = new Date().getFullYear();
               autocomplete="off"
               aria-label="Website durchsuchen"
             />
-            <kbd class="em-search-kbd" title="Tastaturkürzel">Ctrl K</kbd>
             <button type="button" class="em-search-clear" id="em-search-clear" aria-label="Suche zurücksetzen" style="display:none;">&times;</button>
           </div>
           <div class="em-search-dropdown" id="em-search-dropdown" style="display:none;">
@@ -157,7 +156,6 @@ const year = new Date().getFullYear();
         var dropdown = document.getElementById('em-search-dropdown');
         var resultsBox = document.getElementById('em-search-results');
         var clearBtn = document.getElementById('em-search-clear');
-        var kbd = wrapper ? wrapper.querySelector('.em-search-kbd') : null;
         if (!input || !dropdown || !resultsBox) return;
 
         var searchIndex = null;
@@ -211,12 +209,10 @@ const year = new Date().getFullYear();
           if (!q) {
             dropdown.style.display = 'none';
             if (clearBtn) clearBtn.style.display = 'none';
-            if (kbd) kbd.style.display = '';
             return;
           }
 
           if (clearBtn) clearBtn.style.display = 'inline-flex';
-          if (kbd) kbd.style.display = 'none';
 
           var terms = q.split(/\s+/).filter(Boolean);
           var matches = searchIndex.filter(function(item) {
@@ -272,7 +268,6 @@ const year = new Date().getFullYear();
             input.value = '';
             dropdown.style.display = 'none';
             clearBtn.style.display = 'none';
-            if (kbd) kbd.style.display = '';
             input.focus();
           });
         }
@@ -312,14 +307,6 @@ const year = new Date().getFullYear();
             }
           });
         }
-
-        document.addEventListener('keydown', function(e) {
-          if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) {
-            e.preventDefault();
-            input.focus();
-            input.select();
-          }
-        });
 
         document.addEventListener('click', function(e) {
           if (wrapper && !wrapper.contains(e.target)) {

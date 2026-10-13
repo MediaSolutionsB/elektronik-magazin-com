@@ -12,7 +12,7 @@ const t = typeOf(review);
       {review.score > 0 && <span class="em-pill">{review.score}/100</span>}
     </div>
     <div class="em-card-title">{review.title}</div>
-    <div class="em-card-text">{review.excerpt}</div>
+    <div class="em-card-text">{(review.excerpt || '').replace(/<[^>]+>/g, '').trim()}</div>
     <div class="em-card-more">{t.more} <Fragment set:html={arrow} /></div>
   </div>
 </a>

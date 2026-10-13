@@ -7,7 +7,7 @@ import { tools } from '../rechner/tools.js';
 export async function GET() {
   const reviews = allReviews();
   const ratgeber = JSON.parse(fs.readFileSync(path.resolve('content/ratgeber/index.json'), 'utf-8'));
-  const staticUrls = ['/', '/elektronik-services/', '/ratgeber/', '/tools/', '/kontakt/', '/ueber-uns/', '/oliver-bechstein/',
+  const staticUrls = ['/', '/tests/', '/elektronik-services/', '/ratgeber/', '/tools/', '/kontakt/', '/ueber-uns/', '/oliver-bechstein/',
     '/individuelle-kaufberatung/', '/installationsservice-fuer-heimkino-und-hifi-systeme/', '/fernwartung-und-technischer-support/',
     '/impressum/', '/datenschutzerklaerung/', '/sitemap-html/'];
   const urls = [

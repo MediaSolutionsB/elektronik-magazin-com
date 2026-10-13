@@ -1,0 +1,33 @@
+---
+import Base from '../../layouts/Base.astro';
+import Card from '../../lib/Card.astro';
+import { site } from '../../site.config.js';
+import { allReviews } from '../../lib/reviews.js';
+
+const reviews = allReviews().filter((r) => r.type === 'test' || r.type === 'check');
+---
+<Base
+  title="Tests & Checks: Unabhängige Hardware- und Praxistests"
+  description="Alle Praxistests und Hardware-Checks von Elektronik-Magazin: Smartphones, Audio, Smart Home, Heimkino und Haushaltsgeräte ehrlich getestet."
+  path="/tests/"
+>
+  <section class="em-pagehead">
+    <div class="em-wrap">
+      <nav class="em-crumbs" aria-label="Brotkrumen">
+        <a href="/">Startseite</a><span aria-hidden="true">/</span><span>Tests &amp; Checks</span>
+      </nav>
+      <h1>Tests &amp; Checks</h1>
+      <p>Ausführliche Praxistests und kompakte Hardware-Checks: Wir testen Technik-Produkte im Alltag auf Herz und Nieren – unabhängig, verständlich und mit klarem Fazit.</p>
+    </div>
+  </section>
+
+  <section class="em-wrap em-section">
+    {reviews.length ? (
+      <div class="em-cards">
+        {reviews.map((r) => <Card review={r} />)}
+      </div>
+    ) : (
+      <div class="em-empty">Hier erscheinen bald die ersten Testberichte.</div>
+    )}
+  </section>
+</Base>

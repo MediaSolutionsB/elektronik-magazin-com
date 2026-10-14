@@ -26,9 +26,9 @@ export function GET() {
       guides = parsed.map((g) => ({
         title: g.title,
         fullTitle: g.title,
-        url: `/ratgeber/${g.slug}/`,
+        url: g.permalink || `/ratgeber/${g.slug}/`,
         type: 'Ratgeber',
-        category: 'Kaufberatung',
+        category: g.category || 'Kaufberatung',
         excerpt: (g.excerpt || '').replace(/<[^>]+>/g, '').slice(0, 160).trim(),
         score: null,
       }));

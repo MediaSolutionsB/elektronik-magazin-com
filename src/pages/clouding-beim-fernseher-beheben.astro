@@ -1,0 +1,408 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../site.config.js';
+
+const canonicalPath = '/clouding-beim-fernseher-beheben/';
+const pageTitle = 'Clouding beim Fernseher beheben: Ursachen, Sofort-Hilfen & Profi-Tipps';
+const pageDescription = 'Weiße Wolken oder helle Flecken auf dem TV-Bildschirm? Erfahre, warum Clouding entsteht und wie du es mit Bildeinstellungen, dem Massage-Trick oder Gehäuselockerung wirksam behebst.';
+const heroImage = '/bilder/clouding/clouding-fernseher-beispiel.webp';
+
+const jsonld = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Article',
+      'headline': pageTitle,
+      'description': pageDescription,
+      'image': site.url + heroImage,
+      'datePublished': '2017-08-15T12:00:00+02:00',
+      'dateModified': '2026-10-14T11:00:00+02:00',
+      'author': {
+        '@type': 'Person',
+        'name': site.author.name,
+        'url': site.url + '/oliver-bechstein/',
+        'image': site.url + site.author.image,
+        'description': site.author.bio
+      },
+      'publisher': {
+        '@type': 'Organization',
+        'name': site.name,
+        'url': site.url,
+        'logo': {
+          '@type': 'ImageObject',
+          'url': site.url + '/bilder/em-icon.webp'
+        }
+      },
+      'mainEntityOfPage': site.url + canonicalPath
+    },
+    {
+      '@type': 'FAQPage',
+      'mainEntity': [
+        {
+          '@type': 'Question',
+          'name': 'Was ist Clouding beim Fernseher genau?',
+          'acceptedAnswer': {
+            '@type': 'Answer',
+            'text': 'Clouding (auch Taschenlampeneffekt oder Flashlighting genannt) bezeichnet eine ungleichmäßige Ausleuchtung bei LCD- und LED-Fernsehern. In dunklen oder schwarzen Filmszenen werden helle, wolkige Flecken oder Lichtkegel aus den Display-Ecken sichtbar.'
+          }
+        },
+        {
+          '@type': 'Question',
+          'name': 'Kann man Clouding beim Fernseher selbst beheben?',
+          'acceptedAnswer': {
+            '@type': 'Answer',
+            'text': 'Ja, in den meisten Fällen lässt sich Clouding deutlich reduzieren: 1. Durch Drosseln der Hintergrundbeleuchtung (Backlight) im TV-Menü. 2. Durch den sanften Massage-Trick mit einem Mikrofasertuch bei warmem Panel. 3. Durch leichtes Lockern der Gehäuseschrauben um eine Vierteldrehung. 4. Durch Anbringen einer indirekten Hintergrundbeleuchtung (Bias Lighting).'
+          }
+        },
+        {
+          '@type': 'Question',
+          'name': 'Ist Clouding ein Reklamations- oder Garantiefall?',
+          'acceptedAnswer': {
+            '@type': 'Answer',
+            'text': 'Die meisten Hersteller wie Samsung, LG, Sony oder Philips stufen leichtes bis mittleres Clouding als bauartbedingte Eigenschaft von Edge-LED-Displays ein und lehnen eine Garantiereparatur oft ab. Bei Neugeräten empfiehlt sich daher die sofortige Rückgabe über das 14-tägige Widerrufsrecht beim Onlinekauf.'
+          }
+        },
+        {
+          '@type': 'Question',
+          'name': 'Haben OLED-Fernseher auch Clouding?',
+          'acceptedAnswer': {
+            '@type': 'Answer',
+            'text': 'Nein. OLED-Fernseher besitzen keine Hintergrundbeleuchtung, sondern selbstleuchtende Pixel. Jeder Pixel schaltet sich bei Schwarz komplett ab. Daher sind OLED-Geräte physikalisch zu 100 % frei von Clouding und Taschenlampeneffekten.'
+          }
+        },
+        {
+          '@type': 'Question',
+          'name': 'Verschwindet Clouding mit der Zeit von alleine?',
+          'acceptedAnswer': {
+            '@type': 'Answer',
+            'text': 'Gelegentlich kann sich frisch aufgetretenes Clouding nach einigen Betriebswochen etwas mildern, wenn sich fertigungsbedingte Materialspannungen im TV-Gehäuse durch wiederholte Erwärmung und Abkühlung abbauen. Meist bleibt das Phänomen jedoch ohne gezielte Maßnahmen dauerhaft bestehen.'
+          }
+        }
+      ]
+    }
+  ]
+};
+---
+
+<Base
+  title={pageTitle}
+  description={pageDescription}
+  image={heroImage}
+  path={canonicalPath}
+  type="article"
+  jsonld={jsonld}
+>
+  <article class="em-article-wrap">
+    <header class="em-article-header">
+      <nav class="em-crumbs" aria-label="Brotkrumen">
+        <a href="/">Startseite</a><span aria-hidden="true">/</span>
+        <a href="/ratgeber/">Ratgeber</a><span aria-hidden="true">/</span>
+        <span>Clouding beim Fernseher beheben</span>
+      </nav>
+      <div class="em-pill" style="margin-top: 16px;">TV &amp; Heimkino Praxis-Guide</div>
+      <h1 style="font-size: clamp(28px, 4vw, 44px); margin-top: 14px; line-height: 1.15; font-weight: 800;">
+        Clouding beim Fernseher beheben: Ursachen, Sofort-Hilfen &amp; Profi-Tipps
+      </h1>
+      <div class="em-article-meta" style="margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; color: var(--muted); font-size: 15px;">
+        <span>Von <a href="/oliver-bechstein/" style="color: inherit; font-weight: 700; text-decoration: underline;">Oliver Bechstein</a></span>
+        <span>&bull;</span>
+        <span>Zuletzt aktualisiert: 14. Oktober 2026</span>
+        <span>&bull;</span>
+        <span>Lesezeit: ca. 7 Min.</span>
+      </div>
+    </header>
+
+    <div class="em-content">
+      <!-- Quick-Answer Box -->
+      <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-left: 6px solid var(--accent); border-radius: 16px; padding: 22px 24px; margin: 28px 0 36px;">
+        <strong style="display: block; font-size: 18px; margin-bottom: 8px; color: var(--ink);">Das Wichtigste in Kürze:</strong>
+        <ul style="margin: 0; padding-left: 20px; line-height: 1.6; color: var(--slate);">
+          <li><strong>Was ist Clouding?</strong> Milchig-weiße Wolken oder helle Flecken in dunklen Filmszenen, verursacht durch ungleichmäßige LED-Hintergrundbeleuchtung oder mechanische Spannungen im Panel.</li>
+          <li><strong>Schnellste Lösung:</strong> Drossle im TV-Menü die <em>Hintergrundbeleuchtung</em> (Backlight) auf ca. 60–70 % und wechsle auf den Bildmodus <em>Kino</em> oder <em>Filmmaker Mode</em>.</li>
+          <li><strong>Bester Hardware-Trick:</strong> Der sanfte <em>Massage-Trick</em> mit einem weichen Mikrofasertuch bei warmem Panel löst mechanische Verspannungen der Diffusor-Schichten.</li>
+          <li><strong>Kein Clouding:</strong> Wenn du absolute Schwarztiefe ohne jeden Lichthof suchst, sind <strong>OLED-Fernseher</strong> die einzige zu 100 % sichere Technologie.</li>
+        </ul>
+      </div>
+
+      <p style="font-size: 18px; line-height: 1.65; color: var(--ink);">
+        Du freust dich auf einen gemütlichen Filmabend, der Raum ist abgedunkelt, die Eröffnungsszene startet in tiefem Schwarz – doch statt satter Dunkelheit siehst du <strong>graue, milchige Wolken und helle Flecken</strong>, die über das Panel wandern oder wie kleine Taschenlampen aus den Ecken leuchten.
+      </p>
+      <p>
+        Dieses Phänomen nennt sich <strong>Clouding</strong> (gelegentlich auch <em>Taschenlampeneffekt</em> oder <em>Flashlighting</em>). Es zählt zu den häufigsten und frustrierendsten Bildfehlern bei modernen Flachbildfernsehern. Die gute Nachricht vorweg: <strong>Du musst dich nicht damit abfinden.</strong> In diesem Praxisratgeber erfährst du genau, wie Clouding physikalisch entsteht, wie du es mit einfachen Handgriffen minimierst und welche Tricks selbst hartnäckige Flecken beseitigen.
+      </p>
+
+      <!-- Hero Bild -->
+      <figure class="em-shot" style="margin: 32px 0;">
+        <img
+          src="/bilder/clouding/clouding-fernseher-beispiel.webp"
+          alt="Sichtbares Clouding und Taschenlampeneffekt auf einem LED-Fernseher in dunkler Umgebung"
+          width="1376"
+          height="768"
+          loading="eager"
+        />
+        <figcaption>Typisches Clouding bei einem LCD/LED-Fernseher: Bei dunklem Bildinhalt strahlen ungleichmäßige, wolkenartige Lichtflecken und helle Ecken störend durch das Panel.</figcaption>
+      </figure>
+
+      <h2>Was ist Clouding beim Fernseher? Definition &amp; Symptome</h2>
+      <p>
+        Der Begriff stammt vom englischen Wort <em>cloud</em> (Wolke). Clouding beschreibt eine <strong>ungleichmäßige Ausleuchtung der Bildfläche</strong> bei Flachbildfernsehern, die mit Flüssigkristall-Technologie (LCD bzw. LED-LCD) arbeiten.
+      </p>
+      <p>
+        In hellen Bildszenen – etwa bei Tageslicht, Fußballspielen oder Animationsfilmen – fällt Clouding so gut wie nie auf. Sobald jedoch düstere Filmszenen, Nachtaufnahmen oder die schwarzen 16:9-Kinobalken oben und unten ins Spiel kommen, leuchten bestimmte Zonen heller als der Rest.
+      </p>
+
+      <h3>Die verschiedenen Ausprägungen von Ausleuchtungsfehlern:</h3>
+      <ul>
+        <li><strong>Klassisches Clouding:</strong> Diffuse, wolkenartige Flecken mitten im Bildbereich, die fleckig und wolkig wirken.</li>
+        <li><strong>Taschenlampeneffekt (Flashlighting):</strong> Kegelförmige, helle Einstrahlungen, die direkt aus den Ecken oder vom Rahmen her ins Display leuchten – ähnlich wie der Schein einer Taschenlampe.</li>
+        <li><strong>Backlight Bleeding:</strong> Reines Durchscheinen der LED-Lichtleiste entlang der Ränder, meist durch eine undichte Rahmenfassung.</li>
+        <li><strong>IPS-Glow:</strong> Ein blickwinkelabhängiges, leichtes Schimmern bei Displays mit IPS-Panel, das sich verändert, sobald man sich seitlich zum Fernseher bewegt.</li>
+      </ul>
+
+      <h2>Warum entsteht Clouding? Die technischen Ursachen im Detail</h2>
+      <p>
+        Um Clouding wirksam zu bekämpfen, muss man verstehen, woher der Bildfehler kommt. Im Gegensatz zu OLED-Displays können die einzelnen Bildpunkte (Pixel) eines LCD-Fernsehers <strong>nicht selbst leuchten</strong>. Sie fungieren wie mikroskopisch kleine Jalousien, die sich öffnen oder schließen, um Licht durchzulassen oder zu blockieren.
+      </p>
+      <p>
+        Hinter diesen Pixeln sitzt die Lichtquelle – die sogenannte <strong>Hintergrundbeleuchtung (Backlight)</strong>. Und genau hier liegt das physikalische Problem:
+      </p>
+
+      <h3>1. Edge-LED: Bauartbedingte Schwachstelle ultraflacher Fernseher</h3>
+      <p>
+        Nahezu alle preiswerten und besonders flachen Fernseher setzen auf die <strong>Edge-LED-Bauweise</strong>. Hier sitzen die LEDs ausschließlich an den Außenrändern (oft nur an der Unterkante oder an zwei Seiten). Eine hauchdünne, lichtleitende Kunststoffplatte (meist aus speziellem Acrylglas/PMMA) sowie mehrere optische Diffusor-Folien verteilen das Licht über die gesamte Fläche des 55-, 65- oder 75-Zoll-Displays.
+      </p>
+      <p>
+        Schon minimale Unebenheiten oder Toleranzen im Zehntelmillimeter-Bereich führen dazu, dass an manchen Stellen mehr Licht nach vorne durchdringt als an anderen.
+      </p>
+
+      <h3>2. Mechanische Verspannungen im Rahmen</h3>
+      <p>
+        Werden die Gehäuseschrauben im Werk oder bei der Wandmontage zu stramm angezogen, verzieht sich das Gehäuse minimal. Der Druck überträgt sich direkt auf die innenliegenden Folien und das Flüssigkristall-Panel. Wo Druck herrscht, können die Flüssigkristalle das Hintergrundlicht nicht mehr komplett sperren – ein heller Fleck entsteht.
+      </p>
+
+      <h3>3. Wärmeausdehnung im laufenden Betrieb</h3>
+      <p>
+        Vielleicht ist dir schon aufgefallen, dass der Fernseher beim Einschalten oft ein tadelloses Schwarz zeigt, die hellen Wolken aber <strong>erst nach 20 bis 45 Minuten</strong> sichtbar werden. Grund dafür ist die Erwärmung: LEDs, Netzteil und Prozessoren heizen das Gehäuse auf. Die Kunststoff-Lichtleiterplatte dehnt sich bei Wärme aus. Hat sie im Rahmen zu wenig Spielraum, wölbt sie sich mikroskopisch auf – Clouding wird sichtbar.
+      </p>
+
+      <!-- Massage Bild -->
+      <figure class="em-shot" style="margin: 36px 0;">
+        <img
+          src="/bilder/clouding/clouding-fernseher-tuch-massage.webp"
+          alt="Display-Massage mit weichem Mikrofasertuch zur Beseitigung von Clouding-Spannungen"
+          width="1376"
+          height="768"
+          loading="lazy"
+        />
+        <figcaption>Der sanfte Massage-Trick: Mit einem sauberen, weichen Mikrofasertuch und kreisenden Bewegungen lassen sich mechanische Spannungen im Panel gezielt abbauen.</figcaption>
+      </figure>
+
+      <h2>Clouding beheben: Die 5 besten Methoden im Praxistest</h2>
+      <p>
+        Je nach Ursache gibt es verschiedene Lösungsansätze. Wir beginnen mit den einfachen Bildeinstellungen und arbeiten uns zu den mechanischen Handgriffen vor.
+      </p>
+
+      <div style="display: flex; flex-direction: column; gap: 24px; margin: 28px 0;">
+        <!-- Methode 1 -->
+        <div style="background: var(--card); border: 1.5px solid var(--line); border-radius: 16px; padding: 24px;">
+          <h3 style="margin-top: 0; color: var(--accent); font-size: 22px;">Methode 1: Bildeinstellungen optimieren (Sofort-Hilfe ohne Risiko)</h3>
+          <p>
+            Werkseitig sind die meisten Fernseher im sogenannten „Standard“- oder „Dynamik“-Modus eingestellt. Hier läuft die Hintergrundbeleuchtung permanent auf 100 % Maximalleistung, um im hellen Verkaufsraum zu glänzen. Zu Hause im abgedunkelten Wohnzimmer überstrahlt dieser Modus das Bild gnadenlos.
+          </p>
+          <ul style="padding-left: 20px; line-height: 1.6;">
+            <li><strong>Hintergrundbeleuchtung drosseln:</strong> Reduziere im Bildmenü den Regler für <em>Hintergrundbeleuchtung</em> (bei Sony: <em>Helligkeit</em>, bei LG/Samsung oft separat als <em>Hintergrundbeleuchtung</em> bezeichnet) auf ca. <strong>50 bis 70 %</strong>. Das dämpft die Wolken drastisch ein, ohne dem Bild Kontrast zu nehmen.</li>
+            <li><strong>Helligkeit vs. Hintergrundbeleuchtung:</strong> Verstelle nicht den Regler „Helligkeit“ ins Bodenlose! Dieser steuert den Schwarzwert der Signalverarbeitung. Steht er zu hoch, wird Schwarz grau; steht er zu niedrig, saufen dunkle Bilddetails komplett ab.</li>
+            <li><strong>Bildmodus „Film“ oder „Filmmaker Mode“:</strong> Diese Modi stellen neutrale Farben und eine moderate, augenschonende Ausleuchtung ein.</li>
+            <li><strong>Local Dimming aktivieren:</strong> Falls dein TV über Zonen-Dimmung verfügt, stelle die Option auf <em>Mittel</em> oder <em>Hoch</em>.</li>
+            <li><strong>Lichtsensor (Öko-Sensor) aktivieren:</strong> Der Fernseher passt seine Helligkeit automatisch an das Umgebungslicht an – im dunklen Raum dimmt er sich selbstständig herunter.</li>
+          </ul>
+        </div>
+
+        <!-- Methode 2 -->
+        <div style="background: var(--card); border: 1.5px solid var(--line); border-radius: 16px; padding: 24px;">
+          <h3 style="margin-top: 0; color: var(--accent); font-size: 22px;">Methode 2: Der „Massage-Trick“ mit dem Mikrofasertuch</h3>
+          <p>
+            Dieser Trick klingt zunächst ungewöhnlich, ist in Heimkino-Foren aber ein bewährter Geheimtipp gegen Verspannungen der innenliegenden Polarisations- und Diffusorfolien:
+          </p>
+          <ol style="padding-left: 20px; line-height: 1.7;">
+            <li>Lass den Fernseher ca. <strong>30 bis 45 Minuten laufen</strong>, damit sich das Display erwärmt und die Kunststoffschichten flexibler werden.</li>
+            <li>Schalte das TV-Gerät aus, sodass der Bildschirm komplett schwarz ist. Achte auf gute Beleuchtung im Raum, um die Paneloberfläche gut zu sehen.</li>
+            <li>Nimm ein <strong>frisch gewaschenes, flauschiges Mikrofasertuch</strong> (kein Küchenpapier, keine scharfen Reiniger!).</li>
+            <li>Führe mit dem Tuch <strong>ganz sanfte, kreisende Bewegungen</strong> aus. Starte direkt auf dem hellen Fleck und streiche ihn behutsam in Richtung des nächsten Gehäuserandes aus.</li>
+            <li><strong>Achtung:</strong> Übe niemals starken Druck aus! Du massierst das Panel nur mit dem Eigengewicht deiner Fingerkuppen.</li>
+            <li>Schalte das Gerät wieder ein. Häufig haben sich die aufeinanderliegenden Schichten entspannt und die Wolke ist deutlich kleiner oder ganz verschwunden.</li>
+          </ol>
+        </div>
+
+        <!-- Methode 3 -->
+        <div style="background: var(--card); border: 1.5px solid var(--line); border-radius: 16px; padding: 24px;">
+          <h3 style="margin-top: 0; color: var(--accent); font-size: 22px;">Methode 3: Gehäuseschrauben &amp; Wandhalterung lockern</h3>
+          <p>
+            Oft entsteht der Taschenlampeneffekt in den Bildschirmecken durch schlicht <strong>zu stramm angezogene Schrauben</strong>.
+          </p>
+          <ul style="padding-left: 20px; line-height: 1.6;">
+            <li><strong>Rückwandschrauben entspannen:</strong> Trenne den Fernseher vom Strom. Drehe die Schrauben an der Rückwand (insbesondere jene in der Nähe der Problemstellen) mit einem passenden Kreuzschlitz-Schraubendreher um etwa <strong>eine Vierteldrehung</strong> auf. Die Schrauben müssen weiterhin fest sitzen, aber der mechanische Druck auf das Panel weicht.</li>
+            <li><strong>VESA-Wandhalterung prüfen:</strong> Wenn der TV an der Wand montiert ist, sind häufig die vier VESA-Schrauben schuld. Werden diese mit vollem Drehmoment angeknallt, wölbt sich die Rückwand nach innen und drückt die Diffusorplatte gegen das Display. Lockere auch diese Schrauben um eine halbe Umdrehung.</li>
+          </ul>
+        </div>
+
+        <!-- Methode 4 -->
+        <div style="background: var(--card); border: 1.5px solid var(--line); border-radius: 16px; padding: 24px;">
+          <h3 style="margin-top: 0; color: var(--accent); font-size: 22px;">Methode 4: Aufstellort &amp; Wärmemanagement optimieren</h3>
+          <p>
+            Da Hitze die Lichtleiterplatten verzieht, solltest du den Aufstellort kritisch prüfen:
+          </p>
+          <ul style="padding-left: 20px; line-height: 1.6;">
+            <li>Steht der Fernseher direkt über oder neben einem voll aufgedrehten <strong>Heizkörper</strong>? Wenn ja: unbedingt umstellen oder den Abstand vergrößern.</li>
+            <li>Vermeide direkte Sonneneinstrahlung durch Südfenster oder punktuelle Erwärmung durch nahe Halogen- und Glühlampen.</li>
+            <li>Sorge für ausreichende Luftzirkulation hinter dem Gerät. Steht der Fernseher in einer engen Schrankwand oder direkt an der Wand, staut sich die Abwärme.</li>
+          </ul>
+        </div>
+
+        <!-- Methode 5 -->
+        <div style="background: var(--card); border: 1.5px solid var(--line); border-radius: 16px; padding: 24px;">
+          <h3 style="margin-top: 0; color: var(--accent); font-size: 22px;">Methode 5: Bias Lighting (Der clevere Wahrnehmungs-Trick)</h3>
+          <p>
+            Diese Methode bekämpft nicht die Hardware, sondern nutzt die Funktionsweise des menschlichen Auges – mit verblüffender Wirkung!
+          </p>
+          <p>
+            In einem stockdunklen Raum weitet sich die menschliche Pupille maximal, um jedes Quäntchen Licht einzufangen. Dadurch wird selbst minimales Restlicht der Hintergrundbeleuchtung als störend heller Fleck wahrgenommen.
+          </p>
+          <p>
+            Befestigst du hingegen ein <strong>LED-Lichtband (Bias Light) hinter dem Fernseher</strong>, das die Wand dahinter sanft anstrahlt (ideal: neutralweiß mit ca. 6.500 Kelvin), verengt sich die Pupille leicht. Der Kontrast steigt subjektiv enorm an: Das Display wirkt plötzlich <strong>tiefschwarz</strong> und das verbleibende Clouding wird für das menschliche Auge unsichtbar!
+          </p>
+        </div>
+      </div>
+
+      <!-- Bias Lighting Bild -->
+      <figure class="em-shot" style="margin: 36px 0;">
+        <img
+          src="/bilder/clouding/fernseher-hintergrundbeleuchtung-bias-lighting.webp"
+          alt="Indirekte LED-Hintergrundbeleuchtung (Bias Lighting) hinter einem TV verbessert den wahrgenommenen Schwarzwert"
+          width="1376"
+          height="768"
+          loading="lazy"
+        />
+        <figcaption>Effektiver Wahrnehmungstrick: Eine indirekte 6.500K LED-Hintergrundbeleuchtung (Bias Lighting) an der Wand verengt die Pupille und lässt das Display tiefschwarz erscheinen.</figcaption>
+      </figure>
+
+      <h2>Clouding Testbild: So überprüfst du deinen Fernseher richtig</h2>
+      <p>
+        Möchtest du herausfinden, ob und wie stark dein Fernseher von Clouding betroffen ist (zum Beispiel direkt nach dem Neukauf)? So führst du den Test fachgerecht durch:
+      </p>
+      <ol style="padding-left: 20px; line-height: 1.7;">
+        <li>Dunkle das Zimmer vollständig ab – kein Deckenlicht, keine direkte Tischlampe.</li>
+        <li>Lass den Fernseher mindestens <strong>30 Minuten einlaufen</strong>, damit er seine typische Betriebstemperatur erreicht.</li>
+        <li>Wähle eine Signalquelle mit <strong>vollständig schwarzem Bild</strong> (z. B. ein rein schwarzes JPEG-Bild über einen USB-Stick oder ein YouTube-Video mit dem Suchbegriff <em>„Black Screen 4K Test“</em>).</li>
+        <li>Stelle die Hintergrundbeleuchtung kurz auf das Niveau, mit dem du normalerweise Filme schaust (z. B. Bildmodus <em>Kino</em>).</li>
+        <li><strong>Die goldene Regel:</strong> Beurteile das Bild aus dem normalen Sitzabstand (ca. 2 bis 3 Meter) und genau von vorne. Wenn dir im normalen Filmerlebnis nichts auffällt, solltest du dich nicht verrückt machen lassen!</li>
+      </ol>
+
+      <div style="background: #eff6ff; border-left: 5px solid #2563eb; border-radius: 12px; padding: 18px 20px; margin: 24px 0;">
+        <strong style="color: #1e40af; display: block; margin-bottom: 4px;">💡 Passende Online-Rechner für dein Heimkino:</strong>
+        <p style="margin: 0; font-size: 15px; color: #1e3a8a;">
+          Prüfe gleich nach, ob dein Sitzabstand und deine Montagehöhe ideal eingestellt sind:
+          <br />
+          &rarr; <a href="/tools/sitzabstand-rechner-fernseher/" style="color: #1d4ed8; font-weight: 700; text-decoration: underline;">TV-Sitzabstand Rechner</a> |
+          &rarr; <a href="/tools/fernseher-montagehoehe-rechner/" style="color: #1d4ed8; font-weight: 700; text-decoration: underline;">Fernseher Montagehöhe Rechner</a> |
+          &rarr; <a href="/tools/fernseher-stromverbrauch-rechner/" style="color: #1d4ed8; font-weight: 700; text-decoration: underline;">TV-Stromkosten Rechner</a>
+        </p>
+      </div>
+
+      <h2>Garantie &amp; Umtausch: Ist Clouding ein Reklamationsgrund?</h2>
+      <p>
+        Was tun, wenn alle Einstellungsversuche scheitern und das Clouding so intensiv ist, dass jeder Filmabend ruiniert wird?
+      </p>
+      <p>
+        Hier muss man zwischen <strong>Garantie des Herstellers</strong> und dem <strong>gesetzlichen Widerrufsrecht</strong> unterscheiden:
+      </p>
+      <ul>
+        <li>
+          <strong>Herstellergarantie (Samsung, Sony, LG, Philips &amp; Co.):</strong> In den Garantiebedingungen stufen fast alle Hersteller eine gewisse Ausleuchtungs-Ungleichmäßigkeit bei LCD/LED-Panels als <em>„bauartbedingte Eigenschaft innerhalb der Serientoleranz“</em> ein. Ein Austauschpanel wird oft nur dann bewilligt, wenn der Mangel selbst bei normalem Tageslicht-TV-Programm unübersehbar ist.
+        </li>
+        <li>
+          <strong>Die beste Lösung beim Neukauf:</strong> Wenn du den Fernseher online bestellt hast, greift das gesetzliche <strong>14-tägige Widerrufsrecht</strong>. Teste das Neugerät sofort in den ersten Tagen gründlich im Dunkeln. Ist das Clouding inakzeptabel stark, schicke das Gerät ohne Angabe von Gründen zurück oder bitte um einen Austausch. Bei Großgeräten bieten renommierte Händler meist eine unkomplizierte Speditionsabholung an.
+        </li>
+      </ul>
+
+      <h2>OLED vs. QLED vs. Mini-LED: Welcher TV hat kein Clouding?</h2>
+      <p>
+        Falls du vor einer Neuanschaffung stehst oder mit deinem aktuellen LCD-TV unzufrieden bist, hilft ein Blick auf die verschiedenen Display-Technologien:
+      </p>
+      <div class="em-table em-table-facts" style="margin: 24px 0;">
+        <table>
+          <thead>
+            <tr>
+              <th>Technologie</th>
+              <th>Clouding-Risiko</th>
+              <th>Eignung für dunkle Räume</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>OLED / QD-OLED</strong></td>
+              <td><span style="color: #15803d; font-weight: 700;">Kein Clouding (0 %)</span></td>
+              <td>Hervorragend – selbstleuchtende Pixel für perfektes Schwarz</td>
+            </tr>
+            <tr>
+              <td><strong>Mini-LED (FALD)</strong></td>
+              <td><span style="color: #15803d; font-weight: 700;">Sehr gering</span></td>
+              <td>Sehr gut – Hunderte bis Tausende einzeln dimmbare Zonen</td>
+            </tr>
+            <tr>
+              <td><strong>Direct-LED (ohne Local Dimming)</strong></td>
+              <td><span style="color: #d97706; font-weight: 700;">Mittel</span></td>
+              <td>Mäßig – gleichmäßiger als Edge-LED, aber oft Grauschleier</td>
+            </tr>
+            <tr>
+              <td><strong>Edge-LED</strong></td>
+              <td><span style="color: #dc2626; font-weight: 700;">Hoch</span></td>
+              <td>Schwach bei Dunkelheit – anfällig für Ecken-Flashlighting</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Häufige Fragen (FAQ) zu Clouding</h2>
+      <div style="display: flex; flex-direction: column; gap: 16px; margin: 28px 0;">
+        <details style="background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 20px;">
+          <summary style="font-weight: 700; font-size: 17px; cursor: pointer;">Geht der Fernseher durch Clouding schneller kaputt?</summary>
+          <p style="margin: 12px 0 0; color: var(--slate); line-height: 1.6;">
+            Nein. Clouding ist ein rein optischer Ausleuchtungsfehler der Diffusor- und Polarisationsschichten. Es handelt sich nicht um einen elektrischen Defekt, der Bauteile beschädigt oder die Lebensdauer des Fernsehers verkürzt.
+          </p>
+        </details>
+
+        <details style="background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 20px;">
+          <summary style="font-weight: 700; font-size: 17px; cursor: pointer;">Hilft ein Software-Update gegen Clouding?</summary>
+          <p style="margin: 12px 0 0; color: var(--slate); line-height: 1.6;">
+            Direkt an der physischen Ausleuchtung kann ein Update nichts ändern. Allerdings optimieren Firmware-Updates gelegentlich die Algorithmen für das <em>Local Dimming</em> (Zonendimmung), wodurch Lichthöfe in dunklen Szenen softwareseitig besser unterdrückt werden. Ein Update lohnt sich also in jedem Fall.
+          </p>
+        </details>
+
+        <details style="background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 20px;">
+          <summary style="font-weight: 700; font-size: 17px; cursor: pointer;">Warum haben manche baugleichen Modelle Clouding und andere nicht?</summary>
+          <p style="margin: 12px 0 0; color: var(--slate); line-height: 1.6;">
+            In der TV-Community spricht man hierbei von der sogenannten „Panel-Lotterie“. Da Fertigungstoleranzen, Transporterschütterungen und die Drehmomente der Gehäuseschrauben von Gerät zu Gerät variieren, kann ein TV-Gerät nahezu perfekt ausgeleuchtet sein, während das nächste Exemplar derselben Baureihe sichtbare Lichthöfe aufweist.
+          </p>
+        </details>
+
+        <details style="background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 20px;">
+          <summary style="font-weight: 700; font-size: 17px; cursor: pointer;">Kann man ein Display durch zu starkes Drücken beim Massieren beschädigen?</summary>
+          <p style="margin: 12px 0 0; color: var(--slate); line-height: 1.6;">
+            Ja, bei zu starkem punktuellem Druck können Flüssigkristallzellen brechen oder Pixelfehler entstehen. Gehe beim Massage-Trick deshalb immer extrem behutsam vor: Nutze nur ein dickes, weiches Mikrofasertuch und übe niemals mehr Druck aus als beim vorsichtigen Streicheln einer empfindlichen Oberfläche.
+          </p>
+        </details>
+      </div>
+
+      <!-- Autorenbox -->
+      <div class="em-author">
+        <img src={site.author.image} alt={site.author.name} width="84" height="84" loading="lazy" />
+        <div>
+          <span class="em-author-label">Über den Autor</span>
+          <strong>{site.author.name}</strong>
+          <p>{site.author.bio}</p>
+        </div>
+      </div>
+    </div>
+  </article>
+</Base>

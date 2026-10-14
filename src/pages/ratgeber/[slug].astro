@@ -7,10 +7,12 @@ import path from 'node:path';
 export function getStaticPaths() {
   const indexFile = path.resolve('content/ratgeber/index.json');
   const items = JSON.parse(fs.readFileSync(indexFile, 'utf-8'));
-  return items.map((item) => ({
-    params: { slug: item.slug },
-    props: { meta: item }
-  }));
+  return items
+    .filter((item) => fs.existsSync(path.resolve(`content/ratgeber/${item.slug}/content.html`)))
+    .map((item) => ({
+      params: { slug: item.slug },
+      props: { meta: item }
+    }));
 }
 
 const { meta } = Astro.props;

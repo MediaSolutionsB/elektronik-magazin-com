@@ -30,14 +30,14 @@ h1, h2, h3, h4 { font-family: var(--display); letter-spacing: -0.02em; line-heig
 
 /* Header */
 .em-header { background: var(--card); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 50; }
-.em-header-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 32px; padding: 14px 0; }
+.em-header-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 20px; padding: 14px 0; }
 .em-logo { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); font-family: var(--display); font-weight: 800; font-size: 25px; letter-spacing: -0.02em; white-space: nowrap; }
 .em-logo-icon { width: 38px; height: 38px; object-fit: contain; flex-shrink: 0; display: block; }
 .em-logo-text { display: inline-flex; align-items: baseline; white-space: nowrap; }
 .em-logo-accent { color: var(--accent); }
 .em-logo-footer { color: #fff; margin-bottom: 14px; font-size: 23px; white-space: nowrap; }
 .em-logo-footer .em-logo-accent { color: var(--accent-bright); }
-.em-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 24px; font-weight: 600; font-size: 16px; }
+.em-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 18px; font-weight: 600; font-size: 15.5px; }
 .em-nav a { text-decoration: none; padding: 8px 0; color: var(--slate); transition: color 0.15s; }
 .em-nav a:hover { color: var(--accent); }
 .em-nav a.em-nav-service { background: var(--slate); color: #fff !important; padding: 6px 16px !important; border-radius: 999px; }
@@ -406,7 +406,7 @@ h1, h2, h3, h4 { font-family: var(--display); letter-spacing: -0.02em; line-heig
 .em-author p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.5; }
 
 /* Header Search Field */
-.em-search-wrapper { position: relative; flex: 1 1 260px; max-width: 360px; min-width: 180px; }
+.em-search-wrapper { position: relative; flex: 0 1 210px; max-width: 220px; min-width: 140px; }
 .em-search-box { display: flex; align-items: center; position: relative; background: var(--line-soft); border: 1.5px solid var(--line); border-radius: 999px; padding: 0 12px; height: 40px; transition: all 0.2s ease; }
 .em-search-box:focus-within { background: #ffffff; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.12), 0 4px 12px rgba(0, 0, 0, 0.05); }
 .em-search-icon { width: 17px; height: 17px; color: var(--muted); flex-shrink: 0; margin-right: 8px; pointer-events: none; }

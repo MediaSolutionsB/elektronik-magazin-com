@@ -18,7 +18,7 @@ const recentPosts = allPosts.slice(1, 7);
         <p>Unabhängige Praxistests von Smartphones, Audio, Netzwerk & Smart Home – plus präzise Online-Rechner für Stromkosten und Akkukapazität.</p>
         <div class="em-hero-actions">
           <a class="em-btn" href="/tools/">Zu den Online-Rechnern</a>
-          <a class="em-btn em-btn-ghost" href="/tests/">Tests &amp; Checks</a>
+          <a class="em-btn em-btn-ghost" href="/check/">Praxis-Checks</a>
         </div>
       </div>
       {featuredPost && (
@@ -41,7 +41,7 @@ const recentPosts = allPosts.slice(1, 7);
           <span class="em-eyebrow">Neueste Hardware-Tests</span>
           <h2>Praxistests &amp; Erfahrungsberichte</h2>
         </div>
-        <a href="/tests/">Alle Tests &amp; Checks ansehen &rarr;</a>
+        <a href="/check/">Alle Praxis-Checks ansehen &rarr;</a>
       </div>
       <div class="em-cards">
         {recentPosts.map((post) => <Card review={post} />)}

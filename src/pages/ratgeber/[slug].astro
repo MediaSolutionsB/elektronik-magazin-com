@@ -35,6 +35,12 @@ const contentHtml = fs.readFileSync(file, 'utf-8');
       </div>
     </header>
 
+    {meta.image && (
+      <figure style="margin: 24px 0 32px;">
+        <img class="em-lead-img" src={meta.image} alt={meta.title} width="1280" height="720" style="aspect-ratio: 16/9; object-fit: cover;" />
+      </figure>
+    )}
+
     <div class="em-content" set:html={contentHtml} />
   </article>
 </Base>

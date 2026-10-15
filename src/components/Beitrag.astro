@@ -74,7 +74,7 @@ const jsonld = { '@context': 'https://schema.org', '@graph': [product, ...(video
               <span><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8z"/></svg>Video ansehen</span>
             </button>
           </div>
-          <p class="em-video-hint">Beim Abspielen wird das Video von YouTube geladen. · <a href={`https://www.youtube.com/watch?v=${review.videoId}`} target="_blank" rel="noopener" style="color: inherit; text-decoration: underline;">Auf YouTube öffnen ↗</a></p>
+          <p class="em-video-hint">Beim Abspielen wird das Video von YouTube geladen.</p>
         </Fragment>
       ) : (
         <img class="em-lead-img" src={review.image} alt={review.productName || review.title} width="1280" height="720" />
